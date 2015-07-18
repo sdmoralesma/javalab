@@ -1,5 +1,5 @@
 # javalab
-javalab is a web app that provides a simple interface to run Java code with powerful features
+[javalab](https://javalab.co) is a web app that provides a simple interface to run Java code with powerful features
 
 ## Installation and Running
 
