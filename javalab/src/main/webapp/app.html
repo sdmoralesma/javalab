@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="labApp">
+
+<head>
+    <title>Java Lab</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="resources/images/favicon.ico">
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Online Java laboratory: write code, add dependencies, run!">
+    <meta name="keywords"
+          content="java, java code online, javalab, java lab, java web, java compile online, java run online,
+          online java compiler, online ide, learn java, learn programming online, java programming online,
+          run java code online, run java code, execute java code">
+    <meta name="author" content="Sergio Morales">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!--styles-->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="resources/css/angular-block-ui.min.css" rel="stylesheet"/>
+    <link href="resources/css/base.css" rel="stylesheet"/>
+    <link href="resources/css/desktop.css" rel="stylesheet"/>
+    <link href="resources/css/tablet.css" rel="stylesheet"/>
+    <link href="resources/css/mobile.css" rel="stylesheet"/>
+
+    <!-- link for CSS when using the tree as an attribute -->
+    <link rel="stylesheet" type="text/css" href="resources/css/tree-control-attribute.css">
+</head>
+
+<body ng-controller="mainCtrl">
+
+<nav id="ext-nav" class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#collapsable-menu">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="/">Java Lab</a>
+        </div>
+
+        <form class="navbar-form navbar-left">
+            <div class="input-group">
+                <div class="form-group">
+                    <angucomplete-alt id="search-input"
+                                      pause="100"
+                                      placeholder="Select class or test"
+                                      selected-object="selectedFile"
+                                      local-data="javaClasses"
+                                      search-fields="name, path"
+                                      title-field="name"
+                                      description-field="path"
+                                      minlength="0"
+                                      auto-match="true"
+                                      match-class="highlight"
+                                      input-class="form-control form-control-small"></angucomplete-alt>
+                </div>
+                <div class="input-group-btn">
+                    <button id="run-btn" class="btn btn-default " ng-click="runCode()">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
+                    <button id="test-btn" class="btn btn-default" ng-click="runTests()">
+                        <span class="glyphicon glyphicon-check"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a id="contact-btn" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a id="bug-btn" target="_blank"
+                           href="https://bitbucket.org/sdmoralesma/javalab/issues?status=new&status=open"></a>
+                    </li>
+                    <li>
+                        <a id="email-btn" href="mailto:sdmoralesma (at) gmail (dot) com"></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div id="ext-libraries" class="col-sm-12 col-md-3">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
+
+                <div class="btn-group pull-right">
+                    <a ng-click="formatCode()" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-indent-left"></span>
+                    </a>
+
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a ng-click="addNode('file', selected)">
+                                <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
+                            </a></li>
+                            <li><a ng-click="addNode('folder', selected)">
+                                <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
+                            </a></li>
+                        </ul>
+                    </div>
+                    <a ng-click="editNode(selected)" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a ng-click="removeNode(selected)" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="panel-body">
+                <div treecontrol class="tree-classic"
+                     tree-model="treedata"
+                     options="treeOptions"
+                     on-selection="showSelected(node)"
+                     expanded-nodes="expandedNodes"
+                     selected-node="selected">
+                    {{node.name}}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="panel-title glyphicon glyphicon-book">&nbsp;Libraries</span>
+            </div>
+
+            <div class="panel-body">
+                <div>
+                    <div ng-repeat="lib in libsModel.libraries | filter: { visible: 'true' }">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
+                            </label>
+                            <span class="label label-info">{{lib.version}}</span>
+                            <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="code-editor" ng-model="libsModel.code" class="panel panel-default"></div>
+
+    <textarea id="console" readonly ng-model="libsModel.console" class="form-control"></textarea>
+
+</div>
+
+<!--dependencies-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://codebeautify.org/js/beautify.js"></script>
+<script src="//code.angularjs.org/1.4.1/angular.js"></script>
+<script src="resources/js/angular-block-ui.min.js"></script>
+<script src="resources/js/angular-tree-control.js"></script>
+<script src="resources/js/TreeModel.js"></script>
+<script src="resources/js/angucomplete-alt.js"></script>
+
+
+<!--application-->
+<script src="resources/js/model.js"></script>
+<script src="resources/js/application.js"></script>
+<script src="resources/js/initialize-editor.js"></script>
+<script src="resources/js/resize-ace-vertically.js"></script>
+<script src="resources/js/events.js"></script>
+<script src="resources/js/google-tracking.js"></script>
+</body>
+</html>

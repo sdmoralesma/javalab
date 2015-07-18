@@ -1,0 +1,9 @@
+# Development Environment
+app:
+  build: .
+  command: /opt/wildfly/bin/standalone.sh --debug 8787 -b 0.0.0.0 -bmanagement 0.0.0.0
+  ports:
+    - "49990:9990"
+    - "48080:8080"
+    - "48787:8787"
+

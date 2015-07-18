@@ -1,0 +1,5 @@
+# Development Environment
+app:
+  build: .
+  stdin_open: true
+
