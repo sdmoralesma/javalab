@@ -19,7 +19,7 @@ RUN cd /opt && wget --quiet http://download.jboss.org/wildfly/$WILDFLY_VERSION/w
 ENV JBOSS_HOME /opt/wildfly
 
 # Create admin user for wildfly
-RUN $JBOSS_HOME/bin/add-user.sh admin Admin#12345 --silent
+RUN $JBOSS_HOME/bin/add-user.sh admin admin123 --silent
 
 # Install Maven
 ENV MAVEN_VERSION 3.3.3
