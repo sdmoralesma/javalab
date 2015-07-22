@@ -1,10 +1,10 @@
-package com.smorales.javalab.middleware.boundary.buildtool;
+package com.smorales.javalab.middleware.buildtool.boundary;
 
-import com.smorales.javalab.middleware.boundary.entity.Library;
-import com.smorales.javalab.middleware.boundary.entity.TreeData;
-import com.smorales.javalab.middleware.boundary.rest.RunnableNode;
-import com.smorales.javalab.middleware.constants.LabPaths;
-import com.smorales.javalab.middleware.exceptions.NotRunnableCodeException;
+import com.smorales.javalab.middleware.buildtool.LabPaths;
+import com.smorales.javalab.middleware.buildtool.NotRunnableCodeException;
+import com.smorales.javalab.middleware.buildtool.entity.Library;
+import com.smorales.javalab.middleware.buildtool.entity.TreeData;
+import com.smorales.javalab.middleware.buildtool.rest.RunnableNode;
 
 import java.io.IOException;
 import java.nio.file.Files;

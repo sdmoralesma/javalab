@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.boundary.rest;
+package com.smorales.javalab.middleware.buildtool.rest;
 
 public class RunnableNode {
 

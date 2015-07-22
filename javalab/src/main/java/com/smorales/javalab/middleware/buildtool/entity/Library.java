@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.boundary.entity;
+package com.smorales.javalab.middleware.buildtool.entity;
 
 public class Library {
 

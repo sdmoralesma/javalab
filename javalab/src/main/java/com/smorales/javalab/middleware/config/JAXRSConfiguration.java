@@ -1,12 +1,12 @@
 package com.smorales.javalab.middleware.config;
 
-import com.smorales.javalab.middleware.boundary.rest.ProcessorResource;
+import com.smorales.javalab.middleware.buildtool.rest.ProcessorResource;
 
 import javax.ws.rs.core.Application;
 import java.util.Set;
 
 @javax.ws.rs.ApplicationPath("rest")
-public class ApplicationConfig extends Application {
+public class JAXRSConfiguration extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {

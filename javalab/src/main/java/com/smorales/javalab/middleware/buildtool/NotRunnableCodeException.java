@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.exceptions;
+package com.smorales.javalab.middleware.buildtool;
 
 public class NotRunnableCodeException extends RuntimeException {
 

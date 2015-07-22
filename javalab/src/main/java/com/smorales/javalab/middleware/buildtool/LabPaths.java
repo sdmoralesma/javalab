@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.constants;
+package com.smorales.javalab.middleware.buildtool;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
