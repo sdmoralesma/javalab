@@ -1,0 +1,11 @@
+# Development Environment
+app:
+  image: jekyll/pages
+  command: jekyll serve -H 0.0.0.0
+  restart: on-failure
+  volumes:
+    - .:/srv/jekyll
+  ports:
+    - "4000:4000"
+  tty: true
+
