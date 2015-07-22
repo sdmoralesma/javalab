@@ -1,2 +1,4 @@
-name: javalab
+title: javalab
 markdown: kramdown
+gems:
+  - jekyll-sitemap
