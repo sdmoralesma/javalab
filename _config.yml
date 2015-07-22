@@ -1,0 +1,4 @@
+title: javalab
+markdown: kramdown
+gems:
+  - jekyll-sitemap
