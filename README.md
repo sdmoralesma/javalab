@@ -10,6 +10,7 @@
 5. build image : ``` docker-compose build ```
 6. run container : ``` docker-compose up ```
 
+## Ports
 * access the app: ``` localhost:48080 ```
 * wildfly console: ``` localhost:49990 ```
 * java debugger: ``` localhost:48787 ```
