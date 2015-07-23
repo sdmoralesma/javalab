@@ -1,7 +1,9 @@
 ---
+permalink: /org.joda.time/
 layout: page
 headline: Joda Time
 description: joda time description
 ---
 
-a lot of content
+## Basics
+ - [introduction](http://javalab.co)
