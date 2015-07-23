@@ -1,4 +1,9 @@
 title: javalab
+
 markdown: kramdown
+
+include: ['_pages']
+relative_permalinks: false
+
 gems:
   - jekyll-sitemap
