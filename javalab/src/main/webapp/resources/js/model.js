@@ -2,7 +2,7 @@
  * Model
  */
 var model = {
-    "console": "Welcome to Java Lab v0.1 !\r\n$ java -version > \"1.8.0_45\" Java HotSpot(TM) 64-Bit Server VM",
+    "console": "Welcome to javalab v0.1 !\r\n$ java -version > \"1.8.0_45\" Java HotSpot(TM) 64-Bit Server VM",
     "libraries": [
         {
             "name": "apache commons lang",
