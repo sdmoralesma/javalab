@@ -2,7 +2,7 @@
 window.onbeforeunload = function (e) {
     e = e || window.event;
 
-    const CODE_NOT_SAVED = 'Code not saved!!!';
+    const CODE_NOT_SAVED = 'Code not saved!';
 
     // For IE and Firefox prior to version 4
     if (e) {

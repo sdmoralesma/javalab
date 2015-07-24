@@ -1,8 +1,13 @@
 function resizeTextAreasVertically() {
 
-    //  Define height for each element based on %
+    var minWidthDesktop = 980;
+    if ($(window).width() < minWidthDesktop) {
+        return;
+    }
+
     var windowHeight = $(window).height();
     var extNavHeight = $('#ext-nav').height();
+    //  Define height for each element based on %
     var codeEditorHeight = (windowHeight * 75 / 100) - extNavHeight;
     var testCodeEditorHeight = (windowHeight * 75 / 100) - extNavHeight;
     var consoleHeight = (windowHeight * 25 / 100) - extNavHeight;

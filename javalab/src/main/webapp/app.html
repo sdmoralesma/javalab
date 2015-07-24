@@ -2,13 +2,13 @@
 <html lang="en" ng-app="labApp">
 
 <head>
-    <title>Java Lab</title>
+    <title>javalab</title>
     <link rel="icon" type="image/png" sizes="16x16" href="resources/images/favicon.ico">
 
     <meta charset="UTF-8">
-    <meta name="description" content="Online Java laboratory: write code, add dependencies, run!">
+    <meta name="description" content="simple interface to run Java code with powerful features online">
     <meta name="keywords"
-          content="java, java code online, javalab, java lab, java web, java compile online, java run online,
+          content="java, java code online, javalab, java laboratory, java web, java compile online, java run online,
           online java compiler, online ide, learn java, learn programming online, java programming online,
           run java code online, run java code, execute java code">
     <meta name="author" content="Sergio Morales">
@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="/">Java Lab</a>
+            <a class="navbar-brand" href="/">javalab</a>
         </div>
 
         <form class="navbar-form navbar-left">
@@ -70,25 +70,25 @@
             </div>
         </form>
 
-
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a id="contact-btn" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                    <span class="glyphicon glyphicon-envelope"></span>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a id="bug-btn" target="_blank"
-                           href="https://github.com/sdmoralesma/javalab/issues/"></a>
-                    </li>
-                    <li>
-                        <a id="email-btn" href="mailto:sdmoralesma (at) gmail (dot) com"></a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
+        <div class="collapse navbar-collapse" id="collapsable-menu">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a id="contact-btn" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a id="bug-btn" target="_blank"
+                               href="https://github.com/sdmoralesma/javalab/issues/"></a>
+                        </li>
+                        <li>
+                            <a id="email-btn" href="mailto:sdmoralesma (at) gmail (dot) com"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -168,12 +168,12 @@
 </div>
 
 <!--dependencies-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://codebeautify.org/js/beautify.js"></script>
-<script src="//code.angularjs.org/1.4.1/angular.js"></script>
+<script src="//code.angularjs.org/1.4.3/angular.js"></script>
 <script src="resources/js/angular-block-ui.min.js"></script>
 <script src="resources/js/angular-tree-control.js"></script>
 <script src="resources/js/TreeModel.js"></script>

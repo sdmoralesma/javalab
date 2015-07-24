@@ -25,6 +25,8 @@ a.fill-div {
     margin-bottom: 5px;
     padding-left: 0;
     font-size: 14px;
+    min-height: 500px;
+    height:100%;
 }
 
 #test-editor {

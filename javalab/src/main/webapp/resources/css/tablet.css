@@ -21,10 +21,10 @@
     }
 
     #email-btn::after {
-        content: 'Email-me';
+        content: 'Email me';
     }
 
     #bug-btn::after {
-        content: 'Report bug/enhancement';
+        content: 'Report Issue';
     }
 }
