@@ -1,4 +1,6 @@
-package com.smorales.javalab.middleware.buildtool;
+package com.smorales.javalab.middleware.buildtool.control;
+
+import com.smorales.javalab.middleware.buildtool.boundary.NotRunnableCodeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

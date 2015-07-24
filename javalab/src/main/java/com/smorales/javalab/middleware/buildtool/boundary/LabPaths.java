@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool;
+package com.smorales.javalab.middleware.buildtool.boundary;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
