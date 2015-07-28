@@ -1,20 +1,23 @@
 package com.smorales.javalab.middleware.buildtool.boundary;
 
-import com.smorales.javalab.middleware.buildtool.entity.Library;
-import com.smorales.javalab.middleware.buildtool.entity.TreeData;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BuildToolTest {
 
+    private BuildTool buildTool;
+
+    @Before
+    public void setUp() {
+        buildTool = BuildTool.get(BuildTool.Type.JAVAC, null, null, null);
+    }
+
     @Test
-    public void savingSuccessfulPrediction() {
+    public void shouldInitializeWithJson() {
 
-        BuildTool bt = BuildTool.get(BuildTool.Type.JAVAC, Mockito.anyListOf(TreeData.class), Mockito.anyListOf(Library.class), null);
-
-        assertThat()
+        assertThat(buildTool).isNotNull();
 
     }
 }
