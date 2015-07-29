@@ -146,7 +146,7 @@
 
             <div class="panel-body">
                 <div>
-                    <div ng-repeat="lib in libsModel.libraries | filter: { visible: 'true' }">
+                    <div ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
@@ -161,9 +161,9 @@
 
     </div>
 
-    <div id="code-editor" ng-model="libsModel.code" class="panel panel-default"></div>
+    <div id="code-editor" ng-model="appModel.code" class="panel panel-default"></div>
 
-    <textarea id="console" readonly ng-model="libsModel.console" class="form-control"></textarea>
+    <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
 
 </div>
 

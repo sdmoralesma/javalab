@@ -51,19 +51,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
                 "children": model.treedata
             });
 
-            $scope.libsModel = model;
-            $scope.treeModelMap = new TreeModel().parse(model.treedata);//TODO:fix me!
-
-
-            function initializeAceEditorFor(editorVar, editorCode) {
-                editorVar.$blockScrolling = Infinity;
-                editorVar.setTheme(CRIMSON_THEME);
-                editorVar.getSession().setMode(JAVA_MODE);
-                editorVar.getSession().setValue(editorCode);
-            }
-
-            initializeAceEditorFor(codeEditor, model.treedata[0].children[0].children[0].code);
-
+            $scope.appModel = model;
 
             //tree data initialization
             $scope.treedata = model.treedata;
@@ -74,7 +62,15 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             $scope.javaClasses = [
                 {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
                 {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
-            ]
+            ];
+
+
+            (function initializeCodeEditor() {
+                codeEditor.$blockScrolling = Infinity;
+                codeEditor.setTheme(CRIMSON_THEME);
+                codeEditor.getSession().setMode(JAVA_MODE);
+                codeEditor.getSession().setValue(model.treedata[0].children[0].children[0].code);
+            }());
 
         });
     };
