@@ -1,11 +1,3 @@
-const CRIMSON_THEME = "ace/theme/crimson_editor";
-const SUBLIME_THEME = "ace/theme/monokai";
-const JAVA_MODE = "ace/mode/java";
-
-var model = null; // Main Model
-var root = null; //Tree Model
-var codeEditor = ace.edit("code-editor");
-
 var labApp = angular.module('labApp', ['blockUI', 'treeControl', "angucomplete-alt"]);
 
 labApp.factory('MiddlewareClient', function ($http) {
@@ -45,16 +37,14 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             async: false
         }).success(function (data) {
 
-            model = data;
-            root = new TreeModel().parse({
+            $scope.appModel = data;
+            $scope.root = new TreeModel().parse({
                 "id": 0,
-                "children": model.treedata
+                "children": $scope.appModel.treedata
             });
 
-            $scope.appModel = model;
-
             //tree data initialization
-            $scope.treedata = model.treedata;
+            $scope.treedata = $scope.appModel.treedata;
             $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
             $scope.selected = $scope.treedata[0].children[0].children[0];
 
@@ -65,11 +55,15 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             ];
 
 
+            $scope.codeEditor = ace.edit("code-editor");
             (function initializeCodeEditor() {
-                codeEditor.$blockScrolling = Infinity;
-                codeEditor.setTheme(CRIMSON_THEME);
-                codeEditor.getSession().setMode(JAVA_MODE);
-                codeEditor.getSession().setValue(model.treedata[0].children[0].children[0].code);
+                const CRIMSON_THEME = "ace/theme/crimson_editor";
+                const JAVA_MODE = "ace/mode/java";
+
+                $scope.codeEditor.$blockScrolling = Infinity;
+                $scope.codeEditor.setTheme(CRIMSON_THEME);
+                $scope.codeEditor.getSession().setMode(JAVA_MODE);
+                $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
             }());
 
         });
@@ -96,31 +90,31 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
     $scope.runCode = function () {
 
-        if (model.runnableNode.id == undefined) {
-            model.console = "Please select a class to run";
+        if ($scope.appModel.runnableNode.id == undefined) {
+            $scope.appModel.console = "Please select a class to run";
             return;
         }
 
         blockUI.start();
-        $scope.selected.code = codeEditor.getValue();
-        $scope.selected.cursor = codeEditor.getCursorPosition();
-        model.runnableNode.mainClass = true;
-        model.runnableNode.testClass = false;
-        model.console = MiddlewareClient.runCode(model);
+        $scope.selected.code = $scope.codeEditor.getValue();
+        $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
+        $scope.appModel.runnableNode.mainClass = true;
+        $scope.appModel.runnableNode.testClass = false;
+        $scope.appModel.console = MiddlewareClient.runCode($scope.appModel);
         blockUI.stop();
     };
 
     $scope.runTests = function () {
 
-        if (model.runnableNode.id == undefined) {
-            model.console = "Please select a test class";
+        if ($scope.appModel.runnableNode.id == undefined) {
+            $scope.appModel.console = "Please select a test class";
             return;
         }
 
         blockUI.start();
-        model.runnableNode.mainClass = false;
-        model.runnableNode.testClass = true;
-        model.console = MiddlewareClient.runTest(model);
+        $scope.appModel.runnableNode.mainClass = false;
+        $scope.appModel.runnableNode.testClass = true;
+        $scope.appModel.console = MiddlewareClient.runTest($scope.appModel);
         blockUI.stop();
     };
 
@@ -132,16 +126,16 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
         var oldNode = $scope.selected;
         if (oldNode !== undefined) {
-            oldNode.code = codeEditor.getValue();
-            oldNode.cursor = codeEditor.getCursorPosition();
+            oldNode.code = $scope.codeEditor.getValue();
+            oldNode.cursor = $scope.codeEditor.getCursorPosition();
         }
 
         $scope.selected = node;
         if (node.type === "file") {
-            codeEditor.setValue(node.code, 1); // moves cursor to the end
+            $scope.codeEditor.setValue(node.code, 1); // moves cursor to the end
             var cursor = node.cursor == undefined ? {column: 0, row: 0} : node.cursor;
-            codeEditor.moveCursorToPosition(cursor);
-            codeEditor.focus();
+            $scope.codeEditor.moveCursorToPosition(cursor);
+            $scope.codeEditor.focus();
         }
     };
 
@@ -152,7 +146,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             return;
         }
 
-        var nodeFound = root.first(function (iterNode) {
+        var nodeFound = $scope.root.first(function (iterNode) {
             return iterNode.model.id === node.id;
         });
 
@@ -211,7 +205,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             return;
         }
 
-        var nodeFound = root.first(function (iterNode) {
+        var nodeFound = $scope.root.first(function (iterNode) {
             return iterNode.model.id === node.id;
         });
 
@@ -266,7 +260,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             return;
         }
 
-        var nodeFound = root.first(function (iterNode) {
+        var nodeFound = $scope.root.first(function (iterNode) {
             return iterNode.model.id === node.id;
         });
 
@@ -302,15 +296,15 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
     $scope.selectedFile = function (selected) {
 
         if (selected == undefined) {
-            model.runnableNode.id = undefined;
+            $scope.appModel.runnableNode.id = undefined;
             return;
         }
 
-        var nodeFound = root.first(function (iterNode) {
+        var nodeFound = $scope.root.first(function (iterNode) {
             return iterNode.model.id === selected.originalObject.id;
         });
 
-        model.runnableNode.id = nodeFound.model.id;
+        $scope.appModel.runnableNode.id = nodeFound.model.id;
     };
 
 });
