@@ -70,6 +70,12 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
             $scope.selected = $scope.treedata[0].children[0].children[0];
 
+            //AutoCompletion
+            $scope.javaClasses = [
+                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
+                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
+            ]
+
         });
     };
     $scope.init();
@@ -310,10 +316,5 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
         model.runnableNode.id = nodeFound.model.id;
     };
-
-    $scope.javaClasses = [
-        {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
-        {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
-    ]
 
 });
