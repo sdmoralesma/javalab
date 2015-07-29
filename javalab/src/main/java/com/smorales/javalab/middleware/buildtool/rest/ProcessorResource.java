@@ -2,15 +2,28 @@ package com.smorales.javalab.middleware.buildtool.rest;
 
 import com.smorales.javalab.middleware.buildtool.boundary.BuildTool;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.servlet.ServletContext;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 @Path("/process")
 public class ProcessorResource {
+
+
+    @GET
+    @Path("/init")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response initialize(@Context ServletContext context) {
+        InputStream inputStream = context.getResourceAsStream("/WEB-INF/json/init-model.json");
+        JsonObject jsonObject = Json.createReader(inputStream).readObject();
+        return Response.ok().entity(jsonObject).build();
+    }
+
 
     @POST
     @Path("/run")

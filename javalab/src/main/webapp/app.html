@@ -16,7 +16,7 @@
 
     <!--styles-->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="resources/css/angular-block-ui.min.css" rel="stylesheet"/>
+    <link href="resources/css/angular-block-ui.css" rel="stylesheet"/>
     <link href="resources/css/base.css" rel="stylesheet"/>
     <link href="resources/css/desktop.css" rel="stylesheet"/>
     <link href="resources/css/tablet.css" rel="stylesheet"/>
@@ -146,7 +146,7 @@
 
             <div class="panel-body">
                 <div>
-                    <div ng-repeat="lib in libsModel.libraries | filter: { visible: 'true' }">
+                    <div ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
@@ -161,9 +161,9 @@
 
     </div>
 
-    <div id="code-editor" ng-model="libsModel.code" class="panel panel-default"></div>
+    <div id="code-editor" ng-model="appModel.code" class="panel panel-default"></div>
 
-    <textarea id="console" readonly ng-model="libsModel.console" class="form-control"></textarea>
+    <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
 
 </div>
 
@@ -174,16 +174,14 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://codebeautify.org/js/beautify.js"></script>
 <script src="//code.angularjs.org/1.4.3/angular.js"></script>
-<script src="resources/js/angular-block-ui.min.js"></script>
+<script src="resources/js/angular-block-ui.js"></script>
 <script src="resources/js/angular-tree-control.js"></script>
 <script src="resources/js/TreeModel.js"></script>
 <script src="resources/js/angucomplete-alt.js"></script>
 
 
 <!--application-->
-<script src="resources/js/model.js"></script>
 <script src="resources/js/application.js"></script>
-<script src="resources/js/initialize-editor.js"></script>
 <script src="resources/js/resize-ace-vertically.js"></script>
 <script src="resources/js/events.js"></script>
 <script src="resources/js/google-tracking.js"></script>
