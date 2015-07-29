@@ -158,7 +158,11 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
         }
 
         function createNewNode() {
-            return new TreeModel().parse({id: newNodeUUID(), name: nodeName, type: typeToCreate, children: []});
+            var newNode = new TreeModel().parse({id: newNodeUUID(), name: nodeName, type: typeToCreate, children: []});
+            if(typeToCreate === "file"){
+                newNode.model.code = "";
+            }
+            return newNode;
         }
 
         function pathAsString(node) {
