@@ -77,7 +77,7 @@ public abstract class BuildTool {
         for (TreeData node : treeDataList) {
             if (node.getType().equals("file")) {
 
-                if (runnableNode.getId() == node.getId()) {
+                if (runnableNode.getId().equals(node.getId())) {
                     Path path = Paths.get(parentPath.toString() + "/" + node.getName());
                     System.out.println("Found Runnable Class: " + path.toAbsolutePath());
                     mainclass.add(path);
