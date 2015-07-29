@@ -4,6 +4,7 @@ const JAVA_MODE = "ace/mode/java";
 
 var model = null; // Main Model
 var root = null; //Tree Model
+var codeEditor = ace.edit("code-editor");
 
 var labApp = angular.module('labApp', ['blockUI', 'treeControl', "angucomplete-alt"]);
 
@@ -11,35 +12,9 @@ labApp.factory('MiddlewareClient', function ($http) {
 
     const ENDPOINT = 'rest/process';
     return {
-        initialize: function () {
-            const RUN_CODE_SERVICE = ENDPOINT + "/init";
-            $http.get(RUN_CODE_SERVICE)
-                .then(function (response) {
-                    model = response.data;
-                    root = new TreeModel().parse({
-                        "id": 0,
-                        "children": model.treedata
-                    });
-
-                    function initializeAceEditorFor(editorVar, editorCode) {
-                        editorVar.$blockScrolling = Infinity;
-                        editorVar.setTheme(CRIMSON_THEME);
-                        editorVar.getSession().setMode(JAVA_MODE);
-                        editorVar.getSession().setValue(editorCode);
-                    }
-
-                    var codeEditor = ace.edit("code-editor");
-                    initializeAceEditorFor(codeEditor, model.treedata[0].children[0].children[0].code);
-
-                }, function error(failure) {
-                    alert('error code: ' + failure.status);
-                });
-        },
-
         runCode: function (model) {
             const RUN_CODE_SERVICE = ENDPOINT + "/run";
             $http.post(RUN_CODE_SERVICE, model, {
-                method: 'POST',
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
@@ -51,7 +26,6 @@ labApp.factory('MiddlewareClient', function ($http) {
         runTest: function (model) {
             const RUN_TESTS_SERVICE = ENDPOINT + "/tests";
             $http.post(RUN_TESTS_SERVICE, model, {
-                method: 'POST',
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
@@ -64,16 +38,41 @@ labApp.factory('MiddlewareClient', function ($http) {
 
 labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
-    $scope.libsModel = null;
-    $scope.treeModelMap = null;
-
     $scope.init = function () {
-        MiddlewareClient.initialize();
-        $scope.libsModel = model;
-        $scope.treeModelMap = new TreeModel().parse(model.treedata);//TODO:fix me!
+        $.ajax({
+            dataType: "json",
+            url: 'rest/process/init',
+            async: false
+        }).success(function (data) {
+
+            model = data;
+            root = new TreeModel().parse({
+                "id": 0,
+                "children": model.treedata
+            });
+
+            $scope.libsModel = model;
+            $scope.treeModelMap = new TreeModel().parse(model.treedata);//TODO:fix me!
+
+
+            function initializeAceEditorFor(editorVar, editorCode) {
+                editorVar.$blockScrolling = Infinity;
+                editorVar.setTheme(CRIMSON_THEME);
+                editorVar.getSession().setMode(JAVA_MODE);
+                editorVar.getSession().setValue(editorCode);
+            }
+
+            initializeAceEditorFor(codeEditor, model.treedata[0].children[0].children[0].code);
+
+
+            //tree data initialization
+            $scope.treedata = model.treedata;
+            $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
+            $scope.selected = $scope.treedata[0].children[0].children[0];
+
+        });
     };
     $scope.init();
-
 
 
     $scope.formatCode = function () {
@@ -294,13 +293,6 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
             return (node1 === node2) && (angular.equals(node1, node2));
         }
     };
-
-    $scope.treedata = model.treedata;
-
-    $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
-
-    $scope.selected = $scope.treedata[0].children[0].children[0];
-
 
     /**
      * Autocompletion
