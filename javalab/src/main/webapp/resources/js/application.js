@@ -38,10 +38,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
         }).success(function (data) {
 
             $scope.appModel = data;
-            $scope.root = new TreeModel().parse({
-                "id": 0,
-                "children": $scope.appModel.treedata
-            });
+            $scope.root = new TreeModel().parse({"id": 0, "children": $scope.appModel.treedata});
 
             //tree data initialization
             $scope.treedata = $scope.appModel.treedata;
@@ -54,12 +51,11 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
                 {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
             ];
 
-
-            $scope.codeEditor = ace.edit("code-editor");
             (function initializeCodeEditor() {
                 const CRIMSON_THEME = "ace/theme/crimson_editor";
                 const JAVA_MODE = "ace/mode/java";
 
+                $scope.codeEditor = ace.edit("code-editor");
                 $scope.codeEditor.$blockScrolling = Infinity;
                 $scope.codeEditor.setTheme(CRIMSON_THEME);
                 $scope.codeEditor.getSession().setMode(JAVA_MODE);
@@ -159,7 +155,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
         function createNewNode() {
             var newNode = new TreeModel().parse({id: newNodeUUID(), name: nodeName, type: typeToCreate, children: []});
-            if(typeToCreate === "file"){
+            if (typeToCreate === "file") {
                 newNode.model.code = "";
             }
             return newNode;
