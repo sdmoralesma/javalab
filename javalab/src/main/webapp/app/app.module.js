@@ -1,0 +1,1 @@
+var labApp = angular.module('LabApp', ['blockUI', 'treeControl', "angucomplete-alt"]);
