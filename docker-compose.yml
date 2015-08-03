@@ -15,5 +15,5 @@ labdb:
     MYSQL_USER: mysql
     MYSQL_PASSWORD: mysql
     MYSQL_ROOT_PASSWORD: admin123
-  ports:
-    - "43306:3306"
+  expose:
+    - "3306"
