@@ -23,7 +23,7 @@ RUN $JBOSS_HOME/bin/add-user.sh admin admin123 --silent
 
 #add datasource to wildfly
 ADD wildfly-config/scripts $JBOSS_HOME/scripts/
-ADD wildfly-config/modules $JBOSS_HOME/modules/
+ADD wildfly-config/connector $JBOSS_HOME/connector/
 RUN $JBOSS_HOME/scripts/execute.sh
 
 # Solves bug in history

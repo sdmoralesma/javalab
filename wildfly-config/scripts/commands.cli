@@ -1,3 +1,7 @@
+#To create the module (not part of the batch)
+set JBOSS_HOME=/opt/wildfly
+module add --name=com.mysql --resources=$JBOSS_HOME/connector/mysql-connector-java-5.1.36-bin.jar --dependencies=javax.api,javax.transaction.api
+
 # Mark the commands below to be run as a batch
 batch
 
