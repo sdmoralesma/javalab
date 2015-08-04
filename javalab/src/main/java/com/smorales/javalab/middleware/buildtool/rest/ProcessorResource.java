@@ -17,7 +17,7 @@ public class ProcessorResource {
 
     @GET
     @Path("/init")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response initialize(@Context ServletContext context) {
         InputStream inputStream = context.getResourceAsStream("/WEB-INF/json/init-model.json");
         JsonObject jsonObject = Json.createReader(inputStream).readObject();

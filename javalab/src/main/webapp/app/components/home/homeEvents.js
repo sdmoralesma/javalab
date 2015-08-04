@@ -1,3 +1,4 @@
+'use strict';
 // trigger dialog before leave page
 window.onbeforeunload = function (e) {
     e = e || window.event;

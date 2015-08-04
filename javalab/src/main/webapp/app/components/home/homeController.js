@@ -1,4 +1,5 @@
-labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
+'use strict';
+labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($scope, middleService, blockUI) {
 
     $scope.init = function () {
         $.ajax({
@@ -34,8 +35,6 @@ labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
 
         });
     };
-    $scope.init();
-
 
     $scope.formatCode = function () {
 
@@ -66,7 +65,7 @@ labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
         $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
         $scope.appModel.runnableNode.mainClass = true;
         $scope.appModel.runnableNode.testClass = false;
-        $scope.appModel.console = middleClientService.runCode($scope.appModel);
+        $scope.appModel.console = middleService.runCode($scope.appModel);
         blockUI.stop();
     };
 
@@ -80,7 +79,7 @@ labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
         blockUI.start();
         $scope.appModel.runnableNode.mainClass = false;
         $scope.appModel.runnableNode.testClass = true;
-        $scope.appModel.console = middleClientService.runTest($scope.appModel);
+        $scope.appModel.console = middleService.runTest($scope.appModel);
         blockUI.stop();
     };
 
@@ -277,4 +276,4 @@ labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
         $scope.appModel.runnableNode.id = nodeFound.model.id;
     };
 
-});
+}]);

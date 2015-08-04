@@ -1,3 +1,4 @@
+'use strict';
 function resizeTextAreasVertically() {
 
     var minWidthDesktop = 980;
