@@ -1,4 +1,4 @@
-labApp.controller("HomeCtrl", function ($scope, MiddlewareClient, blockUI) {
+labApp.controller("HomeCtrl", function ($scope, middleClientService, blockUI) {
 
     $scope.init = function () {
         $.ajax({
@@ -66,7 +66,7 @@ labApp.controller("HomeCtrl", function ($scope, MiddlewareClient, blockUI) {
         $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
         $scope.appModel.runnableNode.mainClass = true;
         $scope.appModel.runnableNode.testClass = false;
-        $scope.appModel.console = MiddlewareClient.runCode($scope.appModel);
+        $scope.appModel.console = middleClientService.runCode($scope.appModel);
         blockUI.stop();
     };
 
@@ -80,7 +80,7 @@ labApp.controller("HomeCtrl", function ($scope, MiddlewareClient, blockUI) {
         blockUI.start();
         $scope.appModel.runnableNode.mainClass = false;
         $scope.appModel.runnableNode.testClass = true;
-        $scope.appModel.console = MiddlewareClient.runTest($scope.appModel);
+        $scope.appModel.console = middleClientService.runTest($scope.appModel);
         blockUI.stop();
     };
 
