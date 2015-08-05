@@ -1,5 +1,5 @@
 'use strict';
-labApp.factory('middleService', ['$http', function ($http) {
+labApp.factory('middleService', ['$http', '$rootScope', function ($http, $rootScope) {
 
     const ENDPOINT = 'rest/process';
     return {
@@ -7,9 +7,34 @@ labApp.factory('middleService', ['$http', function ($http) {
             const INIT_SERVICE = ENDPOINT + "/init";
             $http.get(INIT_SERVICE)
                 .then(function (response) {
-                    return response.data;
-                }, function error(failure) {
-                    alert('error code: ' + failure.status);
+                    $rootScope.appModel = response.data;
+
+                    $rootScope.root = new TreeModel().parse({"id": 0, "children": $rootScope.appModel.treedata});
+
+                    //tree data initialization
+                    $rootScope.treedata = $rootScope.appModel.treedata;
+                    $rootScope.expandedNodes = [$rootScope.treedata[0], $rootScope.treedata[0].children[0], $rootScope.treedata[1], $rootScope.treedata[1].children[0]];
+                    $rootScope.selected = $rootScope.treedata[0].children[0].children[0];
+
+                    //AutoCompletion
+                    $rootScope.javaClasses = [
+                        {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
+                        {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
+                    ];
+
+                    (function initializeCodeEditor() {
+                        const CRIMSON_THEME = "ace/theme/crimson_editor";
+                        const JAVA_MODE = "ace/mode/java";
+
+                        $rootScope.codeEditor = ace.edit("code-editor");
+                        $rootScope.codeEditor.$blockScrolling = Infinity;
+                        $rootScope.codeEditor.setTheme(CRIMSON_THEME);
+                        $rootScope.codeEditor.getSession().setMode(JAVA_MODE);
+                        $rootScope.codeEditor.getSession().setValue($rootScope.appModel.treedata[0].children[0].children[0].code);
+                    }());
+
+                }, function (failure) {
+                    alert('error initializing: ' + failure.status);
                 });
         },
 
@@ -19,7 +44,7 @@ labApp.factory('middleService', ['$http', function ($http) {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
-            }, function error(failure) {
+            }, function (failure) {
                 alert('error code: ' + failure.status);
             });
         },
@@ -30,7 +55,7 @@ labApp.factory('middleService', ['$http', function ($http) {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
-            }, function error(failure) {
+            }, function (failure) {
                 alert('error code: ' + failure.status);
             });
         }
