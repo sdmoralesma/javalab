@@ -1,6 +1,42 @@
 'use strict';
 labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($scope, middleService, blockUI) {
 
+    $scope.init = function () {
+        $.ajax({
+            dataType: "json",
+            url: 'rest/process/init',
+            async: false
+        }).success(function (data) {
+
+            $scope.appModel = data;
+            $scope.root = new TreeModel().parse({"id": 0, "children": $scope.appModel.treedata});
+
+            //tree data initialization
+            $scope.treedata = $scope.appModel.treedata;
+            $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
+            $scope.selected = $scope.treedata[0].children[0].children[0];
+
+            //AutoCompletion
+            $scope.javaClasses = [
+                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
+                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
+            ];
+
+            (function initializeCodeEditor() {
+                const CRIMSON_THEME = "ace/theme/crimson_editor";
+                const JAVA_MODE = "ace/mode/java";
+
+                $scope.codeEditor = ace.edit("code-editor");
+                $scope.codeEditor.$blockScrolling = Infinity;
+                $scope.codeEditor.setTheme(CRIMSON_THEME);
+                $scope.codeEditor.getSession().setMode(JAVA_MODE);
+                $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
+            }());
+
+        });
+    };
+    $scope.init();
+
     $scope.formatCode = function () {
 
         function formatCodeFor(editor) {
@@ -223,11 +259,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($
             return (node1 === node2) && (angular.equals(node1, node2));
         }
     };
-
-    //tree data initialization //TODO:NOT WORKING!!!
-    $scope.treedata = $scope.appModel.treedata;
-    $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
-    $scope.selected = $scope.treedata[0].children[0].children[0];
 
     /**
      * Autocompletion
