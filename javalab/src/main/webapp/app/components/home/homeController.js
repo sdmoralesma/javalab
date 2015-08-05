@@ -84,6 +84,13 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($
         blockUI.stop();
     };
 
+    $scope.save = function () {
+        alert("saved!");
+    };
+
+    $scope.new = function () {
+        alert("new");
+    };
 
     /**
      * Tree manager
