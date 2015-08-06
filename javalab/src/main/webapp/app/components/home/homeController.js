@@ -85,11 +85,15 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($
     };
 
     $scope.save = function () {
-        alert("saved!");
+        blockUI.start();
+        $scope.appModel.console = middleService.saveWorkspace($scope.appModel);
+        blockUI.stop();
     };
 
     $scope.new = function () {
-        alert("new");
+        blockUI.start();
+        $scope.appModel.console = middleService.newWorkspace($scope.appModel);
+        blockUI.stop();
     };
 
     /**
