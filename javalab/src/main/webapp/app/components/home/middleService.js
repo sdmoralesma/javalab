@@ -26,8 +26,8 @@ labApp.factory('middleService', ['$http', function ($http) {
         },
 
         saveWorkspace: function (model) {
-            const RUN_TESTS_SERVICE = ENDPOINT + "/save";
-            $http.post(RUN_TESTS_SERVICE, model, {
+            const SAVE_SERVICE = ENDPOINT + "/save";
+            $http.post(SAVE_SERVICE, model, {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
@@ -37,8 +37,8 @@ labApp.factory('middleService', ['$http', function ($http) {
         },
 
         newWorkspace: function (model) {
-            const RUN_TESTS_SERVICE = ENDPOINT + "/new";
-            $http.post(RUN_TESTS_SERVICE, model, {
+            const NEW_SERVICE = ENDPOINT + "/new";
+            $http.post(NEW_SERVICE, model, {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 model.console = response.data;
