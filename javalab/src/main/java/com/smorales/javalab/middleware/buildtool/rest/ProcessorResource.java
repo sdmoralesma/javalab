@@ -1,6 +1,7 @@
 package com.smorales.javalab.middleware.buildtool.rest;
 
 import com.smorales.javalab.middleware.buildtool.boundary.BuildTool;
+import com.smorales.javalab.middleware.buildtool.entity.Workspace;
 
 import javax.ejb.Stateless;
 import javax.json.Json;
@@ -59,7 +60,11 @@ public class ProcessorResource {
     public Response save(Request req) {
 //        BuildTool buildTool = BuildTool.get(BuildTool.Type.JAVAC, req.getTreedata(), req.getLibraries(), req.getRunnableNode());
 //        String out = buildTool.testCode();
-        String out = "saved!";
+        Workspace workspace = new Workspace();
+        workspace.setJsonWorkspace("a new document");
+        workspace.setId(null);
+        em.persist(workspace);
+        String out = workspace.getJsonWorkspace() + "saved!";
         return Response.ok().entity(out).build();
     }
 
