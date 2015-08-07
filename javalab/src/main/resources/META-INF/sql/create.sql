@@ -1,4 +1,1 @@
-CREATE TABLE workspace (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  json_workspace TEXT NOT NULL
-);
+CREATE TABLE workspace (id BIGINT AUTO_INCREMENT, json_workspace TEXT NOT NULL, PRIMARY KEY (id));
