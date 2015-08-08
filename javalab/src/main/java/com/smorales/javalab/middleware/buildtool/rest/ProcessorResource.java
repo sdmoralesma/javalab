@@ -51,7 +51,7 @@ public class ProcessorResource {
         try {
             workspace = query.getSingleResult();
         } catch (NoResultException ex) {
-            return Response.ok().entity("No workspace found").build();
+            return Response.ok().entity("Exists more than 1 workspace with the same base62 id").build();
         }
 
         JsonObject jsonObject = Json.createReader(new StringReader(workspace.getWorkspace())).readObject();
