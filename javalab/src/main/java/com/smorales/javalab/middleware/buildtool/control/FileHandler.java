@@ -1,5 +1,7 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.buildtool.control;
 
+import com.smorales.javalab.middleware.buildtool.boundary.LabPaths;
+import com.smorales.javalab.middleware.buildtool.boundary.NotRunnableCodeException;
 import com.smorales.javalab.middleware.buildtool.entity.TreeData;
 
 import java.io.IOException;
@@ -8,9 +10,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.UUID;
 
-class FileHandler {
+public class FileHandler {
 
-    static Path createTempDir() {
+    public static Path createTempDir() {
         try {
             Path tempDir = Paths.get(LabPaths.HOME.getPathAsString(), FileHandler.generateUUID(), "/");
             System.out.println("Created temp dir: " + tempDir);
@@ -24,7 +26,7 @@ class FileHandler {
         return UUID.randomUUID().toString();
     }
 
-    static void createFileTree(Path parentPath, List<TreeData> treedata, List<Path> sourceFilesCollector) {
+    public static void createFileTree(Path parentPath, List<TreeData> treedata, List<Path> sourceFilesCollector) {
 
         for (TreeData node : treedata) {
             if (node.getType().equals("file")) {
@@ -73,7 +75,7 @@ class FileHandler {
         }
     }
 
-    static void removeDir(Path file) {
+    public static void removeDir(Path file) {
         if (file == null) {
             return;
         }
