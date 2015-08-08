@@ -18,6 +18,7 @@ public class Base62Test {
         for (int i = 0; i <= 9; i++) {
             sb.append(i);
         }
+
         assertThat(Base62.ALPHABET).isEqualTo(sb.toString());
     }
 
@@ -31,6 +32,7 @@ public class Base62Test {
         n += Base62.ALPHABET.indexOf(chars[2]) * (int) Math.pow(62, 2);
         n += Base62.ALPHABET.indexOf(chars[3]) * (int) Math.pow(62, 1);
         n += Base62.ALPHABET.indexOf(chars[4]) * (int) Math.pow(62, 0);
+
         assertThat(Base62.fromBase10(n)).isEqualTo(str);
     }
 
@@ -41,6 +43,8 @@ public class Base62Test {
 
     @Test
     public void testIntegerWithOffsetFromInt() throws Exception {
-        assertThat(Base62.fromBase10WithOffset(1, 1000000)).isEqualTo("emjd");
+        int offset = 1000000;
+
+        assertThat(Base62.fromBase10WithOffset(1, offset)).isEqualTo("emjd");
     }
 }
