@@ -56,15 +56,13 @@ public class ProcessorResource {
     @POST
     @Path("/save")
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(Request req) {
-//        BuildTool buildTool = BuildTool.get(BuildTool.Type.JAVAC, req.getTreedata(), req.getLibraries(), req.getRunnableNode());
-//        String out = buildTool.testCode();
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response save(String data) {
         Workspace workspace = new Workspace();
-        workspace.setJsonWorkspace("a new document");
         workspace.setId(null);
+        workspace.setJsonWorkspace(data);
         em.persist(workspace);
-        String out = workspace.getJsonWorkspace() + "saved!";
+        String out = "workspace saved!";
         return Response.ok().entity(out).build();
     }
 

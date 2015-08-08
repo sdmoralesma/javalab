@@ -28,7 +28,7 @@ labApp.factory('middleService', ['$http', function ($http) {
         saveWorkspace: function (model) {
             const SAVE_SERVICE = ENDPOINT + "/save";
             $http.post(SAVE_SERVICE, model, {
-                headers: {'Content-Type': 'application/json'}
+                headers: {'Content-Type': 'text/plain'}
             }).then(function (response) {
                 model.console = response.data;
             }, function error(failure) {
