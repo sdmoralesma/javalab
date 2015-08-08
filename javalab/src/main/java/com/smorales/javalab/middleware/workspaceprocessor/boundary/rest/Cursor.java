@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool.rest;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary.rest;
 
 public class Cursor {
 

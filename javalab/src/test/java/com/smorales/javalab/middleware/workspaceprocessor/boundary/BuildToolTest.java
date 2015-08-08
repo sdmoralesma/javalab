@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
 import org.junit.Before;
 import org.junit.Test;

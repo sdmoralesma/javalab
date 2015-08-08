@@ -1,6 +1,6 @@
-package com.smorales.javalab.middleware.buildtool.rest;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary.rest;
 
-import com.smorales.javalab.middleware.buildtool.boundary.WorkspaceProcessor;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.WorkspaceProcessor;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

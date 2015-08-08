@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool.entity;
+package com.smorales.javalab.middleware.workspaceprocessor.entity;
 
 public class Library {
 

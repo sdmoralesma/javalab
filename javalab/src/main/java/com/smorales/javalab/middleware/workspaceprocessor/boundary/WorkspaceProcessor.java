@@ -1,8 +1,8 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
-import com.smorales.javalab.middleware.buildtool.control.Base62;
-import com.smorales.javalab.middleware.buildtool.entity.Workspace;
-import com.smorales.javalab.middleware.buildtool.rest.Request;
+import com.smorales.javalab.middleware.workspaceprocessor.control.Base62;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.Workspace;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.Request;
 
 import javax.ejb.Stateless;
 import javax.json.Json;

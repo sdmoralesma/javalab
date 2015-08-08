@@ -1,6 +1,6 @@
-package com.smorales.javalab.middleware.buildtool.entity;
+package com.smorales.javalab.middleware.workspaceprocessor.entity;
 
-import com.smorales.javalab.middleware.buildtool.rest.Cursor;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.Cursor;
 
 import java.util.List;
 

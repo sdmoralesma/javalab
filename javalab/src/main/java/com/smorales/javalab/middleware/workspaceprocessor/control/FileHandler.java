@@ -1,8 +1,8 @@
-package com.smorales.javalab.middleware.buildtool.control;
+package com.smorales.javalab.middleware.workspaceprocessor.control;
 
-import com.smorales.javalab.middleware.buildtool.boundary.LabPaths;
-import com.smorales.javalab.middleware.buildtool.boundary.NotRunnableCodeException;
-import com.smorales.javalab.middleware.buildtool.entity.TreeData;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.LabPaths;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
 
 import java.io.IOException;
 import java.nio.file.*;

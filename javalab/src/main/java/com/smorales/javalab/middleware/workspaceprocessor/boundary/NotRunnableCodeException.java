@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
 public class NotRunnableCodeException extends RuntimeException {
 

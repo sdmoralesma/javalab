@@ -1,7 +1,7 @@
-package com.smorales.javalab.middleware.buildtool.rest;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary.rest;
 
-import com.smorales.javalab.middleware.buildtool.entity.Library;
-import com.smorales.javalab.middleware.buildtool.entity.TreeData;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.Library;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.buildtool.control;
+package com.smorales.javalab.middleware.workspaceprocessor.control;
 
 import org.junit.Test;
 

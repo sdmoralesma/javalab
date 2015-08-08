@@ -1,6 +1,6 @@
-package com.smorales.javalab.middleware.buildtool.control;
+package com.smorales.javalab.middleware.workspaceprocessor.control;
 
-import com.smorales.javalab.middleware.buildtool.boundary.NotRunnableCodeException;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.NotRunnableCodeException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

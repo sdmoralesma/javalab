@@ -1,8 +1,8 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
-import com.smorales.javalab.middleware.buildtool.entity.Library;
-import com.smorales.javalab.middleware.buildtool.entity.TreeData;
-import com.smorales.javalab.middleware.buildtool.rest.RunnableNode;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.Library;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.RunnableNode;
 
 import java.io.IOException;
 import java.nio.file.Files;

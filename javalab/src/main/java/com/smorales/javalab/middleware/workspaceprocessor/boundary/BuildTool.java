@@ -1,10 +1,10 @@
-package com.smorales.javalab.middleware.buildtool.boundary;
+package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
-import com.smorales.javalab.middleware.buildtool.control.Executor;
-import com.smorales.javalab.middleware.buildtool.control.FileHandler;
-import com.smorales.javalab.middleware.buildtool.entity.Library;
-import com.smorales.javalab.middleware.buildtool.entity.TreeData;
-import com.smorales.javalab.middleware.buildtool.rest.RunnableNode;
+import com.smorales.javalab.middleware.workspaceprocessor.control.Executor;
+import com.smorales.javalab.middleware.workspaceprocessor.control.FileHandler;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.Library;
+import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.RunnableNode;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
