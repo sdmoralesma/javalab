@@ -42,9 +42,16 @@ public class Base62Test {
     }
 
     @Test
-    public void testIntegerWithOffsetFromInt() throws Exception {
+    public void shoulConvertToBase62WithOffset() throws Exception {
+        int toConvert = 1;
         int offset = 1000000;
+        assertThat(Base62.fromBase10WithOffset(toConvert, offset)).isEqualTo("emjd");
+    }
 
-        assertThat(Base62.fromBase10WithOffset(1, offset)).isEqualTo("emjd");
+    @Test
+    public void shoulConvertToBase10WithOffset() throws Exception {
+        String toConvert = "emjd";
+        int offset = 1000000;
+        assertThat(Base62.toBase10WithOffset(toConvert, offset)).isEqualTo(1);
     }
 }
