@@ -1,10 +1,18 @@
 package com.smorales.javalab.middleware.workspaceprocessor.control;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Base62Test {
+
+    private Base62 sut;
+
+    @Before
+    public void setUp() {
+        sut = new Base62();
+    }
 
     @Test
     public void testCharList() throws Exception {
@@ -33,25 +41,25 @@ public class Base62Test {
         n += Base62.ALPHABET.indexOf(chars[3]) * (int) Math.pow(62, 1);
         n += Base62.ALPHABET.indexOf(chars[4]) * (int) Math.pow(62, 0);
 
-        assertThat(Base62.fromBase10(n)).isEqualTo(str);
+        assertThat(sut.fromBase10(n)).isEqualTo(str);
     }
 
     @Test
     public void testIntegerFromString() throws Exception {
-        assertThat(Base62.toBase10("cb")).isEqualTo(125);
+        assertThat(sut.toBase10("cb")).isEqualTo(125);
     }
 
     @Test
     public void shoulConvertToBase62WithOffset() throws Exception {
         int toConvert = 1;
         int offset = 1000000;
-        assertThat(Base62.fromBase10WithOffset(toConvert, offset)).isEqualTo("emjd");
+        assertThat(sut.fromBase10WithOffset(toConvert, offset)).isEqualTo("emjd");
     }
 
     @Test
     public void shoulConvertToBase10WithOffset() throws Exception {
         String toConvert = "emjd";
         int offset = 1000000;
-        assertThat(Base62.toBase10WithOffset(toConvert, offset)).isEqualTo(1);
+        assertThat(sut.toBase10WithOffset(toConvert, offset)).isEqualTo(1);
     }
 }

@@ -9,14 +9,11 @@ public class Base62 {
 
     private static final int BASE = ALPHABET.length();
 
-    private Base62() {
-    }
-
-    public static String fromBase10WithOffset(int i, int offset) {
+    public String fromBase10WithOffset(int i, int offset) {
         return fromBase10(i + offset);
     }
 
-    public static String fromBase10(int i) {
+    public String fromBase10(int i) {
         StringBuilder sb = new StringBuilder("");
         while (i > 0) {
             i = fromBase10(i, sb);
@@ -24,21 +21,21 @@ public class Base62 {
         return sb.reverse().toString();
     }
 
-    private static int fromBase10(int i, final StringBuilder sb) {
+    private int fromBase10(int i, final StringBuilder sb) {
         int rem = i % BASE;
         sb.append(ALPHABET.charAt(rem));
         return i / BASE;
     }
 
-    public static int toBase10WithOffset(String str, int offsetBase10) {
+    public int toBase10WithOffset(String str, int offsetBase10) {
         return toBase10(new StringBuilder(str).reverse().toString().toCharArray()) - offsetBase10;
     }
 
-    public static int toBase10(String str) {
+    public int toBase10(String str) {
         return toBase10(new StringBuilder(str).reverse().toString().toCharArray());
     }
 
-    private static int toBase10(char[] chars) {
+    private int toBase10(char[] chars) {
         int n = 0;
         for (int i = chars.length - 1; i >= 0; i--) {
             n += toBase10(ALPHABET.indexOf(chars[i]), i);
@@ -46,7 +43,7 @@ public class Base62 {
         return n;
     }
 
-    private static int toBase10(int n, int pow) {
+    private int toBase10(int n, int pow) {
         return n * (int) Math.pow(BASE, pow);
     }
 }

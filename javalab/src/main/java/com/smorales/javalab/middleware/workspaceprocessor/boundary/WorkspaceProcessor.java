@@ -1,10 +1,11 @@
 package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.middleware.workspaceprocessor.control.Base62;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.Workspace;
-import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.Request;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
@@ -20,6 +21,9 @@ public class WorkspaceProcessor {
 
     @PersistenceContext
     EntityManager em;
+
+    @Inject
+    Base62 base62;
 
     public JsonObject initialize() {
         Workspace workspace = em.createNamedQuery("Workspace.findFirstRow", Workspace.class)
@@ -69,7 +73,7 @@ public class WorkspaceProcessor {
                 .setMaxResults(1)
                 .getResultList()
                 .get(0);
-        return Base62.fromBase10WithOffset(lastId + 1, OFFSET);
+        return base62.fromBase10WithOffset(lastId + 1, OFFSET);
     }
 
     public String newWorkspace(Request req) {

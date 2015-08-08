@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BuildToolTest {
+public class WorkspaceProcessorTest {
 
-    private BuildTool sut;
+    private WorkspaceProcessor sut;
 
     @Before
     public void setUp() {
-        sut = BuildTool.get(BuildTool.Type.JAVAC, null, null, null);
+        sut = new WorkspaceProcessor();
     }
 
     @Test
