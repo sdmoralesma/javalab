@@ -95,8 +95,10 @@ public class ProcessorResource {
     }
 
     private String generateBase62Number() {
-        TypedQuery<Integer> query = em.createNamedQuery("Workspace.findIdLastRow", Integer.class);
-        int lastId = query.getSingleResult();
+        int lastId = em.createNamedQuery("Workspace.findIdLastRow", Integer.class)
+                .setMaxResults(1)
+                .getResultList()
+                .get(0);
         return Base62.fromBase10WithOffset(lastId + 1, OFFSET);
     }
 
