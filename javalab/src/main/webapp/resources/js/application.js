@@ -270,7 +270,7 @@ labApp.controller("mainCtrl", function ($scope, MiddlewareClient, blockUI) {
 
         $scope.selected = $scope.treedata[0];//root selected
 
-        if (nodeName.indexOf(".java") > -1) {
+        if (nodeFound.model.name.indexOf(".java") > -1) {
             var classesArray = $scope.javaClasses;
             for (var index = 0; index < classesArray.length; ++index) {
                 if (classesArray[index].id == nodeFound.model.id) {
