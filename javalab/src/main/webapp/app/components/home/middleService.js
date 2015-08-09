@@ -8,7 +8,7 @@ labApp.factory('middleService', ['$http', function ($http) {
             $http.post(RUN_CODE_SERVICE, model, {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                model.console = response.data;
+                model.console = response.data.output;
             }, function error(failure) {
                 alert('error code: ' + failure.status);
             });
@@ -19,7 +19,7 @@ labApp.factory('middleService', ['$http', function ($http) {
             $http.post(RUN_TESTS_SERVICE, model, {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                model.console = response.data;
+                model.console = response.data.output;
             }, function error(failure) {
                 alert('error code: ' + failure.status);
             });
@@ -28,9 +28,9 @@ labApp.factory('middleService', ['$http', function ($http) {
         saveWorkspace: function (model) {
             const SAVE_SERVICE = ENDPOINT + "/save";
             $http.post(SAVE_SERVICE, model, {
-                headers: {'Content-Type': 'text/plain'}
+                headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                model.console = response.data;
+                model.console = response.data.output;
             }, function error(failure) {
                 alert('error code: ' + failure.status);
             });
@@ -41,7 +41,7 @@ labApp.factory('middleService', ['$http', function ($http) {
             $http.post(NEW_SERVICE, model, {
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                model.console = response.data;
+                model.console = response.data.output;
             }, function error(failure) {
                 alert('error code: ' + failure.status);
             });

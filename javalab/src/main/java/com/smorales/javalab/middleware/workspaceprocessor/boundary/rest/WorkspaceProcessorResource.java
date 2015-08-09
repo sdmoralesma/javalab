@@ -4,13 +4,15 @@ import com.smorales.javalab.middleware.workspaceprocessor.boundary.WorkspaceProc
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Stateless
-@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 @Path("/process")
 public class WorkspaceProcessorResource {
 
@@ -32,26 +34,34 @@ public class WorkspaceProcessorResource {
     @POST
     @Path("/run")
     public Response runCode(Request req) {
-        return Response.ok().entity(workspaceProcessor.runCode(req)).build();
+        String result = workspaceProcessor.runCode(req);
+        JsonObject jsonObject = Json.createObjectBuilder().add("output", result).build();
+        return Response.ok().entity(jsonObject).build();
     }
 
 
     @POST
     @Path("/tests")
     public Response runTests(Request req) {
-        return Response.ok().entity(workspaceProcessor.runTests(req)).build();
+        String result = workspaceProcessor.runTests(req);
+        JsonObject output = Json.createObjectBuilder().add("output", result).build();
+        return Response.ok().entity(output).build();
     }
 
     @POST
     @Path("/save")
     public Response save(String data) {
-        return Response.ok().entity(workspaceProcessor.save(data)).build();
+        String result = workspaceProcessor.save(data);
+        JsonObject output = Json.createObjectBuilder().add("output", result).build();
+        return Response.ok().entity(output).build();
     }
 
     @POST
     @Path("/new")
     public Response newWorkspace(Request req) {
-        return Response.ok().entity(workspaceProcessor.newWorkspace(req)).build();
+        String result = workspaceProcessor.newWorkspace(req);
+        JsonObject output = Json.createObjectBuilder().add("output", result).build();
+        return Response.ok().entity(output).build();
     }
 
 }
