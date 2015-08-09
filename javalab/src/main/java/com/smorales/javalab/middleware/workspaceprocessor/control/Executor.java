@@ -9,29 +9,25 @@ import java.io.InputStreamReader;
 
 public class Executor {
 
-    public static String execCommand(String command) {
-        try {
-            Process p = Runtime.getRuntime().exec(command);
-            int status = p.waitFor();
+    public static final int OK = 0;
 
-            String procError = getStreamAsString(p.getErrorStream());
-            if (!procError.equals("")) {
+    public String execCommand(String command) {
+        try {
+            Process proc = Runtime.getRuntime().exec(command);
+            int status = proc.waitFor();
+            if (status == OK) {
+                return getStreamAsString(proc.getInputStream());
+            } else {
+                String procError = getStreamAsString(proc.getErrorStream());
                 throw new NotRunnableCodeException(procError);
             }
-
-            String procOut = getStreamAsString(p.getInputStream());
-            if (!procOut.equals("")) {
-                return procOut;
-            }
-
-            return "";
         } catch (InterruptedException | IOException e) {
             throw new NotRunnableCodeException(e);
         }
     }
 
-    private static String getStreamAsString(InputStream p) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(p));
+    private String getStreamAsString(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {

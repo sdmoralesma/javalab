@@ -77,7 +77,6 @@ class Javac extends BuildTool {
     }
 
     private String getMainClass(Path tempDir, List<Path> classFiles) {
-
         StringBuilder builder = new StringBuilder();
         for (Path file : classFiles) {
             String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
@@ -90,7 +89,6 @@ class Javac extends BuildTool {
     }
 
     private String getTestClass(Path tempDir, List<Path> classFiles) {
-
         StringBuilder builder = new StringBuilder();
         for (Path file : classFiles) {
             String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
@@ -99,7 +97,6 @@ class Javac extends BuildTool {
             String javaClass = removedExtension.replaceAll("/", "\\.");
             builder.append(javaClass).append(" ");
         }
-
         return builder.toString();
     }
 }

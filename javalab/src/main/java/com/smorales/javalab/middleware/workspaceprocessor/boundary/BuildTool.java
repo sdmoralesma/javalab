@@ -6,12 +6,16 @@ import com.smorales.javalab.middleware.workspaceprocessor.control.FileHandler;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.Library;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
 
+import javax.inject.Inject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BuildTool {
+
+    @Inject
+    Executor executor;
 
     protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
 
@@ -91,19 +95,19 @@ public abstract class BuildTool {
     private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
         String command = buildCompileCommand(tempDir, files, libraries);
         System.out.println("Compiling with cmd: " + command);
-        return Executor.execCommand(command);
+        return executor.execCommand(command);
     }
 
     private String runProject(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries) {
         String command = buildRunCommand(tempDir, files, mainClass, libraries);
         System.out.println("Running with cmd: " + command);
-        return Executor.execCommand(command);
+        return executor.execCommand(command);
     }
 
     private String testProject(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries) {
         String command = buildTestCommand(tempDir, files, testClass, libraries);
         System.out.println("Testing with cmd: " + command);
-        return Executor.execCommand(command);
+        return executor.execCommand(command);
     }
 
 }

@@ -1,0 +1,81 @@
+package com.smorales.javalab.middleware.workspaceprocessor.control;
+
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.NotRunnableCodeException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.assertj.core.api.StrictAssertions.assertThat;
+import static org.assertj.core.api.StrictAssertions.assertThatThrownBy;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Executor.class)
+public class ExecutorTest {
+
+    public static final String ALL_OK = "all ok\n";
+    public static final String UNEXPECTED_ERROR = "unexpected error\n";
+
+    private Executor sut;
+
+    @Before
+    public void setUp() {
+        sut = new Executor();
+    }
+
+    @Test
+    public void shouldRunCodeOk() throws Exception {
+        String cmd = "validCommand";
+        Process process = mock(Process.class);
+        mockStatic(Runtime.class);
+        when(Runtime.getRuntime().exec(cmd)).thenReturn(process);
+        int ok = 0;
+        when(process.waitFor()).thenReturn(ok);
+        when(process.getInputStream()).thenReturn(createAllOkInputStream());
+
+        String result = sut.execCommand(cmd);
+
+        assertThat(result).isEqualTo(ALL_OK);
+    }
+
+    private InputStream createAllOkInputStream() {
+        byte[] data = ALL_OK.getBytes();
+        return new ByteArrayInputStream(data);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenRunCodeStatusIsNotZero() throws Exception {
+        String cmd = "validCommand";
+        Process process = mock(Process.class);
+        mockStatic(Runtime.class);
+        when(Runtime.getRuntime().exec(cmd)).thenReturn(process);
+        int notOk = 1;
+        when(process.waitFor()).thenReturn(notOk);
+        when(process.getErrorStream()).thenReturn(createErrorStream());
+
+        assertThatThrownBy(() -> sut.execCommand(cmd)).isInstanceOf(NotRunnableCodeException.class)
+                .hasMessage(UNEXPECTED_ERROR);
+    }
+
+    private InputStream createErrorStream() {
+        byte[] data = UNEXPECTED_ERROR.getBytes();
+        return new ByteArrayInputStream(data);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenRunCodeThrowsIOException() throws Exception {
+        mockStatic(Runtime.class);
+        when(Runtime.getRuntime().exec(anyString())).thenThrow(IOException.class);
+
+        assertThatThrownBy(() -> sut.execCommand("cmd")).isInstanceOf(NotRunnableCodeException.class);
+    }
+}
