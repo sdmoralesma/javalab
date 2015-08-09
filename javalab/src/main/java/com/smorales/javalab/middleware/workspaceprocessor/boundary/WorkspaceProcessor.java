@@ -23,6 +23,9 @@ public class WorkspaceProcessor {
     @Inject
     Base62 base62;
 
+    @Inject
+    BuildTool buildTool;
+
     public JsonObject initialize() {
         Workspace workspace = em.createNamedQuery(Workspace.findFirstRow, Workspace.class)
                 .setMaxResults(1)
@@ -41,12 +44,12 @@ public class WorkspaceProcessor {
     }
 
     public String runCode(Request req) {
-        BuildTool buildTool = BuildTool.get(BuildTool.Type.JAVAC, req.getTreedata(), req.getLibraries(), req.getRunnableNode());
+        BuildTool buildTool = BuildTool.get(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
         return buildTool.runCode();
     }
 
     public String runTests(Request req) {
-        BuildTool buildTool = BuildTool.get(BuildTool.Type.JAVAC, req.getTreedata(), req.getLibraries(), req.getRunnableNode());
+        BuildTool buildTool = BuildTool.get(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
         return buildTool.testCode();
     }
 

@@ -1,10 +1,10 @@
 package com.smorales.javalab.middleware.workspaceprocessor.boundary;
 
+import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.middleware.workspaceprocessor.control.Executor;
 import com.smorales.javalab.middleware.workspaceprocessor.control.FileHandler;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.Library;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
-import com.smorales.javalab.middleware.workspaceprocessor.boundary.rest.RunnableNode;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BuildTool {
-
-    public enum Type {
-        JAVAC
-    }
 
     protected final List<TreeData> treedata;
     protected final List<Library> libraries;
@@ -32,13 +28,8 @@ public abstract class BuildTool {
         this.testclass = new ArrayList<>();
     }
 
-    public static BuildTool get(Type type, List<TreeData> treedata, List<Library> libraries, RunnableNode runnableNode) {
-        switch (type) {
-            case JAVAC:
-                return new JavaC(treedata, libraries, runnableNode);
-            default:
-                throw new IllegalArgumentException("Type not supported: " + type);
-        }
+    public static BuildTool get(List<TreeData> treedata, List<Library> libraries, RunnableNode runnableNode) {
+        return new JavaC(treedata, libraries, runnableNode);
     }
 
     // implements template method pattern
