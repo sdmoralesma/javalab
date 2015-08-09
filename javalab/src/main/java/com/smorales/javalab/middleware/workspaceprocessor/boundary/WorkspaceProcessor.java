@@ -9,15 +9,13 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.io.StringReader;
 
 @Stateless
 public class WorkspaceProcessor {
 
-    public static final int OFFSET = 1000000;
+    private static final int OFFSET = 1000000;
 
     @PersistenceContext
     EntityManager em;
@@ -26,7 +24,7 @@ public class WorkspaceProcessor {
     Base62 base62;
 
     public JsonObject initialize() {
-        Workspace workspace = em.createNamedQuery("Workspace.findFirstRow", Workspace.class)
+        Workspace workspace = em.createNamedQuery(Workspace.findFirstRow, Workspace.class)
                 .setMaxResults(1)
                 .getResultList()
                 .get(0);
@@ -35,15 +33,9 @@ public class WorkspaceProcessor {
     }
 
     public JsonObject getByBase62(String base62) {
-        TypedQuery<Workspace> query = em.createNamedQuery("Workspace.findByBase62", Workspace.class);
-        query.setParameter("base62", base62);
-        Workspace workspace;
-
-        try {
-            workspace = query.getSingleResult();
-        } catch (NoResultException ex) {
-            throw new IllegalStateException("Exists more than 1 workspace with the same base62 id");
-        }
+        Workspace workspace = em.createNamedQuery(Workspace.findByBase62, Workspace.class)
+                .setParameter("base62", base62)
+                .getSingleResult();
 
         return Json.createReader(new StringReader(workspace.getWorkspace())).readObject();
     }
@@ -64,12 +56,11 @@ public class WorkspaceProcessor {
         workspace.setWorkspace(data);
         workspace.setBase62(generateBase62Number());
         em.persist(workspace);
-
-        return "Workspace saved: http://javalab.co/" + workspace.getBase62();
+        return workspace.getBase62();
     }
 
     private String generateBase62Number() {
-        int lastId = em.createNamedQuery("Workspace.findIdLastRow", Integer.class)
+        int lastId = em.createNamedQuery(Workspace.findIdLastRow, Integer.class)
                 .setMaxResults(1)
                 .getResultList()
                 .get(0);
