@@ -21,6 +21,7 @@ public class WorkspaceProcessorTest {
         sut = new WorkspaceProcessor();
         sut.em = mock(EntityManager.class, RETURNS_DEEP_STUBS);
         sut.base62 = mock(Base62.class);
+        sut.buildTool = mock(BuildTool.class);
     }
 
     @Test
@@ -45,19 +46,25 @@ public class WorkspaceProcessorTest {
     @Test
     public void shouldRunCodeOk() {
         Request req = getValidRequest();
+        String okMessage = "ok run message";
 
+        when(sut.buildTool.runCode(any(BuildToolData.class))).thenReturn(okMessage);
 
         String result = sut.runCode(req);
-        assertThat(result).isNotNull();
+        assertThat(result).isNotNull().isEqualTo(okMessage);
+        verify(sut.buildTool).runCode(any());
     }
 
     @Test
     public void shouldRunTestsOk() {
         Request req = getValidRequest();
+        String okMessage = "ok test message";
 
+        when(sut.buildTool.testCode(any(BuildToolData.class))).thenReturn(okMessage);
 
         String result = sut.runTests(req);
-        assertThat(result).isNotNull();
+        assertThat(result).isNotNull().isEqualTo(okMessage);
+        verify(sut.buildTool).testCode(any());
     }
 
     @Test
@@ -70,7 +77,7 @@ public class WorkspaceProcessorTest {
 
         String result = sut.save(validWorkspace.getWorkspace());
         assertThat(result).isNotNull().isEqualTo("emji");
-        verify(sut.em, times(1)).persist(any(Workspace.class));
+        verify(sut.em).persist(any(Workspace.class));
     }
 
     @Test

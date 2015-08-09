@@ -11,7 +11,7 @@ public class BuildToolTest {
 
     @Before
     public void setUp() {
-        sut = BuildTool.get(BuildTool.Type.JAVAC, null, null, null);
+        sut = new JavaC();
     }
 
     @Test
