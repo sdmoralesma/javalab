@@ -13,6 +13,12 @@ import java.util.List;
 
 public abstract class BuildTool {
 
+    protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
+
+    protected abstract String buildRunCommand(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries);
+
+    protected abstract String buildTestCommand(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries);
+
     // implements template method pattern
     public String runCode(BuildToolData data) {
         List<TreeData> treedata = data.getTreedata();
@@ -81,12 +87,6 @@ public abstract class BuildTool {
             }
         }
     }
-
-    protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
-
-    protected abstract String buildRunCommand(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries);
-
-    protected abstract String buildTestCommand(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries);
 
     private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
         String command = buildCompileCommand(tempDir, files, libraries);

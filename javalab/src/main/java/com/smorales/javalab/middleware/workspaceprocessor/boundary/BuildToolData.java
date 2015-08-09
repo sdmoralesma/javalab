@@ -43,15 +43,8 @@ public class BuildToolData {
         return mainclass;
     }
 
-    public void setMainclass(List<Path> mainclass) {
-        this.mainclass = mainclass;
-    }
-
     public List<Path> getTestclass() {
         return testclass;
     }
 
-    public void setTestclass(List<Path> testclass) {
-        this.testclass = testclass;
-    }
 }

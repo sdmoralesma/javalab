@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BuildToolTest {
+public class JavacTest {
 
     private BuildTool sut;
 
     @Before
     public void setUp() {
-        sut = new JavaC();
+        sut = new Javac();
     }
 
     @Test

@@ -8,11 +8,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-class JavaC extends BuildTool {
+class Javac extends BuildTool {
 
     private static final String JAVAC_EXEC = "javac";
     private static final String JAVA_EXEC = "java";
     private static final String JAVA_EXTENSION = ".java";
+
+    private static final String SRC_MAIN_JAVA = "src/main/java/";
+    private static final String SRC_TEST_JAVA = "src/test/java/";
 
     @Override
     protected String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries) {
@@ -57,13 +60,9 @@ class JavaC extends BuildTool {
 
     private String filesToCompileAsString(List<Path> files) {
         StringBuilder builder = new StringBuilder();
-        for (Path path : files) {
-            if (path.getFileName().toString().contains(JAVA_EXTENSION)) {
-                builder.append(path.toAbsolutePath().toString())
-                        .append(" ");
-            }
-        }
-
+        files.stream()
+                .filter(path -> path.getFileName().toString().contains(JAVA_EXTENSION))
+                .forEach(path -> builder.append(path.toAbsolutePath().toString()).append(" "));
         return builder.toString();
     }
 
@@ -82,9 +81,9 @@ class JavaC extends BuildTool {
         StringBuilder builder = new StringBuilder();
         for (Path file : classFiles) {
             String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
-            relativePath = relativePath.replaceAll("src/main/java/", "");
+            relativePath = relativePath.replaceAll(SRC_MAIN_JAVA, "");
             String removedExtension = relativePath.replaceAll(JAVA_EXTENSION, "");
-            String javaClass = removedExtension.replaceAll("\\/", "\\.");
+            String javaClass = removedExtension.replaceAll("/", "\\.");
             builder.append(javaClass).append(" ");
         }
         return builder.toString();
@@ -95,9 +94,9 @@ class JavaC extends BuildTool {
         StringBuilder builder = new StringBuilder();
         for (Path file : classFiles) {
             String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
-            relativePath = relativePath.replaceAll("src/test/java/", "");
+            relativePath = relativePath.replaceAll(SRC_TEST_JAVA, "");
             String removedExtension = relativePath.replaceAll(JAVA_EXTENSION, "");
-            String javaClass = removedExtension.replaceAll("\\/", "\\.");
+            String javaClass = removedExtension.replaceAll("/", "\\.");
             builder.append(javaClass).append(" ");
         }
 
