@@ -1,4 +1,4 @@
-package com.smorales.javalab.middleware.config;
+package com.smorales.javalab.middleware;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
