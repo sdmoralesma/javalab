@@ -4,5 +4,5 @@ before_install:
 jdk:
   - oraclejdk8
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t 005409da-dd1b-4d8d-b096-8cc89758f02a
 
