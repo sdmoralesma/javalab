@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 public class Executor {
 
@@ -28,12 +29,7 @@ public class Executor {
 
     private String getStreamAsString(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder builder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line).append("\n");
-        }
-        return builder.toString();
+        return reader.lines().collect(Collectors.joining("\n"));
     }
 
 }

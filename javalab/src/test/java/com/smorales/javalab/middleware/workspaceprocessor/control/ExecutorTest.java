@@ -22,8 +22,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(Executor.class)
 public class ExecutorTest {
 
-    public static final String ALL_OK = "all ok\n";
-    public static final String UNEXPECTED_ERROR = "unexpected error\n";
+    public static final String ALL_OK = "all ok";
+    public static final String UNEXPECTED_ERROR = "unexpected error";
 
     private Executor sut;
 
