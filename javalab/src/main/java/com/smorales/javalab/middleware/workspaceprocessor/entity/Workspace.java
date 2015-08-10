@@ -7,7 +7,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = Workspace.findFirstRow, query = "select w from Workspace w order by w.id asc"),
         @NamedQuery(name = Workspace.findIdLastRow, query = "select w.id from Workspace w order by w.id desc"),
-        @NamedQuery(name = Workspace.findByBase62, query = "select w from Workspace w where w.base62 = :base62"),
+        @NamedQuery(name = Workspace.findByBase62, query = "select w from Workspace w where w.path = :base62"),
 })
 public class Workspace implements Serializable {
 
@@ -22,18 +22,18 @@ public class Workspace implements Serializable {
     private Integer id;
 
     @Column(name = "base62")
-    private String base62;
+    private String path;
 
     @Column(name = "workspace")
-    private String workspace;
+    private String json;
 
     public Workspace() {
     }
 
-    public Workspace(int id, String base62, String workspace) {
+    public Workspace(int id, String path, String json) {
         this.id = id;
-        this.base62 = base62;
-        this.workspace = workspace;
+        this.path = path;
+        this.json = json;
     }
 
     public Integer getId() {
@@ -44,19 +44,19 @@ public class Workspace implements Serializable {
         this.id = id;
     }
 
-    public String getBase62() {
-        return base62;
+    public String getPath() {
+        return path;
     }
 
-    public void setBase62(String base62) {
-        this.base62 = base62;
+    public void setPath(String base62) {
+        this.path = base62;
     }
 
-    public String getWorkspace() {
-        return workspace;
+    public String getJson() {
+        return json;
     }
 
-    public void setWorkspace(String jsonWorkspace) {
-        this.workspace = jsonWorkspace;
+    public void setJson(String jsonWorkspace) {
+        this.json = jsonWorkspace;
     }
 }

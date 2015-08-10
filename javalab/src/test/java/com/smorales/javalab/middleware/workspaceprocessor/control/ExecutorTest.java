@@ -10,12 +10,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 import static org.assertj.core.api.StrictAssertions.assertThatThrownBy;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -30,6 +30,7 @@ public class ExecutorTest {
     @Before
     public void setUp() {
         sut = new Executor();
+        sut.tracer = mock(Logger.class, RETURNS_DEEP_STUBS);
     }
 
     @Test

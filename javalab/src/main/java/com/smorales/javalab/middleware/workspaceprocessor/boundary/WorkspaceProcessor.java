@@ -32,7 +32,7 @@ public class WorkspaceProcessor {
                 .getResultList()
                 .get(0);
 
-        return Json.createReader(new StringReader(workspace.getWorkspace())).readObject();
+        return Json.createReader(new StringReader(workspace.getJson())).readObject();
     }
 
     public JsonObject getByBase62(String base62) {
@@ -40,7 +40,7 @@ public class WorkspaceProcessor {
                 .setParameter("base62", base62)
                 .getSingleResult();
 
-        return Json.createReader(new StringReader(workspace.getWorkspace())).readObject();
+        return Json.createReader(new StringReader(workspace.getJson())).readObject();
     }
 
     public String runCode(Request req) {
@@ -56,10 +56,10 @@ public class WorkspaceProcessor {
     public String save(String data) {
         Workspace workspace = new Workspace();
         workspace.setId(null);
-        workspace.setWorkspace(data);
-        workspace.setBase62(generateBase62Number());
+        workspace.setJson(data);
+        workspace.setPath(generateBase62Number());
         em.persist(workspace);
-        return workspace.getBase62();
+        return workspace.getPath();
     }
 
     private String generateBase62Number() {
@@ -70,7 +70,7 @@ public class WorkspaceProcessor {
         return base62.fromBase10WithOffset(lastId + 1, OFFSET);
     }
 
-    public String newWorkspace(Request req) {
+    public String newWorkspace() {
         return "new workspace";
     }
 }

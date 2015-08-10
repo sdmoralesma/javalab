@@ -11,11 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class BuildTool {
 
     @Inject
     Executor executor;
+
+    @Inject
+    FileHandler fileHandler;
+
+    @Inject
+    Logger tracer;
 
     protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
 
@@ -25,61 +32,52 @@ public abstract class BuildTool {
 
     // implements template method pattern
     public String runCode(BuildToolData data) {
-        List<TreeData> treedata = data.getTreedata();
-        List<Path> mainclass = data.getMainclass();
-        RunnableNode runnableNode = data.getRunnableNode();
-        List<Path> testclass = data.getTestclass();
-        List<Library> libraries = data.getLibraries();
-
-        Path tempDir = FileHandler.createTempDir();
+        Path tempDir = fileHandler.createTempDir();
         try {
-            final List<Path> filesCollector = new ArrayList<>();
-            FileHandler.createFileTree(tempDir, treedata, filesCollector);
-            compileFiles(tempDir, filesCollector, libraries);
-            getRunnableClass(tempDir, treedata, runnableNode, mainclass, testclass);
-            return runProject(tempDir, filesCollector, mainclass, libraries);
+            final List<Path> filesCollector = getFilesCollector(data, tempDir);
+            return runProject(tempDir, filesCollector, data.getMainclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            FileHandler.removeDir(tempDir);
+            fileHandler.removeDir(tempDir);
         }
     }
 
     // implements template method pattern
     public String testCode(BuildToolData data) {
-        List<TreeData> treedata = data.getTreedata();
-        List<Path> mainclass = data.getMainclass();
-        RunnableNode runnableNode = data.getRunnableNode();
-        List<Path> testclass = data.getTestclass();
-        List<Library> libraries = data.getLibraries();
-
-        Path tempDir = FileHandler.createTempDir();
+        Path tempDir = fileHandler.createTempDir();
         try {
-            final List<Path> filesCollector = new ArrayList<>();
-            FileHandler.createFileTree(tempDir, treedata, filesCollector);
-            compileFiles(tempDir, filesCollector, libraries);
-            getRunnableClass(tempDir, treedata, runnableNode, mainclass, testclass);
-            return testProject(tempDir, filesCollector, testclass, libraries);
+            final List<Path> filesCollector = getFilesCollector(data, tempDir);
+            return testProject(tempDir, filesCollector, data.getTestclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            FileHandler.removeDir(tempDir);
+            fileHandler.removeDir(tempDir);
         }
     }
+
+    private List<Path> getFilesCollector(BuildToolData data, Path tempDir) {
+        final List<Path> filesCollector = new ArrayList<>();
+        fileHandler.createFileTree(tempDir, data.getTreedata(), filesCollector);
+        compileFiles(tempDir, filesCollector, data.getLibraries());
+        getRunnableClass(tempDir, data.getTreedata(), data.getRunnableNode(), data.getMainclass(), data.getTestclass());
+        return filesCollector;
+    }
+
 
     private void getRunnableClass(Path parentPath, List<TreeData> treeDataList, RunnableNode runnableNode, List<Path> mainclass, List<Path> testclass) {
 
         for (TreeData node : treeDataList) {
-            if (node.getType().equals("file")) {
+            if ("file".equals(node.getType())) {
 
                 if (runnableNode.getId().equals(node.getId())) {
                     Path path = Paths.get(parentPath.toString() + "/" + node.getName());
-                    System.out.println("Found Runnable Class: " + path.toAbsolutePath());
+                    tracer.info("Found Runnable Class: " + path.toAbsolutePath());
                     mainclass.add(path);
                     testclass.add(path);
                 }
 
-            } else if (node.getType().equals("folder")) {
+            } else if ("folder".equals(node.getType())) {
 
                 String packagePathString = node.getName().replaceAll("\\.", "\\/");
                 Path path = Paths.get(parentPath.toString(), packagePathString);
@@ -94,19 +92,19 @@ public abstract class BuildTool {
 
     private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
         String command = buildCompileCommand(tempDir, files, libraries);
-        System.out.println("Compiling with cmd: " + command);
+        tracer.info("Compiling with cmd: " + command);
         return executor.execCommand(command);
     }
 
     private String runProject(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries) {
         String command = buildRunCommand(tempDir, files, mainClass, libraries);
-        System.out.println("Running with cmd: " + command);
+        tracer.info("Running with cmd: " + command);
         return executor.execCommand(command);
     }
 
     private String testProject(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries) {
         String command = buildTestCommand(tempDir, files, testClass, libraries);
-        System.out.println("Testing with cmd: " + command);
+        tracer.info("Testing with cmd: " + command);
         return executor.execCommand(command);
     }
 

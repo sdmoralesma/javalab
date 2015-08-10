@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
 
 class Javac extends BuildTool {
 
@@ -53,7 +54,7 @@ class Javac extends BuildTool {
             Path directories = Files.createDirectories(buildDir);
             return directories.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Can not create {tempDir}/build dir");
         }
     }
@@ -69,11 +70,11 @@ class Javac extends BuildTool {
     private String dependenciesAsString(List<Library> libraries) {
         StringBuilder builder = new StringBuilder();
         for (Library library : libraries) {
-            builder.append(LabPaths.REPOSITORY_DIR.getPathAsString())
+            builder.append(LabPaths.REPOSITORY_DIR.asString())
                     .append(library.getJar())
                     .append(":");
         }
-        return builder.toString().equals("") ? LabPaths.REPOSITORY_DIR.getPathAsString() : builder.toString();
+        return "".equals(builder.toString()) ? LabPaths.REPOSITORY_DIR.asString() : builder.toString();
     }
 
     private String getMainClass(Path tempDir, List<Path> classFiles) {

@@ -4,42 +4,48 @@ import com.smorales.javalab.middleware.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.middleware.workspaceprocessor.boundary.NotRunnableCodeException;
 import com.smorales.javalab.middleware.workspaceprocessor.entity.TreeData;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FileHandler {
 
-    public static Path createTempDir() {
+    @Inject
+    Logger tracer;
+
+    public Path createTempDir() {
         try {
-            Path tempDir = Paths.get(LabPaths.HOME.getPathAsString(), FileHandler.generateUUID(), "/");
-            System.out.println("Created temp dir: " + tempDir);
-            return Files.createDirectory(tempDir);
+            Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString(), this.generateUUID(), "/"));
+            tracer.info("Creating temp dir" + tempDir);
+            return tempDir;
         } catch (IOException e) {
+            tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException(e);
         }
     }
 
-    private static String generateUUID() {
+    private String generateUUID() {
         return UUID.randomUUID().toString();
     }
 
-    public static void createFileTree(Path parentPath, List<TreeData> treedata, List<Path> sourceFilesCollector) {
-
+    public void createFileTree(Path parentPath, List<TreeData> treedata, List<Path> sourceFilesCollector) {
         for (TreeData node : treedata) {
-            if (node.getType().equals("file")) {
+            if ("file".equals(node.getType())) {
                 Path file = createFile(parentPath, node);
                 writeCodeToFile(file, node);
                 sourceFilesCollector.add(file.toAbsolutePath());
-            } else if (node.getType().equals("folder")) {
-
+            } else if ("folder".equals(node.getType())) {
                 try {
                     String packagePathString = node.getName().replaceAll("\\.", "\\/");
                     Path path = Paths.get(parentPath.toString(), packagePathString);
                     Path directories = Files.createDirectories(path);
-                    System.out.println("Created folder: " + packagePathString);
+                    tracer.info("Created folder: " + packagePathString);
 
                     List<TreeData> children = node.getChildren();
                     if (!children.isEmpty()) {
@@ -47,64 +53,57 @@ public class FileHandler {
                         createFileTree(parentPathForChildren, children, sourceFilesCollector);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    tracer.log(Level.SEVERE, e, e::getMessage);
                     throw new NotRunnableCodeException("Error creating package directories");
                 }
             }
         }
     }
 
-    private static Path createFile(Path parentPath, TreeData node) {
-
+    private Path createFile(Path parentPath, TreeData node) {
         try {
             Path path = Paths.get(parentPath.toString() + "/" + node.getName());
             Path file = Files.createFile(path);
-            System.out.println("File created: " + file.toAbsolutePath().toString());
+            tracer.info("File created: " + file.toAbsolutePath().toString());
             return file;
         } catch (IOException e) {
-            e.printStackTrace();
+            tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Error creating file:" + node.getName());
         }
     }
 
-    private static void writeCodeToFile(Path classFile, TreeData node) {
+    private void writeCodeToFile(Path classFile, TreeData node) {
         try {
             Files.write(classFile, node.getCode().getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException ioe) {
-            throw new NotRunnableCodeException(ioe);
+        } catch (IOException e) {
+            tracer.log(Level.SEVERE, e, e::getMessage);
+            throw new NotRunnableCodeException(e);
         }
     }
 
-    public static void removeDir(Path file) {
-        if (file == null) {
-            return;
-        }
-
+    public void removeDir(Path file) {
+        Objects.nonNull(file);
         try {
             Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
-
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     Files.deleteIfExists(file);
-                    System.out.println("Deleted file: " + file);
+                    tracer.info("Deleted file: " + file);
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-
-                    if (exc == null) {
-                        Files.deleteIfExists(dir);
-                        System.out.println("Deleted file: " + dir);
-                        return FileVisitResult.CONTINUE;
-                    } else {
+                    if (exc != null) {
                         throw exc;
                     }
+                    Files.deleteIfExists(dir);
+                    tracer.info("Deleted file: " + dir);
+                    return FileVisitResult.CONTINUE;
                 }
-
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Error deleting file: " + file.toString());
         }
     }

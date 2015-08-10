@@ -36,10 +36,10 @@ public class WorkspaceProcessorTest {
     @Test
     public void shouldGetByBase62Ok() {
         Workspace validWorkspace = getValidWorkspace();
-        when(sut.em.createNamedQuery(Workspace.findByBase62, Workspace.class).setParameter("base62", validWorkspace.getBase62()).getSingleResult())
+        when(sut.em.createNamedQuery(Workspace.findByBase62, Workspace.class).setParameter("base62", validWorkspace.getPath()).getSingleResult())
                 .thenReturn(validWorkspace);
 
-        JsonObject result = sut.getByBase62(validWorkspace.getBase62());
+        JsonObject result = sut.getByBase62(validWorkspace.getPath());
         assertThat(result).isNotNull();
     }
 
@@ -75,14 +75,14 @@ public class WorkspaceProcessorTest {
         when(sut.em.createNamedQuery(Workspace.findIdLastRow, Integer.class).setMaxResults(1).getResultList().get(0))
                 .thenReturn(lastId);
 
-        String result = sut.save(validWorkspace.getWorkspace());
+        String result = sut.save(validWorkspace.getJson());
         assertThat(result).isNotNull().isEqualTo("emji");
         verify(sut.em).persist(any(Workspace.class));
     }
 
     @Test
     public void shouldGetNewWorkspaceOk() {
-        assertThat(sut.newWorkspace(getValidRequest())).isNotNull();
+        assertThat(sut.newWorkspace()).isNotNull();
     }
 
     private Workspace getValidWorkspace() {

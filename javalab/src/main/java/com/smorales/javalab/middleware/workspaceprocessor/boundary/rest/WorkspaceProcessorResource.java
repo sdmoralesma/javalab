@@ -26,6 +26,14 @@ public class WorkspaceProcessorResource {
     }
 
     @GET
+    @Path("/new")
+    public Response newWorkspace() {
+        String result = workspaceProcessor.newWorkspace();
+        JsonObject output = Json.createObjectBuilder().add("output", result).build();
+        return Response.ok().entity(output).build();
+    }
+
+    @GET
     @Path("/{idBase62}")
     public Response getByBase62(@PathParam("idBase62") String idBase62) {
         return Response.ok().entity(workspaceProcessor.getByBase62(idBase62)).build();
@@ -52,14 +60,6 @@ public class WorkspaceProcessorResource {
     @Path("/save")
     public Response save(String data) {
         String result = workspaceProcessor.save(data);
-        JsonObject output = Json.createObjectBuilder().add("output", result).build();
-        return Response.ok().entity(output).build();
-    }
-
-    @POST
-    @Path("/new")
-    public Response newWorkspace(Request req) {
-        String result = workspaceProcessor.newWorkspace(req);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(output).build();
     }

@@ -13,11 +13,11 @@ public enum LabPaths {
         this.path = path;
     }
 
-    public Path getPath() {
+    public Path asPath() {
         return Paths.get(this.path);
     }
 
-    public String getPathAsString() {
+    public String asString() {
         return this.path;
     }
 
