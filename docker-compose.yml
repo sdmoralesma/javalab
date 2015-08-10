@@ -6,4 +6,14 @@ app:
     - "49990:9990"
     - "48080:8080"
     - "48787:8787"
-
+  links:
+    - labdb:labdb
+labdb:
+  image: mysql:latest
+  environment:
+    MYSQL_DATABASE: labdb
+    MYSQL_USER: mysql
+    MYSQL_PASSWORD: mysql
+    MYSQL_ROOT_PASSWORD: admin123
+  ports:
+    - "43306:3306"

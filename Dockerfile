@@ -11,7 +11,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -qq install -y oracle-java8-installer oracle-java8-set-default
 
 # Install WildFly to /opt
-ENV WILDFLY_VERSION 8.2.0.Final
+ENV WILDFLY_VERSION 9.0.1.Final
 RUN cd /opt && wget --quiet http://download.jboss.org/wildfly/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.tar.gz && \
     tar xvf wildfly-$WILDFLY_VERSION.tar.gz && \
     ln -s /opt/wildfly-$WILDFLY_VERSION /opt/wildfly && \
@@ -20,6 +20,14 @@ ENV JBOSS_HOME /opt/wildfly
 
 # Create admin user for wildfly
 RUN $JBOSS_HOME/bin/add-user.sh admin admin123 --silent
+
+#add datasource to wildfly
+ADD wildfly-config/scripts $JBOSS_HOME/scripts/
+ADD wildfly-config/connector $JBOSS_HOME/connector/
+RUN $JBOSS_HOME/scripts/execute.sh
+
+# Solves bug in history
+RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/current
 
 # Install Maven
 ENV MAVEN_VERSION 3.3.3
@@ -34,14 +42,14 @@ ENV MAVEN_HOME /opt/maven
 RUN groupadd -r wildfly-group -g 433 && \
     useradd -u 431 -r -g wildfly-group -s /bin/false wildfly -m
 
-# Add lab project and download dependencies
 ENV USER_HOME /home/wildfly
 ENV MAVEN_M2 $USER_HOME/.m2/repository
 
+# Add lab project and download dependencies
 ADD lab $USER_HOME/lab/
 RUN mvn package -q -f $USER_HOME/lab/pom.xml -Dmaven.repo.local=$MAVEN_M2
 
-# Auto-Deploy JavaLab to Wildfly
+# Auto-Deploy javalab to Wildfly
 ADD javalab $USER_HOME/javalab/
 RUN mvn package -q -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/

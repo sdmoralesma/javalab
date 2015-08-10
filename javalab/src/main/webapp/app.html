@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="labApp">
+<html lang="en" ng-app="LabApp">
 
 <head>
     <title>javalab</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="resources/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico">
 
     <meta charset="UTF-8">
     <meta name="description" content="simple interface to run Java code with powerful features online">
@@ -16,17 +16,17 @@
 
     <!--styles-->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="resources/css/angular-block-ui.css" rel="stylesheet"/>
-    <link href="resources/css/base.css" rel="stylesheet"/>
-    <link href="resources/css/desktop.css" rel="stylesheet"/>
-    <link href="resources/css/tablet.css" rel="stylesheet"/>
-    <link href="resources/css/mobile.css" rel="stylesheet"/>
+    <link href="assets/css/angular-block-ui.css" rel="stylesheet"/>
+    <link href="assets/css/base.css" rel="stylesheet"/>
+    <link href="assets/css/desktop.css" rel="stylesheet"/>
+    <link href="assets/css/tablet.css" rel="stylesheet"/>
+    <link href="assets/css/mobile.css" rel="stylesheet"/>
 
     <!-- link for CSS when using the tree as an attribute -->
-    <link rel="stylesheet" type="text/css" href="resources/css/tree-control-attribute.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/tree-control-attribute.css">
 </head>
 
-<body ng-controller="mainCtrl">
+<body ng-controller="HomeCtrl">
 
 <nav id="ext-nav" class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
@@ -68,6 +68,14 @@
                     </button>
                 </div>
             </div>
+        </form>
+        <form class="navbar-form navbar-left">
+            <button id="save-btn" class="btn btn-primary" ng-click="save()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+            </button>
+            <button id="new-btn" class="btn btn-success" ng-click="new()">
+                <span class="glyphicon glyphicon-file"></span>
+            </button>
         </form>
 
         <div class="collapse navbar-collapse" id="collapsable-menu">
@@ -174,16 +182,19 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://codebeautify.org/js/beautify.js"></script>
 <script src="//code.angularjs.org/1.4.3/angular.js"></script>
-<script src="resources/js/angular-block-ui.js"></script>
-<script src="resources/js/angular-tree-control.js"></script>
-<script src="resources/js/TreeModel.js"></script>
-<script src="resources/js/angucomplete-alt.js"></script>
+<script src="app/shared/angular-block-ui.js"></script>
+<script src="app/shared/angular-tree-control.js"></script>
+<script src="app/shared/angucomplete-alt.js"></script>
+<script src="assets/js/tree-model.js"></script>
 
 
 <!--application-->
-<script src="resources/js/application.js"></script>
-<script src="resources/js/resize-ace-vertically.js"></script>
-<script src="resources/js/events.js"></script>
-<script src="resources/js/google-tracking.js"></script>
+<script src="app/app.module.js"></script>
+<script src="app/app.routes.js"></script>
+<script src="app/components/home/middleService.js"></script>
+<script src="app/components/home/homeController.js"></script>
+<script src="app/components/home/homeResizeEditorVertically.js"></script>
+<script src="app/components/home/homeEvents.js"></script>
+<script src="assets/js/google-tracking.js"></script>
 </body>
 </html>

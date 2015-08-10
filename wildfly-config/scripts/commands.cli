@@ -1,0 +1,19 @@
+#To create the module (not part of the batch)
+set JBOSS_HOME=/opt/wildfly
+module add --name=com.mysql --resources=$JBOSS_HOME/connector/mysql-connector-java-5.1.36-bin.jar --dependencies=javax.api,javax.transaction.api
+
+# Mark the commands below to be run as a batch
+batch
+
+# Add MySQL driver
+/subsystem=datasources/jdbc-driver=mysql:add(\
+    driver-name=mysql,\
+    driver-module-name=com.mysql,\
+    driver-class-name=com.mysql.jdbc.Driver,\
+    driver-xa-datasource-class-name=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource\    
+)
+
+# Add Datasource
+data-source add --jndi-name=java:/MySQLDS --name=MySQLDS --connection-url=jdbc:mysql://labdb:3306/labdb --driver-name=mysql --user-name=mysql --password=mysql --enabled=true
+
+run-batch

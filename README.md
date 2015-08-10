@@ -14,3 +14,6 @@
 * access the app: ``` localhost:48080 ```
 * wildfly console: ``` localhost:49990 ```
 * java debugger: ``` localhost:48787 ```
+
+### Versioning
+javalab follows [semantic versioning](http://semver.org/)
