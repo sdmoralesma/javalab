@@ -3,6 +3,7 @@ package com.smorales.javalab.middleware.workspaceprocessor.control;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -35,7 +36,7 @@ public class FileHandlerTest {
 
         when(Paths.get(anyString(), anyVararg())).thenReturn(mock(Path.class));
         when(Files.createDirectory(any(Path.class))).thenReturn(mock(Path.class));
-        doNothing().when(sut.tracer).info(anyString());
+        doNothing().when(sut.tracer).info(Matchers::anyString);
 
         Path result = sut.createTempDir();
 

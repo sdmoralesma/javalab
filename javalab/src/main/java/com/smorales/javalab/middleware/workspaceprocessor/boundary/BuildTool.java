@@ -72,7 +72,7 @@ public abstract class BuildTool {
 
                 if (runnableNode.getId().equals(node.getId())) {
                     Path path = Paths.get(parentPath.toString() + "/" + node.getName());
-                    tracer.info("Found Runnable Class: " + path.toAbsolutePath());
+                    tracer.info(() -> "Found Runnable Class: " + path.toAbsolutePath());
                     mainclass.add(path);
                     testclass.add(path);
                 }
@@ -92,19 +92,19 @@ public abstract class BuildTool {
 
     private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
         String command = buildCompileCommand(tempDir, files, libraries);
-        tracer.info("Compiling with cmd: " + command);
+        tracer.info(() -> "Compiling with cmd: " + command);
         return executor.execCommand(command);
     }
 
     private String runProject(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries) {
         String command = buildRunCommand(tempDir, files, mainClass, libraries);
-        tracer.info("Running with cmd: " + command);
+        tracer.info(() -> "Running with cmd: " + command);
         return executor.execCommand(command);
     }
 
     private String testProject(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries) {
         String command = buildTestCommand(tempDir, files, testClass, libraries);
-        tracer.info("Testing with cmd: " + command);
+        tracer.info(() -> "Testing with cmd: " + command);
         return executor.execCommand(command);
     }
 

@@ -21,10 +21,10 @@ public class Workspace implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "base62")
+    @Column(name = "path")
     private String path;
 
-    @Column(name = "workspace")
+    @Column(name = "json")
     private String json;
 
     public Workspace() {

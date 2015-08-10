@@ -64,7 +64,7 @@ public class FileHandler {
         try {
             Path path = Paths.get(parentPath.toString() + "/" + node.getName());
             Path file = Files.createFile(path);
-            tracer.info("File created: " + file.toAbsolutePath().toString());
+            tracer.info(() -> "File created: " + file.toAbsolutePath().toString());
             return file;
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
