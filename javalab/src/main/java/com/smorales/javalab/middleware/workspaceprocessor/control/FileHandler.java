@@ -21,7 +21,7 @@ public class FileHandler {
 
     public Path createTempDir() {
         try {
-            Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString(), this.generateUUID(), "/"));
+            Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString() + this.generateUUID() + "/"));
             tracer.info("Creating temp dir" + tempDir);
             return tempDir;
         } catch (IOException e) {
