@@ -23,7 +23,7 @@ class Javac extends BuildTool {
     protected String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries) {
         String cmd = "{javacExec} {javaFiles} -d {buildPath} -cp {buildPath}:{libraries}";
         cmd = cmd.replace("{javacExec}", JAVAC_EXEC);
-        cmd = cmd.replace("{javaFiles}", filesToCompileAsString(files));
+        cmd = cmd.replace("{javaFiles}", javafilesAsString(files));
         cmd = cmd.replace("{buildPath}", getBuildPath(tempDir));
         cmd = cmd.replace("{libraries}", dependenciesAsString(libraries));
         return cmd;
@@ -51,14 +51,14 @@ class Javac extends BuildTool {
 
     private String getBuildPath(Path tempDir) {
         try {
-            return Files.createDirectories(Paths.get(tempDir.toString() + "/" + "build")).toString();
+            return Files.createDirectories(Paths.get(tempDir.toString() + "/build")).toString();
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Can not create {tempDir}/build dir");
         }
     }
 
-    private String filesToCompileAsString(List<Path> files) {
+    private String javafilesAsString(List<Path> files) {
         return files.stream()
                 .map(file -> file.toAbsolutePath().toString())
                 .filter(absPath -> absPath.contains(JAVA_EXTENSION))

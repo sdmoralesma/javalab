@@ -75,7 +75,7 @@ public class ExecutorTest {
     @Test
     public void shouldThrowExceptionWhenRunCodeThrowsIOException() throws Exception {
         mockStatic(Runtime.class);
-        when(Runtime.getRuntime().exec(anyString())).thenThrow(IOException.class);
+        when(Runtime.getRuntime().exec(anyString())).thenThrow(new IOException());
 
         assertThatThrownBy(() -> sut.execCommand("cmd")).isInstanceOf(NotRunnableCodeException.class);
     }
