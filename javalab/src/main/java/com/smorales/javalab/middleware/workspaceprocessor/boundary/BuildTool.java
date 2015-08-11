@@ -26,16 +26,16 @@ public abstract class BuildTool {
 
     protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
 
-    protected abstract String buildRunCommand(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries);
+    protected abstract String buildRunCommand(Path tempDir, List<Path> mainClass, List<Library> libraries);
 
-    protected abstract String buildTestCommand(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries);
+    protected abstract String buildTestCommand(Path tempDir, List<Path> testClass, List<Library> libraries);
 
     // implements template method pattern
     public String runCode(BuildToolData data) {
         Path tempDir = fileHandler.createTempDir();
         try {
-            final List<Path> filesCollector = getFilesCollector(data, tempDir);
-            return runProject(tempDir, filesCollector, data.getMainclass(), data.getLibraries());
+            createFileTreeAndCompileFilesAndGetRunnableClasses(data, tempDir);
+            return runProject(tempDir, data.getMainclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
@@ -47,8 +47,8 @@ public abstract class BuildTool {
     public String testCode(BuildToolData data) {
         Path tempDir = fileHandler.createTempDir();
         try {
-            final List<Path> filesCollector = getFilesCollector(data, tempDir);
-            return testProject(tempDir, filesCollector, data.getTestclass(), data.getLibraries());
+            createFileTreeAndCompileFilesAndGetRunnableClasses(data, tempDir);
+            return testProject(tempDir, data.getTestclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
@@ -56,17 +56,14 @@ public abstract class BuildTool {
         }
     }
 
-    private List<Path> getFilesCollector(BuildToolData data, Path tempDir) {
+    private void createFileTreeAndCompileFilesAndGetRunnableClasses(BuildToolData data, Path tempDir) { // TODO> make me simpler
         final List<Path> filesCollector = new ArrayList<>();
         fileHandler.createFileTree(tempDir, data.getTreedata(), filesCollector);
         compileFiles(tempDir, filesCollector, data.getLibraries());
         getRunnableClass(tempDir, data.getTreedata(), data.getRunnableNode(), data.getMainclass(), data.getTestclass());
-        return filesCollector;
     }
 
-
     private void getRunnableClass(Path parentPath, List<TreeData> treeDataList, RunnableNode runnableNode, List<Path> mainclass, List<Path> testclass) {
-
         for (TreeData node : treeDataList) {
             if ("file".equals(node.getType())) {
 
@@ -96,14 +93,14 @@ public abstract class BuildTool {
         return executor.execCommand(command);
     }
 
-    private String runProject(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries) {
-        String command = buildRunCommand(tempDir, files, mainClass, libraries);
+    private String runProject(Path tempDir, List<Path> mainClass, List<Library> libraries) {
+        String command = buildRunCommand(tempDir, mainClass, libraries);
         tracer.info(() -> "Running with cmd: " + command);
         return executor.execCommand(command);
     }
 
-    private String testProject(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries) {
-        String command = buildTestCommand(tempDir, files, testClass, libraries);
+    private String testProject(Path tempDir, List<Path> testClass, List<Library> libraries) {
+        String command = buildTestCommand(tempDir, testClass, libraries);
         tracer.info(() -> "Testing with cmd: " + command);
         return executor.execCommand(command);
     }

@@ -30,7 +30,7 @@ class Javac extends BuildTool {
     }
 
     @Override
-    protected String buildRunCommand(Path tempDir, List<Path> files, List<Path> mainClass, List<Library> libraries) {
+    protected String buildRunCommand(Path tempDir, List<Path> mainClass, List<Library> libraries) {
         String cmd = "{javaExec} -cp {buildPath}:{libraries} {mainClass}";
         cmd = cmd.replace("{javaExec}", JAVA_EXEC);
         cmd = cmd.replace("{buildPath}", getBuildPath(tempDir));
@@ -40,7 +40,7 @@ class Javac extends BuildTool {
     }
 
     @Override
-    protected String buildTestCommand(Path tempDir, List<Path> files, List<Path> testClass, List<Library> libraries) {
+    protected String buildTestCommand(Path tempDir, List<Path> testClass, List<Library> libraries) {
         String cmd = "{javaExec} -cp {buildPath}:{libraries} org.junit.runner.JUnitCore {testClass}";
         cmd = cmd.replace("{javaExec}", JAVA_EXEC);
         cmd = cmd.replace("{buildPath}", getBuildPath(tempDir));
