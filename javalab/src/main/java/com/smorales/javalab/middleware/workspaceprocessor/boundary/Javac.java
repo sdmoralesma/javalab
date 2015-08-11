@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 class Javac extends BuildTool {
 
@@ -49,10 +50,8 @@ class Javac extends BuildTool {
     }
 
     private String getBuildPath(Path tempDir) {
-        Path buildDir = Paths.get(tempDir.toString(), "/", "build");
         try {
-            Path directories = Files.createDirectories(buildDir);
-            return directories.toString();
+            return Files.createDirectories(Paths.get(tempDir.toString() + "/" + "build")).toString();
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Can not create {tempDir}/build dir");
@@ -60,44 +59,37 @@ class Javac extends BuildTool {
     }
 
     private String filesToCompileAsString(List<Path> files) {
-        StringBuilder builder = new StringBuilder();
-        files.stream()
-                .filter(path -> path.getFileName().toString().contains(JAVA_EXTENSION))
-                .forEach(path -> builder.append(path.toAbsolutePath().toString()).append(" "));
-        return builder.toString();
+        return files.stream()
+                .map(file -> file.toAbsolutePath().toString())
+                .filter(absPath -> absPath.contains(JAVA_EXTENSION))
+                .collect(Collectors.joining(" "));
     }
 
     private String dependenciesAsString(List<Library> libraries) {
-        StringBuilder builder = new StringBuilder();
-        for (Library library : libraries) {
-            builder.append(LabPaths.REPOSITORY_DIR.asString())
-                    .append(library.getJar())
-                    .append(":");
-        }
-        return "".equals(builder.toString()) ? LabPaths.REPOSITORY_DIR.asString() : builder.toString();
+        String collect = libraries.stream()
+                .map(Library::getJar)
+                .map(lib -> LabPaths.REPOSITORY_DIR.asString() + lib)
+                .collect(Collectors.joining(":"));
+        return "".equals(collect) ? LabPaths.REPOSITORY_DIR.asString() : collect;
     }
 
     private String getMainClass(Path tempDir, List<Path> classFiles) {
-        StringBuilder builder = new StringBuilder();
-        for (Path file : classFiles) {
-            String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
-            relativePath = relativePath.replaceAll(SRC_MAIN_JAVA, "");
-            String removedExtension = relativePath.replaceAll(JAVA_EXTENSION, "");
-            String javaClass = removedExtension.replaceAll("/", "\\.");
-            builder.append(javaClass).append(" ");
-        }
-        return builder.toString();
+        return classFiles.stream()
+                .map(Path::toString)
+                .map(path -> path.replaceAll(tempDir.toString() + "/", ""))
+                .map(path -> path.replaceAll(SRC_MAIN_JAVA, ""))
+                .map(path -> path.replaceAll(JAVA_EXTENSION, ""))
+                .map(path -> path.replaceAll("/", "\\."))
+                .collect(Collectors.joining(" "));
     }
 
     private String getTestClass(Path tempDir, List<Path> classFiles) {
-        StringBuilder builder = new StringBuilder();
-        for (Path file : classFiles) {
-            String relativePath = file.toString().replaceAll(tempDir.toString() + "/", "");
-            relativePath = relativePath.replaceAll(SRC_TEST_JAVA, "");
-            String removedExtension = relativePath.replaceAll(JAVA_EXTENSION, "");
-            String javaClass = removedExtension.replaceAll("/", "\\.");
-            builder.append(javaClass).append(" ");
-        }
-        return builder.toString();
+        return classFiles.stream()
+                .map(Path::toString)
+                .map(path -> path.replaceAll(tempDir.toString() + "/", ""))
+                .map(path -> path.replaceAll(SRC_TEST_JAVA, ""))
+                .map(path -> path.replaceAll(JAVA_EXTENSION, ""))
+                .map(path -> path.replaceAll("/", "\\."))
+                .collect(Collectors.joining(" "));
     }
 }

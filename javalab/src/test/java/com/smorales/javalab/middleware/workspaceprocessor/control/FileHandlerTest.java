@@ -59,7 +59,7 @@ public class FileHandlerTest {
         mockStatic(Paths.class, Files.class);
 
         when(Paths.get(anyString())).thenReturn(mock(Path.class));
-        when(Files.createDirectory(any(Path.class))).thenThrow(IOException.class);
+        when(Files.createDirectory(any(Path.class))).thenThrow(new IOException());
 
         assertThatThrownBy(sut::createTempDir).isInstanceOf(NotRunnableCodeException.class);
     }

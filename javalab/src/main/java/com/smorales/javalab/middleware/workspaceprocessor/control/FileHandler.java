@@ -22,7 +22,7 @@ public class FileHandler {
     public Path createTempDir() {
         try {
             Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString() + this.generateUUID() + "/"));
-            tracer.info("Creating temp dir" + tempDir);
+            tracer.info("Creating temp dir: " + tempDir);
             return tempDir;
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
@@ -68,7 +68,7 @@ public class FileHandler {
             return file;
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
-            throw new NotRunnableCodeException("Error creating file:" + node.getName());
+            throw new NotRunnableCodeException("Error creating file: " + node.getName());
         }
     }
 
