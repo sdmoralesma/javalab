@@ -66,16 +66,13 @@ public abstract class BuildTool {
     private void getRunnableClass(Path parentPath, List<TreeData> treeDataList, RunnableNode runnableNode, List<Path> mainclass, List<Path> testclass) {
         for (TreeData node : treeDataList) {
             if ("file".equals(node.getType())) {
-
                 if (runnableNode.getId().equals(node.getId())) {
                     Path path = Paths.get(parentPath.toString() + "/" + node.getName());
                     tracer.info(() -> "Found Runnable Class: " + path.toAbsolutePath());
                     mainclass.add(path);
                     testclass.add(path);
                 }
-
             } else if ("folder".equals(node.getType())) {
-
                 String packagePathString = node.getName().replaceAll("\\.", "\\/");
                 Path path = Paths.get(parentPath.toString(), packagePathString);
                 List<TreeData> children = node.getChildren();
@@ -88,21 +85,21 @@ public abstract class BuildTool {
     }
 
     private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
-        String command = buildCompileCommand(tempDir, files, libraries);
-        tracer.info(() -> "Compiling with cmd: " + command);
-        return executor.execCommand(command);
+        String cmd = buildCompileCommand(tempDir, files, libraries);
+        tracer.info(() -> "Compiling with cmd: " + cmd);
+        return executor.execCommand(cmd);
     }
 
     private String runProject(Path tempDir, List<Path> mainClass, List<Library> libraries) {
-        String command = buildRunCommand(tempDir, mainClass, libraries);
-        tracer.info(() -> "Running with cmd: " + command);
-        return executor.execCommand(command);
+        String cmd = buildRunCommand(tempDir, mainClass, libraries);
+        tracer.info(() -> "Running with cmd: " + cmd);
+        return executor.execCommand(cmd);
     }
 
     private String testProject(Path tempDir, List<Path> testClass, List<Library> libraries) {
-        String command = buildTestCommand(tempDir, testClass, libraries);
-        tracer.info(() -> "Testing with cmd: " + command);
-        return executor.execCommand(command);
+        String cmd = buildTestCommand(tempDir, testClass, libraries);
+        tracer.info(() -> "Testing with cmd: " + cmd);
+        return executor.execCommand(cmd);
     }
 
 }
