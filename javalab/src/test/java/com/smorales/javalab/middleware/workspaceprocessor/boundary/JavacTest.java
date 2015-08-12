@@ -25,6 +25,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class JavacTest {
 
     private static final String EXPECTED_COMPILE_CMD = "javac /home/wildfly/2908e8f4-0a95-4485-92aa-9b87d348dedd/src/main/java/com/company/project/HelloWorld.java -d /home/wildfly/2908e8f4-0a95-4485-92aa-9b87d348dedd/build -cp /home/wildfly/2908e8f4-0a95-4485-92aa-9b87d348dedd/build:/home/wildfly/.m2/repository/";
+    private static final String EXPECTED_RUN_CMD = "java -cp /home/wildfly/2908e8f4-0a95-4485-92aa-9b87d348dedd/build:/home/wildfly/.m2/repository/ MyClass";
+    private static final String EXPECTED_TEST_CMD = "java -cp /home/wildfly/2908e8f4-0a95-4485-92aa-9b87d348dedd/build:/home/wildfly/.m2/repository/ org.junit.runner.JUnitCore src.main.MyClass";
 
     private BuildTool sut;
 
@@ -80,13 +82,13 @@ public class JavacTest {
 
         String cmd = sut.buildRunCommand(tempDir, createClassList(), createLibrariesList());
 
-        assertThat(cmd).isEqualTo(EXPECTED_COMPILE_CMD);
+        assertThat(cmd).isEqualTo(EXPECTED_RUN_CMD);
     }
 
     private List<Path> createClassList() {
         Path javaFile1 = mock(Path.class, RETURNS_DEEP_STUBS);
-        String filePath1 = "/src/main/java/MyClass.java";
-        when(javaFile1.toAbsolutePath().toString()).thenReturn(filePath1);
+        String filePath1 = "src/main/java/MyClass.java";
+        when(javaFile1.toString()).thenReturn(filePath1);
         return Collections.singletonList(javaFile1);
     }
 
@@ -106,6 +108,6 @@ public class JavacTest {
 
         String cmd = sut.buildTestCommand(tempDir, createClassList(), createLibrariesList());
 
-        assertThat(cmd).isEqualTo(EXPECTED_COMPILE_CMD);
+        assertThat(cmd).isEqualTo(EXPECTED_TEST_CMD);
     }
 }
