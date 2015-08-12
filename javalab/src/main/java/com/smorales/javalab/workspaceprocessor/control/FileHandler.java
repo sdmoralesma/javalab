@@ -1,15 +1,15 @@
 package com.smorales.javalab.workspaceprocessor.control;
 
+import com.smorales.javalab.workspaceprocessor.boundary.FlattenNode;
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
-import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +22,7 @@ public class FileHandler {
     public Path createTempDir() {
         try {
             Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString() + this.generateUUID() + "/"));
-            tracer.info("Creating temp dir: " + tempDir);
+            tracer.info("Created temp dir: " + tempDir);
             return tempDir;
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
@@ -34,24 +34,16 @@ public class FileHandler {
         return UUID.randomUUID().toString();
     }
 
-    public void createFileTree(Path parentPath, List<TreeData> treedata, List<Path> sourceFilesCollector) {
-        for (TreeData node : treedata) {
+    public void createFileTree(Set<FlattenNode> flattenDirs) {
+        for (FlattenNode node : flattenDirs) {
             if ("file".equals(node.getType())) {
-                Path file = createFile(parentPath, node);
-                writeCodeToFile(file, node);
-                sourceFilesCollector.add(file.toAbsolutePath());
-            } else if ("folder".equals(node.getType())) {
+                Path filePath = createFile(node.getPath());
+                writeCodeToFile(node);
+                tracer.info("Created file: " + filePath);
+            } else if ("folder".equals(node.getType())) {// TODO: is this REALLY necessary?
                 try {
-                    String packagePathString = node.getName().replaceAll("\\.", "\\/");
-                    Path path = Paths.get(parentPath.toString(), packagePathString);
-                    Path directories = Files.createDirectories(path);
-                    tracer.info("Created folder: " + packagePathString);
-
-                    List<TreeData> children = node.getChildren();
-                    if (!children.isEmpty()) {
-                        Path parentPathForChildren = Paths.get(directories.toString());
-                        createFileTree(parentPathForChildren, children, sourceFilesCollector);
-                    }
+                    Path folderPath = Files.createDirectories(node.getPath());
+                    tracer.info("Created folder: " + folderPath);
                 } catch (IOException e) {
                     tracer.log(Level.SEVERE, e, e::getMessage);
                     throw new NotRunnableCodeException("Error creating package directories");
@@ -60,21 +52,18 @@ public class FileHandler {
         }
     }
 
-    private Path createFile(Path parentPath, TreeData node) {
+    private Path createFile(Path path) {
         try {
-            Path path = Paths.get(parentPath.toString() + "/" + node.getName());
-            Path file = Files.createFile(path);
-            tracer.info(() -> "File created: " + file.toAbsolutePath().toString());
-            return file;
+            return Files.createFile(path);
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
-            throw new NotRunnableCodeException("Error creating file: " + node.getName());
+            throw new NotRunnableCodeException("Error creating file: " + path);
         }
     }
 
-    private void writeCodeToFile(Path classFile, TreeData node) {
+    private void writeCodeToFile(FlattenNode node) {
         try {
-            Files.write(classFile, node.getCode().getBytes(), StandardOpenOption.CREATE);
+            Files.write(node.getPath(), node.getCode().getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException(e);
