@@ -21,7 +21,7 @@ public class FileHandler {
 
     public Path createTempDir() {
         try {
-            Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString() + this.generateUUID() + "/"));
+            Path tempDir = Files.createDirectory(Paths.get(LabPaths.HOME.asString() + generateUUID() + "/"));
             tracer.info("Created temp dir: " + tempDir);
             return tempDir;
         } catch (IOException e) {
@@ -36,37 +36,15 @@ public class FileHandler {
 
     public void createFileTree(Set<FlattenNode> flattenDirs) {
         for (FlattenNode node : flattenDirs) {
-            if ("file".equals(node.getType())) {
-                Path filePath = createFile(node.getPath());
-                writeCodeToFile(node);
+            try {
+                Files.createDirectories(node.getPath().getParent());
+                Path filePath = Files.createFile(node.getPath());
+                Files.write(node.getPath(), node.getCode().getBytes(), StandardOpenOption.CREATE);
                 tracer.info("Created file: " + filePath);
-            } else if ("folder".equals(node.getType())) {// TODO: is this REALLY necessary?
-                try {
-                    Path folderPath = Files.createDirectories(node.getPath());
-                    tracer.info("Created folder: " + folderPath);
-                } catch (IOException e) {
-                    tracer.log(Level.SEVERE, e, e::getMessage);
-                    throw new NotRunnableCodeException("Error creating package directories");
-                }
+            } catch (IOException e) {
+                tracer.log(Level.SEVERE, e, e::getMessage);
+                throw new NotRunnableCodeException("Error creating file: " + node.getPath());
             }
-        }
-    }
-
-    private Path createFile(Path path) {
-        try {
-            return Files.createFile(path);
-        } catch (IOException e) {
-            tracer.log(Level.SEVERE, e, e::getMessage);
-            throw new NotRunnableCodeException("Error creating file: " + path);
-        }
-    }
-
-    private void writeCodeToFile(FlattenNode node) {
-        try {
-            Files.write(node.getPath(), node.getCode().getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException e) {
-            tracer.log(Level.SEVERE, e, e::getMessage);
-            throw new NotRunnableCodeException(e);
         }
     }
 

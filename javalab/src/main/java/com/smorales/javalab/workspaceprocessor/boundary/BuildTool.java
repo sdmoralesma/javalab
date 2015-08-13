@@ -1,17 +1,15 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
 import com.smorales.javalab.workspaceprocessor.entity.Library;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -36,13 +34,14 @@ public abstract class BuildTool {
 
     // implements template method pattern
     public String runCode(BuildToolData data) {
-        Path tempDir = fileHandler.createTempDir();
-        Set<FlattenNode> flattenDirs = flatDirectoryTree(tempDir, data.getTreedata());
-
+        Path tempDir = null;
         try {
-            fileHandler.createFileTree(flattenDirs);
-            compileFiles(tempDir, getJavaFiles(tempDir), data.getLibraries());
-            getRunnableClass(flattenDirs, data);
+            tempDir = fileHandler.createTempDir();
+            HashSet<FlattenNode> projectFiles = new LinkedHashSet<>();
+            flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
+            fileHandler.createFileTree(projectFiles);
+            compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
+            getRunnableClass(projectFiles, data);
             return runProject(tempDir, data.getMainclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
@@ -60,44 +59,37 @@ public abstract class BuildTool {
         }
     }
 
-    private Set<FlattenNode> flatDirectoryTree(Path parentPath, List<TreeData> treeData) {
-        Set<FlattenNode> flatten = new HashSet<>();
+    private void flatDirectoryTree(Set<FlattenNode> flattenNodeSet, Path parentPath, List<TreeData> treeData) {
         for (TreeData node : treeData) {
             if ("file".equals(node.getType())) {
                 Path path = Paths.get(parentPath.toString() + "/" + node.getName());
-                flatten.add(new FlattenNode(node.getId(), path, node.getType(), node.getCode()));
+                flattenNodeSet.add(new FlattenNode(node.getId(), path, node.getType(), node.getCode()));
             } else if ("folder".equals(node.getType())) {
                 String packagePathAsString = node.getName().replaceAll("\\.", "\\/");
                 Path path = Paths.get(parentPath.toString(), packagePathAsString);
-                List<TreeData> children = node.getChildren();
-                if (!children.isEmpty()) {
-                    Path parentPathForChildren = Paths.get(path.toString());
-                    flatDirectoryTree(parentPathForChildren, children);
+                if (!node.getChildren().isEmpty()) {
+                    flatDirectoryTree(flattenNodeSet, path, node.getChildren());
                 }
             }
         }
-        return flatten;
     }
 
-    private List<Path> getJavaFiles(Path parentPath) {
-        try {
-            return Files.walk(parentPath)
-                    .filter(f -> f.getFileName().endsWith(".java"))
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new NotRunnableCodeException("Can not gather files");
-        }
+    private List<Path> getJavaFiles(Set<FlattenNode> files) {
+        return files.stream()
+                .map(FlattenNode::getPath)
+                .filter(p -> p.getFileName().toString().endsWith(".java"))
+                .collect(Collectors.toList());
     }
 
     // implements template method pattern
     public String testCode(BuildToolData data) {
         Path tempDir = fileHandler.createTempDir();
         try {
-            Set<FlattenNode> flattenDirs = flatDirectoryTree(tempDir, data.getTreedata());
-            fileHandler.createFileTree(flattenDirs);
-            compileFiles(tempDir, getJavaFiles(tempDir), data.getLibraries());
-            getRunnableClass(flattenDirs, data);
+            Set<FlattenNode> projectFiles = new LinkedHashSet<>();
+            flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
+            fileHandler.createFileTree(projectFiles);
+            compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
+            getRunnableClass(projectFiles, data);
             return testProject(tempDir, data.getTestclass(), data.getLibraries());
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
@@ -107,10 +99,10 @@ public abstract class BuildTool {
     }
 
 
-    private String compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
+    private void compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
         String cmd = buildCompileCommand(tempDir, files, libraries);
         tracer.info(() -> "Compiling with cmd: " + cmd);
-        return executor.execCommand(cmd);
+        executor.execCommand(cmd);
     }
 
     private String runProject(Path tempDir, List<Path> mainClass, List<Library> libraries) {
