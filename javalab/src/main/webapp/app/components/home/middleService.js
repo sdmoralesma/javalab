@@ -38,9 +38,7 @@ labApp.factory('middleService', ['$http', function ($http) {
 
         newWorkspace: function (model) {
             const NEW_SERVICE = ENDPOINT + "/new";
-            $http.post(NEW_SERVICE, model, {
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
+            $http.get(NEW_SERVICE).then(function (response) {
                 model.console = response.data.output;
             }, function error(failure) {
                 alert('error code: ' + failure.status);
