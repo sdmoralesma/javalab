@@ -64,14 +64,4 @@ public class FileHandlerTest {
         assertThatThrownBy(sut::createTempDir).isInstanceOf(NotRunnableCodeException.class);
     }
 
-    @Test
-    public void shouldCreateFileTreeOk() throws Exception {
-//        sut.createFileTree();
-    }
-
-    @Test
-    public void shouldRemoveDirOk() throws Exception {
-//        sut.removeDir();
-    }
-
 }
