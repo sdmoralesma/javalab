@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/sdmoralesma/javalab.svg)](https://travis-ci.org/sdmoralesma/javalab)
 # javalab 
-[javalab](http://javalab.co) is a web app that provides a nice interface to run Java code with powerful features.
+[javalab](http://javalab.co) is a web app that provides an interface to run applications written on JVM compatible languages with powerful features.
 
 ## Installation and Running
 
