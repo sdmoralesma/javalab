@@ -21,6 +21,7 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($
                 {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
                 {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
             ];
+            $scope.initialValue = $scope.javaClasses[0];
 
             (function initializeCodeEditor() {
                 const CRIMSON_THEME = "ace/theme/crimson_editor";

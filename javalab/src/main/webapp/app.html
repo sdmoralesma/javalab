@@ -49,6 +49,7 @@
                     <angucomplete-alt id="search-input"
                                       pause="100"
                                       placeholder="Select class or test"
+                                      initial-value="initialValue"
                                       selected-object="selectedFile"
                                       local-data="javaClasses"
                                       search-fields="name, path"
@@ -69,21 +70,21 @@
                 </div>
             </div>
         </form>
-        <form class="navbar-form navbar-left">
+        <!--<form class="navbar-form navbar-left">-->
             <!--<button id="save-btn" class="btn btn-primary" ng-click="save()">-->
                 <!--<span class="glyphicon glyphicon-floppy-disk"></span>-->
             <!--</button>-->
             <!--<button id="new-btn" class="btn btn-success" ng-click="new()">-->
                 <!--<span class="glyphicon glyphicon-file"></span>-->
             <!--</button>-->
-        </form>
+        <!--</form>-->
 
         <div class="collapse navbar-collapse" id="collapsable-menu">
-            <ul class="nav navbar-nav navbar-right">
+            <form class="navbar-form navbar-right ">
                 <a href="https://github.com/sdmoralesma/javalab/wiki" target="_blank">
-                    <img src="assets/images/github-mark.png" alt="javalab wiki" style="margin-top: 10px">
+                    <img src="assets/images/github-mark.png" alt="javalab wiki">
                 </a>
-            </ul>
+            </form>
         </div>
     </div>
 </nav>
