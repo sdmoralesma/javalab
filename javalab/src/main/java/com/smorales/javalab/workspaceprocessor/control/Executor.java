@@ -25,8 +25,7 @@ public class Executor {
             if (status == OK) {
                 return getStreamAsString(proc.getInputStream());
             } else {
-                String procError = getStreamAsString(proc.getErrorStream());
-                throw new NotRunnableCodeException(procError);
+                throw new NotRunnableCodeException(getStreamAsString(proc.getErrorStream()));
             }
         } catch (InterruptedException | IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
