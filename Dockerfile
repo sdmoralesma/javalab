@@ -51,6 +51,7 @@ RUN mvn package -q -f $USER_HOME/lab/pom.xml -Dmaven.repo.local=$MAVEN_M2
 
 # Auto-Deploy javalab to Wildfly
 ADD javalab $USER_HOME/javalab/
+RUN mvn dependency:go-offline -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2
 RUN mvn package -q -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 

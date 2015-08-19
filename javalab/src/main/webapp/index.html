@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="assets/css/tree-control-attribute.css">
 </head>
 
-<body ng-controller="HomeCtrl">
+<body ng-view="">
 
 <nav id="ext-nav" class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
@@ -70,14 +70,15 @@
                 </div>
             </div>
         </form>
-        <!--<form class="navbar-form navbar-left">-->
-            <!--<button id="save-btn" class="btn btn-primary" ng-click="save()">-->
-                <!--<span class="glyphicon glyphicon-floppy-disk"></span>-->
-            <!--</button>-->
-            <!--<button id="new-btn" class="btn btn-success" ng-click="new()">-->
-                <!--<span class="glyphicon glyphicon-file"></span>-->
-            <!--</button>-->
-        <!--</form>-->
+
+        <form class="navbar-form navbar-left">
+            <button id="save-btn" class="btn btn-primary" ng-click="save()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+            </button>
+            <button id="new-btn" class="btn btn-success" ng-click="new()">
+                <span class="glyphicon glyphicon-file"></span>
+            </button>
+        </form>
 
         <div class="collapse navbar-collapse" id="collapsable-menu">
             <form class="navbar-form navbar-right ">
@@ -162,6 +163,13 @@
 
     <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
 
+
+    <h1> Output {{ mylocaldata }}} </h1>
+
+    <!--<div ng-view>-->
+        <!--[Template content will be inserted here]-->
+    <!--</div>-->
+
 </div>
 
 <!--dependencies-->
@@ -170,7 +178,8 @@
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://codebeautify.org/js/beautify.js"></script>
-<script src="//code.angularjs.org/1.4.3/angular.js"></script>
+<script src="//code.angularjs.org/1.4.4/angular.js"></script>
+<script src="//code.angularjs.org/1.4.4/angular-route.js"></script>
 <script src="app/shared/angular-block-ui.js"></script>
 <script src="app/shared/angular-tree-control.js"></script>
 <script src="app/shared/angucomplete-alt.js"></script>

@@ -36,13 +36,9 @@ labApp.factory('middleService', ['$http', function ($http) {
             });
         },
 
-        newWorkspace: function (model) {
+        newWorkspace: function () {
             const NEW_SERVICE = ENDPOINT + "/new";
-            $http.get(NEW_SERVICE).then(function (response) {
-                model.console = response.data.output;
-            }, function error(failure) {
-                alert('error code: ' + failure.status);
-            });
+            return $http.get(NEW_SERVICE);
         }
     };
 }]);

@@ -1,5 +1,5 @@
 'use strict';
-labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($scope, middleService, blockUI) {
+labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldata', function ($scope, middleService, blockUI, mylocaldata) {
 
     $scope.init = function () {
         $.ajax({
@@ -36,7 +36,9 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', function ($
 
         });
     };
-    $scope.init();
+
+    //$scope.init();
+    $scope.mylocaldata = mylocaldata.data.output;
 
     $scope.formatCode = function () {
 
