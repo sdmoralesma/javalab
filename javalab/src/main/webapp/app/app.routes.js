@@ -1,7 +1,7 @@
 labApp.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: '/index.html',
+            templateUrl: 'app/components/partials/test.html',
             controller: "HomeCtrl",
             resolve: {
                 mylocaldata: ["middleService", function (middleService) {

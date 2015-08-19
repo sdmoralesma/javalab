@@ -49,9 +49,12 @@ ENV MAVEN_M2 $USER_HOME/.m2/repository
 ADD lab $USER_HOME/lab/
 RUN mvn package -q -f $USER_HOME/lab/pom.xml -Dmaven.repo.local=$MAVEN_M2
 
-# Auto-Deploy javalab to Wildfly
-ADD javalab $USER_HOME/javalab/
+# Cache dependencies
+ADD javalab/pom.xml $USER_HOME/javalab/
 RUN mvn verify clean --fail-never -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2
+
+# Auto-Deploy javalab to Wildfly
+ADD javalab/src $USER_HOME/javalab/src
 RUN mvn package -q -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 
