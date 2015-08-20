@@ -55,7 +55,7 @@ RUN mvn verify clean --fail-never -f $USER_HOME/javalab/pom.xml -Dmaven.repo.loc
 
 # Auto-Deploy javalab to Wildfly
 ADD javalab/src $USER_HOME/javalab/src
-RUN mvn package -q -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
+RUN mvn package -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 
 # Run everything below as the wildfly user
