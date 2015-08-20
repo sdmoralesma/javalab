@@ -28,6 +28,26 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData',
             $scope.codeEditor.getSession().setMode(JAVA_MODE);
             $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
         }());
+
+        function resizeTextAreasVertically() {
+
+            var minWidthDesktop = 980;
+            if ($(window).width() < minWidthDesktop) {
+                return;
+            }
+
+            var windowHeight = $(window).height();
+            var extNavHeight = $('#ext-nav').height();
+            //  Define height for each element based on %
+            var codeEditorHeight = (windowHeight * 75 / 100) - extNavHeight;
+            var consoleHeight = (windowHeight * 25 / 100) - extNavHeight;
+
+            // resize elements
+            $('#code-editor').height(codeEditorHeight);
+            $('#console').height(consoleHeight);
+        }
+
+        resizeTextAreasVertically();
     });
 
     $scope.formatCode = function () {
