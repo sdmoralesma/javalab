@@ -36,6 +36,16 @@ labApp.factory('middleService', ['$http', function ($http) {
             });
         },
 
+        initWorkspace: function () {
+            const INIT_SERVICE = ENDPOINT + "/init";
+            return $http.get(INIT_SERVICE);
+        },
+
+        base62Workspace: function (base62Param) {
+            const BASE62_SERVICE = ENDPOINT + "/" + base62Param;
+            return $http.get(BASE62_SERVICE);
+        },
+
         newWorkspace: function () {
             const NEW_SERVICE = ENDPOINT + "/new";
             return $http.get(NEW_SERVICE);

@@ -1,47 +1,36 @@
 'use strict';
-labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldata', function ($scope, middleService, blockUI, mylocaldata) {
+labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData', function ($scope, middleService, blockUI, initData) {
 
-    $scope.init = function () {
-        $.ajax({
-            dataType: "json",
-            url: 'rest/process/init',
-            async: false
-        }).success(function (data) {
+    $scope.appModel = initData.data;
 
-            $scope.appModel = data;
-            $scope.root = new TreeModel().parse({"id": 0, "children": $scope.appModel.treedata});
+    $scope.$on('$routeChangeSuccess', function () {// initialization of main model
+        $scope.root = new TreeModel().parse({"id": 0, "children": $scope.appModel.treedata});
 
-            //tree data initialization
-            $scope.treedata = $scope.appModel.treedata;
-            $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
-            $scope.selected = $scope.treedata[0].children[0].children[0];
+        //tree data initialization
+        $scope.treedata = $scope.appModel.treedata;
+        $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
+        $scope.selected = $scope.treedata[0].children[0].children[0];
 
-            //AutoCompletion
-            $scope.javaClasses = [
-                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
-                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
-            ];
-            $scope.initialValue = $scope.javaClasses[0];
+        //AutoCompletion
+        $scope.javaClasses = [
+            {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
+            {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
+        ];
+        $scope.initialValue = $scope.javaClasses[0];
 
-            (function initializeCodeEditor() {
-                const CRIMSON_THEME = "ace/theme/crimson_editor";
-                const JAVA_MODE = "ace/mode/java";
+        (function initializeCodeEditor() {
+            const CRIMSON_THEME = "ace/theme/crimson_editor";
+            const JAVA_MODE = "ace/mode/java";
 
-                $scope.codeEditor = ace.edit("code-editor");
-                $scope.codeEditor.$blockScrolling = Infinity;
-                $scope.codeEditor.setTheme(CRIMSON_THEME);
-                $scope.codeEditor.getSession().setMode(JAVA_MODE);
-                $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
-            }());
-
-        });
-    };
-
-    //$scope.init();
-    $scope.mylocaldata = mylocaldata.data.output;
+            $scope.codeEditor = ace.edit("code-editor");
+            $scope.codeEditor.$blockScrolling = Infinity;
+            $scope.codeEditor.setTheme(CRIMSON_THEME);
+            $scope.codeEditor.getSession().setMode(JAVA_MODE);
+            $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
+        }());
+    });
 
     $scope.formatCode = function () {
-
         function formatCodeFor(editor) {
             editor.getSession().setUseWrapMode(false);
             var oldFormat = editor.getValue();
@@ -58,7 +47,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
     };
 
     $scope.runCode = function () {
-
         if ($scope.appModel.runnableNode.id == undefined) {
             $scope.appModel.console = "Please select a class to run";
             return;
@@ -74,7 +62,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
     };
 
     $scope.runTests = function () {
-
         if ($scope.appModel.runnableNode.id == undefined) {
             $scope.appModel.console = "Please select a test class";
             return;
@@ -103,7 +90,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
      * Tree manager
      */
     $scope.showSelected = function (node) {
-
         var oldNode = $scope.selected;
         if (oldNode !== undefined) {
             oldNode.code = $scope.codeEditor.getValue();
@@ -120,7 +106,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
     };
 
     $scope.addNode = function (typeToCreate, node) {
-
         var nodeName = prompt("Enter " + typeToCreate + " name", typeToCreate + " name");
         if (nodeName == null || nodeName.trim() === "") {
             return;
@@ -178,11 +163,9 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
     };
 
     $scope.editNode = function (node) {
-
         if (node.id === 1 || node.id === 2) {
             return;
         }
-
 
         var nodeName = prompt("Change name", node.name);
         if (nodeName == null || nodeName.trim() === "") {
@@ -234,7 +217,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
     };
 
     $scope.removeNode = function (node) {
-
         if (node.id === 1 || node.id === 2) {
             return;
         }
@@ -278,7 +260,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'mylocaldat
      * Autocompletion
      */
     $scope.selectedFile = function (selected) {
-
         if (selected == undefined) {
             $scope.appModel.runnableNode.id = undefined;
             return;

@@ -5,6 +5,7 @@
     <title>javalab</title>
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico">
 
+    <base href="/">
     <meta charset="UTF-8">
     <meta name="description" content="simple interface to run Java code with powerful features online">
     <meta name="keywords"
@@ -30,150 +31,6 @@
 
 <div ng-view></div>
 
-<nav id="ext-nav" class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#collapsable-menu">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <a class="navbar-brand" href="/">javalab</a>
-        </div>
-
-        <form class="navbar-form navbar-left">
-            <div class="input-group">
-                <div class="form-group">
-                    <angucomplete-alt id="search-input"
-                                      pause="100"
-                                      placeholder="Select class or test"
-                                      initial-value="initialValue"
-                                      selected-object="selectedFile"
-                                      local-data="javaClasses"
-                                      search-fields="name, path"
-                                      title-field="name"
-                                      description-field="path"
-                                      minlength="0"
-                                      auto-match="true"
-                                      match-class="highlight"
-                                      input-class="form-control form-control-small"></angucomplete-alt>
-                </div>
-                <div class="input-group-btn">
-                    <button id="run-btn" class="btn btn-default " ng-click="runCode()">
-                        <span class="glyphicon glyphicon-play"></span>
-                    </button>
-                    <button id="test-btn" class="btn btn-default" ng-click="runTests()">
-                        <span class="glyphicon glyphicon-check"></span>
-                    </button>
-                </div>
-            </div>
-        </form>
-
-        <form class="navbar-form navbar-left">
-            <button id="save-btn" class="btn btn-primary" ng-click="save()">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-            </button>
-            <button id="new-btn" class="btn btn-success" ng-click="new()">
-                <span class="glyphicon glyphicon-file"></span>
-            </button>
-        </form>
-
-        <div class="collapse navbar-collapse" id="collapsable-menu">
-            <form class="navbar-form navbar-right ">
-                <a href="https://github.com/sdmoralesma/javalab/wiki" target="_blank">
-                    <img src="assets/images/github-mark.png" alt="javalab wiki">
-                </a>
-            </form>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div id="ext-libraries" class="col-sm-12 col-md-3">
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
-
-                <div class="btn-group pull-right">
-                    <a ng-click="formatCode()" class="btn btn-default btn-xs">
-                        <span class="glyphicon glyphicon-indent-left"></span>
-                    </a>
-
-                    <div class="btn-group">
-                        <a href="#" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a ng-click="addNode('file', selected)">
-                                <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
-                            </a></li>
-                            <li><a ng-click="addNode('folder', selected)">
-                                <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
-                            </a></li>
-                        </ul>
-                    </div>
-                    <a ng-click="editNode(selected)" class="btn btn-default btn-xs">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a ng-click="removeNode(selected)" class="btn btn-default btn-xs">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-
-            <div class="panel-body">
-                <div treecontrol class="tree-classic"
-                     tree-model="treedata"
-                     options="treeOptions"
-                     on-selection="showSelected(node)"
-                     expanded-nodes="expandedNodes"
-                     selected-node="selected">
-                    {{node.name}}
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-book">&nbsp;Libraries</span>
-            </div>
-
-            <div class="panel-body">
-                <div>
-                    <div ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
-                            </label>
-                            <span class="label label-info">{{lib.version}}</span>
-                            <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="code-editor" ng-model="appModel.code" class="panel panel-default"></div>
-
-    <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
-
-
-    <h1> Output {{ mylocaldata }}} </h1>
-
-    <!--<div ng-view>-->
-        <!--[Template content will be inserted here]-->
-    <!--</div>-->
-
-</div>
-
 <!--dependencies-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -196,5 +53,6 @@
 <script src="app/components/home/homeResizeEditorVertically.js"></script>
 <script src="app/components/home/homeEvents.js"></script>
 <script src="assets/js/google-tracking.js"></script>
+
 </body>
 </html>
