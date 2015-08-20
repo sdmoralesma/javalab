@@ -1,5 +1,5 @@
 'use strict';
-labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData', function ($scope, middleService, blockUI, initData) {
+labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI', 'initData', function ($rootScope, $scope, middleService, blockUI, initData) {
 
     $scope.appModel = initData.data;
 
@@ -18,6 +18,8 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData',
         ];
         $scope.initialValue = $scope.javaClasses[0];
 
+        $rootScope.$broadcast('resize',{});
+
         (function initializeCodeEditor() {
             const CRIMSON_THEME = "ace/theme/crimson_editor";
             const JAVA_MODE = "ace/mode/java";
@@ -28,26 +30,6 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData',
             $scope.codeEditor.getSession().setMode(JAVA_MODE);
             $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
         }());
-
-        function resizeTextAreasVertically() {
-
-            var minWidthDesktop = 980;
-            if ($(window).width() < minWidthDesktop) {
-                return;
-            }
-
-            var windowHeight = $(window).height();
-            var extNavHeight = $('#ext-nav').height();
-            //  Define height for each element based on %
-            var codeEditorHeight = (windowHeight * 75 / 100) - extNavHeight;
-            var consoleHeight = (windowHeight * 25 / 100) - extNavHeight;
-
-            // resize elements
-            $('#code-editor').height(codeEditorHeight);
-            $('#console').height(consoleHeight);
-        }
-
-        resizeTextAreasVertically();
     });
 
     $scope.formatCode = function () {
@@ -291,5 +273,15 @@ labApp.controller("HomeCtrl", ['$scope', 'middleService', 'blockUI', 'initData',
 
         $scope.appModel.runnableNode.id = nodeFound.model.id;
     };
+
+    //$scope.$on('$destroy', function () {//TODO: fix me!
+    //    window.onbeforeunload = undefined;
+    //});
+    //
+    //$scope.$on('$locationChangeStart', function (event, next, current) {
+    //    if (!confirm("Are you sure you want to leave this page?")) {
+    //        event.preventDefault();
+    //    }
+    //});
 
 }]);

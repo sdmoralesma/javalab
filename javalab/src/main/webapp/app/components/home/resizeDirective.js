@@ -24,6 +24,10 @@ labApp.directive('resize', ['$window', function ($window) {
                 resizeAreasVertically();
                 scope.$broadcast('resize::resize');
             });
+
+            scope.$on('resize', function (event, data) {
+                resizeAreasVertically();
+            });
         }
     }
 }]);
