@@ -70,6 +70,8 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
         }
 
         blockUI.start();
+        $scope.selected.code = $scope.codeEditor.getValue();
+        $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
         $scope.appModel.runnableNode.mainClass = false;
         $scope.appModel.runnableNode.testClass = true;
         $scope.appModel.console = middleService.runTest($scope.appModel);
@@ -78,6 +80,8 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
     $scope.save = function () {
         blockUI.start();
+        $scope.selected.code = $scope.codeEditor.getValue();
+        $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
         $scope.appModel.console = middleService.saveWorkspace($scope.appModel);
         blockUI.stop();
     };
