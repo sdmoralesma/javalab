@@ -1,7 +1,6 @@
 labApp.directive('resize', ['$window', function ($window) {
 
     function resizeAreasVertically() {
-
         var minWidthDesktop = 980;
         if ($(window).width() < minWidthDesktop) {
             return;

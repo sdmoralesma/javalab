@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.io.StringReader;
 
@@ -36,11 +37,14 @@ public class WorkspaceProcessor {
     }
 
     public JsonObject getByBase62(String base62) {
-        Workspace workspace = em.createNamedQuery(Workspace.findByBase62, Workspace.class)
-                .setParameter("base62", base62)
-                .getSingleResult();
-
-        return Json.createReader(new StringReader(workspace.getJson())).readObject();
+        try {
+            Workspace workspace = em.createNamedQuery(Workspace.findByBase62, Workspace.class)
+                    .setParameter("base62", base62)
+                    .getSingleResult();
+            return Json.createReader(new StringReader(workspace.getJson())).readObject();
+        } catch (NoResultException ex) {
+            return Json.createObjectBuilder().add("output", "no workspace available").build();
+        }
     }
 
     public String runCode(Request req) {

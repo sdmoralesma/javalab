@@ -11,8 +11,10 @@ labApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, 
 
         })
         .when('/data/:idBase62', {
+            templateUrl: 'app/components/partials/main-interface.html',
+            controller: "HomeCtrl",
             resolve: {
-                localdata: ["middleService", "$route", function (middleService, $route) {
+                initData: ["middleService", "$route", function (middleService, $route) {
                     return middleService.base62Workspace($route.current.params.idBase62);
                 }]
             }
@@ -21,5 +23,4 @@ labApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, 
             redirectTo: '/'
         });
 
-    $locationProvider.html5Mode(true);
 }]);

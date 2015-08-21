@@ -274,14 +274,4 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
         $scope.appModel.runnableNode.id = nodeFound.model.id;
     };
 
-    //$scope.$on('$destroy', function () {//TODO: fix me!
-    //    window.onbeforeunload = undefined;
-    //});
-    //
-    //$scope.$on('$locationChangeStart', function (event, next, current) {
-    //    if (!confirm("Are you sure you want to leave this page?")) {
-    //        event.preventDefault();
-    //    }
-    //});
-
 }]);
