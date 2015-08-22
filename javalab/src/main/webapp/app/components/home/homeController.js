@@ -3,11 +3,10 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
     var self = this;
 
-    self.findOnTreeById = function (id) {
-        var nodeFound = $scope.root.first(function (iterNode) {
+    self.findById = function (id) {
+        return $scope.root.first(function (iterNode) {
             return iterNode.model.id === id;
         });
-        return nodeFound.model;
     };
 
     self.initializeCodeEditor = function () {
@@ -27,8 +26,8 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
         //tree data initialization
         $scope.treedata = $scope.appModel.treedata;
-        $scope.expandedNodes = [self.findOnTreeById(1), self.findOnTreeById(11), self.findOnTreeById(2), self.findOnTreeById(21)];
-        $scope.selected = self.findOnTreeById(111);
+        $scope.expandedNodes = [self.findById(1).model, self.findById(11).model, self.findById(2).model, self.findById(21).model];
+        $scope.selected = self.findById(111).model;
 
         //AutoCompletion
         $scope.javaClasses = [
@@ -144,10 +143,6 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return;
         }
 
-        var nodeFound = $scope.root.first(function (iterNode) {
-            return iterNode.model.id === node.id;
-        });
-
         function newNodeUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -163,7 +158,9 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return newNode;
         }
 
+        var nodeFound = self.findById(node.id);
         var newNode = createNewNode();
+
         if (newNode.model.type === "file") {
             nodeFound.parent.addChild(newNode);
             if (nodeName.indexOf(".java") > -1) {
@@ -173,7 +170,6 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
                     path: self.pathAsString(newNode)
                 })
             }
-
         } else if (newNode.model.type === "folder") {
             nodeFound.addChild(newNode);
         }
@@ -189,10 +185,7 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return;
         }
 
-        var nodeFound = $scope.root.first(function (iterNode) {
-            return iterNode.model.id === node.id;
-        });
-
+        var nodeFound = self.findById(node.id);
         nodeFound.model.name = nodeName;
 
         function updatePaths(node) {
@@ -226,12 +219,9 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return;
         }
 
-        var nodeFound = $scope.root.first(function (iterNode) {
-            return iterNode.model.id === node.id;
-        });
+        $scope.selected = self.findById(1).model;//select root
 
-        $scope.selected = $scope.treedata[0];//root selected
-
+        var nodeFound = self.findById(node.id);
         if (nodeFound.model.name.indexOf(".java") > -1) {
             var classesArray = $scope.javaClasses;
             for (var index = 0; index < classesArray.length; ++index) {
@@ -265,10 +255,7 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return;
         }
 
-        var nodeFound = $scope.root.first(function (iterNode) {
-            return iterNode.model.id === selected.originalObject.id;
-        });
-
+        var nodeFound = self.findById(selected.originalObject.id);
         $scope.appModel.runnableNode.id = nodeFound.model.id;
     };
 
