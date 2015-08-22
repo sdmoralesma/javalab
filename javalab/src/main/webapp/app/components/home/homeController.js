@@ -1,6 +1,25 @@
 'use strict';
 labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI', 'initData', function ($rootScope, $scope, middleService, blockUI, initData) {
 
+    var self = this;
+
+    self.findOnTreeById = function (id) {
+        var nodeFound = $scope.root.first(function (iterNode) {
+            return iterNode.model.id === id;
+        });
+        return nodeFound.model;
+    };
+
+    self.initializeCodeEditor = function () {
+        const CRIMSON_THEME = "ace/theme/crimson_editor";
+        const JAVA_MODE = "ace/mode/java";
+        $scope.codeEditor = ace.edit("code-editor");
+        $scope.codeEditor.$blockScrolling = Infinity;
+        $scope.codeEditor.setTheme(CRIMSON_THEME);
+        $scope.codeEditor.getSession().setMode(JAVA_MODE);
+        $scope.codeEditor.getSession().setValue($scope.selected.code);
+    };
+
     $scope.appModel = initData.data;
 
     $scope.$on('$routeChangeSuccess', function () {// initialization of main model
@@ -8,8 +27,8 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
         //tree data initialization
         $scope.treedata = $scope.appModel.treedata;
-        $scope.expandedNodes = [$scope.treedata[0], $scope.treedata[0].children[0], $scope.treedata[1], $scope.treedata[1].children[0]];
-        $scope.selected = $scope.treedata[0].children[0].children[0];
+        $scope.expandedNodes = [self.findOnTreeById(1), self.findOnTreeById(11), self.findOnTreeById(2), self.findOnTreeById(21)];
+        $scope.selected = self.findOnTreeById(111);
 
         //AutoCompletion
         $scope.javaClasses = [
@@ -18,18 +37,9 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
         ];
         $scope.initialValue = $scope.javaClasses[0];
 
-        $rootScope.$broadcast('resize',{});
+        $rootScope.$broadcast('resize', {});
 
-        (function initializeCodeEditor() {
-            const CRIMSON_THEME = "ace/theme/crimson_editor";
-            const JAVA_MODE = "ace/mode/java";
-
-            $scope.codeEditor = ace.edit("code-editor");
-            $scope.codeEditor.$blockScrolling = Infinity;
-            $scope.codeEditor.setTheme(CRIMSON_THEME);
-            $scope.codeEditor.getSession().setMode(JAVA_MODE);
-            $scope.codeEditor.getSession().setValue($scope.appModel.treedata[0].children[0].children[0].code);
-        }());
+        self.initializeCodeEditor();
     });
 
     $scope.formatCode = function () {
@@ -111,6 +121,23 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
         }
     };
 
+
+    self.pathAsString = function (node) {
+        var path = "";
+        var pathArray = node.getPath();
+        for (var index = 2; index < pathArray.length; ++index) {
+            if (pathArray[index].model.name != undefined) {
+
+                if (index === (pathArray.length - 1)) {
+                    path += ".";
+                }
+
+                path += pathArray[index].model.name;
+            }
+        }
+        return path;
+    };
+
     $scope.addNode = function (typeToCreate, node) {
         var nodeName = prompt("Enter " + typeToCreate + " name", typeToCreate + " name");
         if (nodeName == null || nodeName.trim() === "") {
@@ -136,22 +163,6 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return newNode;
         }
 
-        function pathAsString(node) {
-            var path = "";
-            var pathArray = node.getPath();
-            for (var index = 2; index < pathArray.length; ++index) {
-                if (pathArray[index].model.name != undefined) {
-
-                    if (index === (pathArray.length - 1)) {
-                        path += ".";
-                    }
-
-                    path += pathArray[index].model.name;
-                }
-            }
-            return path;
-        }
-
         var newNode = createNewNode();
         if (newNode.model.type === "file") {
             nodeFound.parent.addChild(newNode);
@@ -159,7 +170,7 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
                 $scope.javaClasses.push({
                     id: newNode.model.id,
                     name: newNode.model.name,
-                    path: pathAsString(newNode)
+                    path: self.pathAsString(newNode)
                 })
             }
 
@@ -184,30 +195,13 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
         nodeFound.model.name = nodeName;
 
-        function pathAsString(node) {
-
-            var path = "";
-            var pathArray = node.getPath();
-            for (var index = 2; index < pathArray.length; ++index) {
-                if (pathArray[index].model.name != undefined) {
-
-                    if (index === (pathArray.length - 1)) {
-                        path += ".";
-                    }
-
-                    path += pathArray[index].model.name;
-                }
-            }
-            return path;
-        }
-
         function updatePaths(node) {
             if (node.model.type === "file" && node.model.name.indexOf(".java") > -1) {
                 var classesArray = $scope.javaClasses;
                 for (var i = 0; i < classesArray.length; ++i) {
                     if (classesArray[i].id == node.model.id) {
                         classesArray[i].name = node.model.name;
-                        classesArray[i].path = pathAsString(node);
+                        classesArray[i].path = self.pathAsString(node);
                     }
                 }
 
