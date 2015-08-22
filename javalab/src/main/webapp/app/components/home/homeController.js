@@ -26,13 +26,13 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
 
         //tree data initialization
         $scope.treedata = $scope.appModel.treedata;
-        $scope.expandedNodes = [self.findById(1).model, self.findById(11).model, self.findById(2).model, self.findById(21).model];
-        $scope.selected = self.findById(111).model;
+        $scope.expandedNodes = [self.findById(2).model, self.findById(21).model, self.findById(3).model, self.findById(31).model];
+        $scope.selected = self.findById(211).model;
 
         //AutoCompletion
         $scope.javaClasses = [
-            {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 111},
-            {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 211}
+            {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 211},
+            {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 311}
         ];
         $scope.initialValue = $scope.javaClasses[0];
 
@@ -54,7 +54,7 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             }
         }
 
-        formatCodeFor(ace.edit("code-editor"));
+        formatCodeFor($scope.codeEditor);
     };
 
     $scope.runCode = function () {
@@ -126,7 +126,6 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
         var pathArray = node.getPath();
         for (var index = 2; index < pathArray.length; ++index) {
             if (pathArray[index].model.name != undefined) {
-
                 if (index === (pathArray.length - 1)) {
                     path += ".";
                 }
@@ -219,8 +218,6 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             return;
         }
 
-        $scope.selected = self.findById(1).model;//select root
-
         var nodeFound = self.findById(node.id);
         if (nodeFound.model.name.indexOf(".java") > -1) {
             var classesArray = $scope.javaClasses;
@@ -231,6 +228,8 @@ labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI
             }
         }
 
+        $scope.codeEditor.getSession().setValue("");
+        $scope.selected = nodeFound.parent.model;
         nodeFound.drop();
     };
 
