@@ -31,10 +31,10 @@
                                       input-class="form-control form-control-small"></angucomplete-alt>
                 </div>
                 <div class="input-group-btn">
-                    <button id="run-btn" class="btn btn-default " ng-click="runCode()">
+                    <button id="run-btn" class="btn btn-default " data-ng-click="runCode()">
                         <span class="glyphicon glyphicon-play"></span>
                     </button>
-                    <button id="test-btn" class="btn btn-default" ng-click="runTests()">
+                    <button id="test-btn" class="btn btn-default" data-ng-click="runTests()">
                         <span class="glyphicon glyphicon-check"></span>
                     </button>
                 </div>
@@ -42,10 +42,10 @@
         </form>
 
         <form class="navbar-form navbar-left">
-            <button id="save-btn" class="btn btn-primary" ng-click="save()">
+            <button id="save-btn" class="btn btn-primary" data-ng-click="save()">
                 <span class="glyphicon glyphicon-floppy-disk"></span>
             </button>
-            <button id="new-btn" class="btn btn-success" ng-click="new()">
+            <button id="new-btn" class="btn btn-success" data-ng-click="new()">
                 <span class="glyphicon glyphicon-file"></span>
             </button>
         </form>
@@ -68,27 +68,27 @@
                 <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
 
                 <div class="btn-group pull-right">
-                    <a ng-click="formatCode()" class="btn btn-default btn-xs">
+                    <a data-ng-click="formatCode()" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-indent-left"></span>
                     </a>
 
                     <div class="btn-group">
-                        <a href="#" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+                        <a class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-plus"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a ng-click="addNode('file', selected)">
+                            <li><a data-ng-click="addNode('file', selected)">
                                 <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
                             </a></li>
-                            <li><a ng-click="addNode('folder', selected)">
+                            <li><a data-ng-click="addNode('folder', selected)">
                                 <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
                             </a></li>
                         </ul>
                     </div>
-                    <a ng-click="editNode(selected)" class="btn btn-default btn-xs">
+                    <a data-ng-click="editNode(selected)" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a ng-click="removeNode(selected)" class="btn btn-default btn-xs">
+                    <a data-ng-click="removeNode(selected)" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>
@@ -114,10 +114,10 @@
 
             <div class="panel-body">
                 <div>
-                    <div ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
+                    <div data-ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
+                                <input type="checkbox" data-ng-model="lib.checked"> {{lib.name}}
                             </label>
                             <span class="label label-info">{{lib.version}}</span>
                             <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
@@ -129,8 +129,8 @@
 
     </div>
 
-    <div id="code-editor" ng-model="appModel.code" class="panel panel-default"></div>
+    <div id="code-editor" data-ng-model="appModel.code" class="panel panel-default"></div>
 
-    <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
+    <textarea id="console" readonly data-ng-model="appModel.console" class="form-control"></textarea>
 
 </div>
