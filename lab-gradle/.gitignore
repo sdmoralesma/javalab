@@ -4,3 +4,4 @@ gradlew.bat
 settings.gradle
 gradle/
 .gradle
+.nb-gradle-properties
