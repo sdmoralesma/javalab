@@ -1,5 +1,5 @@
-var labApp = angular.module('LabApp', ['ngRoute', 'blockUI', 'treeControl', "angucomplete-alt"]);
+angular.module('LabApp', ['ngRoute', 'blockUI', 'treeControl', "angucomplete-alt"]);
 
-labApp.run(['$rootScope', 'middleService', function ($rootScope, middleService) {
+angular.module('LabApp').run(['$rootScope', 'middleService', function ($rootScope, middleService) {
 
 }]);

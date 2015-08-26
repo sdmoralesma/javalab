@@ -1,4 +1,4 @@
-labApp.directive('resize', ['$window', function ($window) {
+angular.module('LabApp').directive('resize', ['$window', function ($window) {
 
     function resizeAreasVertically() {
         var minWidthDesktop = 980;

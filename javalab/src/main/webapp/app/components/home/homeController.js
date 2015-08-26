@@ -1,5 +1,5 @@
 'use strict';
-labApp.controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI', 'initData', function ($rootScope, $scope, middleService, blockUI, initData) {
+angular.module('LabApp').controller("HomeCtrl", ['$rootScope', '$scope', 'middleService', 'blockUI', 'initData', function ($rootScope, $scope, middleService, blockUI, initData) {
 
     var self = this;
 

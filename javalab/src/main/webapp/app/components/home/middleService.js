@@ -1,5 +1,5 @@
 'use strict';
-labApp.factory('middleService', ['$http', function ($http) {
+angular.module('LabApp').factory('middleService', ['$http', function ($http) {
 
     const ENDPOINT = 'rest/process';
     return {

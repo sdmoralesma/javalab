@@ -1,4 +1,4 @@
-labApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+angular.module('LabApp').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'app/components/partials/main-interface.html',
