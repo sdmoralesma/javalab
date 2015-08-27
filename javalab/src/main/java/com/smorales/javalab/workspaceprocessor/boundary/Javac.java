@@ -2,6 +2,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.entity.Library;
 
+import javax.enterprise.inject.Alternative;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+@Alternative
 class Javac extends BuildTool {
 
     private static final String JAVAC_EXEC = "javac";
@@ -47,6 +49,10 @@ class Javac extends BuildTool {
         cmd = cmd.replace("{libraries}", dependenciesAsString(libraries));
         cmd = cmd.replace("{testClass}", getTestClass(tempDir, testClass));
         return cmd;
+    }
+
+    @Override
+    protected void createAuxFiles(Path tempDir) {
     }
 
     private String getBuildPath(Path tempDir) {

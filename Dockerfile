@@ -4,7 +4,7 @@ MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 #Install latest java jdk
 RUN export DEBIAN_FRONTEND=noninteractive && \ 
     apt-get -qq update && \
-    apt-get -qq install -y software-properties-common python-software-properties && \
+    apt-get -qq install -y software-properties-common python-software-properties unzip && \
     add-apt-repository ppa:webupd8team/java && \
     apt-get -qq update && \
     echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
@@ -37,13 +37,23 @@ RUN wget --quiet -O /tmp/apache-maven-$MAVEN_VERSION.tar.gz http://archive.apach
     ln -s /opt/maven/bin/mvn /usr/local/bin && \
     rm -f /tmp/apache-maven-$MAVEN_VERSION.tar.gz
 ENV MAVEN_HOME /opt/maven
+ENV USER_HOME /home/wildfly
+ENV MAVEN_M2 $USER_HOME/.m2/repository
+
+# Install Gradle
+WORKDIR /usr/bin
+RUN wget https://services.gradle.org/distributions/gradle-2.2.1-all.zip && \
+    unzip gradle-2.2.1-all.zip && \
+    ln -s gradle-2.2.1 gradle && \
+    rm gradle-2.2.1-all.zip
+
+# Set Appropriate Environmental Variables
+ENV GRADLE_HOME /usr/bin/gradle
+ENV PATH $PATH:$GRADLE_HOME/bin
 
 # Create the wildfly user and group
 RUN groupadd -r wildfly-group -g 433 && \
     useradd -u 431 -r -g wildfly-group -s /bin/false wildfly -m
-
-ENV USER_HOME /home/wildfly
-ENV MAVEN_M2 $USER_HOME/.m2/repository
 
 # Add lab project and download dependencies
 ADD lab $USER_HOME/lab/

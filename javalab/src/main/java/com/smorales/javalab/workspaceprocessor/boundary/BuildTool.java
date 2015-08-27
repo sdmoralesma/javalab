@@ -32,6 +32,8 @@ public abstract class BuildTool {
 
     protected abstract String buildTestCommand(Path tempDir, List<Path> testClass, List<Library> libraries);
 
+    protected abstract void createAuxFiles(Path tempDir);
+
     // implements template method pattern
     public String runCode(BuildToolData data) {
         Path tempDir = null;
@@ -40,6 +42,7 @@ public abstract class BuildTool {
             HashSet<FlattenNode> projectFiles = new LinkedHashSet<>();
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
+            createAuxFiles(tempDir);
             compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
             getRunnableClass(projectFiles, data);
             return runProject(tempDir, data.getMainclass(), data.getLibraries());
@@ -49,6 +52,8 @@ public abstract class BuildTool {
             fileHandler.removeDir(tempDir);
         }
     }
+
+
 
     private void getRunnableClass(Set<FlattenNode> flattenNodes, BuildToolData data) {
         for (FlattenNode node : flattenNodes) {
@@ -88,6 +93,7 @@ public abstract class BuildTool {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
+            createAuxFiles(tempDir);
             compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
             getRunnableClass(projectFiles, data);
             return testProject(tempDir, data.getTestclass(), data.getLibraries());
