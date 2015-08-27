@@ -2,7 +2,6 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
-import com.smorales.javalab.workspaceprocessor.entity.Library;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public abstract class BuildTool {
 
@@ -26,11 +24,11 @@ public abstract class BuildTool {
     @Inject
     Logger tracer;
 
-    protected abstract String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries);
+    protected abstract String buildCompileCommand(Path tempDir);
 
-    protected abstract String buildRunCommand(Path tempDir, List<Path> mainClass, List<Library> libraries);
+    protected abstract String buildRunCommand(Path tempDir);
 
-    protected abstract String buildTestCommand(Path tempDir, List<Path> testClass, List<Library> libraries);
+    protected abstract String buildTestCommand(Path tempDir);
 
     protected abstract void createAuxFiles(Path tempDir);
 
@@ -43,16 +41,15 @@ public abstract class BuildTool {
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
             createAuxFiles(tempDir);
-            compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
+            compileFiles(tempDir);
             getRunnableClass(projectFiles, data);
-            return runProject(tempDir, data.getMainclass(), data.getLibraries());
+            return runProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
             fileHandler.removeDir(tempDir);
         }
     }
-
 
 
     private void getRunnableClass(Set<FlattenNode> flattenNodes, BuildToolData data) {
@@ -79,13 +76,6 @@ public abstract class BuildTool {
         }
     }
 
-    private List<Path> getJavaFiles(Set<FlattenNode> files) {
-        return files.stream()
-                .map(FlattenNode::getPath)
-                .filter(p -> p.getFileName().toString().endsWith(".java"))
-                .collect(Collectors.toList());
-    }
-
     // implements template method pattern
     public String testCode(BuildToolData data) {
         Path tempDir = fileHandler.createTempDir();
@@ -94,9 +84,9 @@ public abstract class BuildTool {
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
             createAuxFiles(tempDir);
-            compileFiles(tempDir, getJavaFiles(projectFiles), data.getLibraries());
+            compileFiles(tempDir);
             getRunnableClass(projectFiles, data);
-            return testProject(tempDir, data.getTestclass(), data.getLibraries());
+            return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
@@ -105,20 +95,20 @@ public abstract class BuildTool {
     }
 
 
-    private void compileFiles(Path tempDir, List<Path> files, List<Library> libraries) {
-        String cmd = buildCompileCommand(tempDir, files, libraries);
+    private void compileFiles(Path tempDir) {
+        String cmd = buildCompileCommand(tempDir);
         tracer.info(() -> "Compiling with cmd: " + cmd);
         executor.execCommand(cmd);
     }
 
-    private String runProject(Path tempDir, List<Path> mainClass, List<Library> libraries) {
-        String cmd = buildRunCommand(tempDir, mainClass, libraries);
+    private String runProject(Path tempDir) {
+        String cmd = buildRunCommand(tempDir);
         tracer.info(() -> "Running with cmd: " + cmd);
         return executor.execCommand(cmd);
     }
 
-    private String testProject(Path tempDir, List<Path> testClass, List<Library> libraries) {
-        String cmd = buildTestCommand(tempDir, testClass, libraries);
+    private String testProject(Path tempDir) {
+        String cmd = buildTestCommand(tempDir);
         tracer.info(() -> "Testing with cmd: " + cmd);
         return executor.execCommand(cmd);
     }

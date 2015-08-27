@@ -1,27 +1,26 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.entity.Library;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
 
 class Gradle extends BuildTool {
 
     @Override
-    protected String buildCompileCommand(Path tempDir, List<Path> files, List<Library> libraries) {
+    protected String buildCompileCommand(Path tempDir) {
         return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " compileJava";
     }
 
     @Override
-    protected String buildRunCommand(Path tempDir, List<Path> mainClass, List<Library> libraries) {
+    protected String buildRunCommand(Path tempDir) {
         return "gradle  -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
     }
 
     @Override
-    protected String buildTestCommand(Path tempDir, List<Path> testClass, List<Library> libraries) {
+    protected String buildTestCommand(Path tempDir) {
         return "gradle  -b " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
     }
 
@@ -38,6 +37,12 @@ class Gradle extends BuildTool {
                     "\n" +
                     "repositories {\n" +
                     "    mavenCentral()\n" +
+                    "}\n" +
+                    "\n" +
+                    "test {\n" +
+                    "    testLogging {\n" +
+                    "        exceptionFormat = 'full'\n" +
+                    "    }\n" +
                     "}\n" +
                     "\n" +
                     "dependencies {\n" +

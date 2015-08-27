@@ -9,6 +9,12 @@ repositories {
     mavenCentral()
 }
 
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
 dependencies {
     compile 'joda-time:joda-time:2.8'
     compile 'com.google.guava:guava:18.0'
