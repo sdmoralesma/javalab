@@ -19,8 +19,8 @@ public class BuildToolData {
 
 
     public BuildToolData(List<TreeData> treedata, List<Library> libraries, RunnableNode runnableNode) {
-        this.treedata = treedata;
-        this.libraries = libraries;
+        this.treedata = treedata == null ? new ArrayList<>() : treedata;
+        this.libraries = libraries == null ? new ArrayList<>() : libraries;
         this.runnableNode = runnableNode;
         this.mainclass = new ArrayList<>();
         this.testclass = new ArrayList<>();
