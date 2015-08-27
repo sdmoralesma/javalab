@@ -42,6 +42,8 @@ class Gradle extends BuildTool {
                     "test {\n" +
                     "    testLogging {\n" +
                     "        exceptionFormat = 'full'\n" +
+                    "        showExceptions = true\n" +
+                    "        showStackTraces = true\n" +
                     "    }\n" +
                     "}\n" +
                     "\n" +

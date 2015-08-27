@@ -56,7 +56,6 @@ public abstract class BuildTool {
         for (FlattenNode node : flattenNodes) {
             if (data.getRunnableNode().getId().equals(node.getId())) {
                 data.getMainclass().add(node.getPath());
-                data.getTestclass().add(node.getPath());
             }
         }
     }
