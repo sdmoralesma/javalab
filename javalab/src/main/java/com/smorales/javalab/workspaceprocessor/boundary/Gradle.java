@@ -20,7 +20,7 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir) {
+    protected void createAuxFiles(Path tempDir, BuildToolData data) {
         try {
             Path gradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
             String info = "apply plugin:'application'\n" +
