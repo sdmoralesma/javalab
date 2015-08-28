@@ -56,7 +56,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(data.getTreedata().get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(data);
+        String result = sut.runCode(data.getTreedata(), data.getLibraries(), data.getRunnableNode());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
@@ -108,7 +108,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(data.getTreedata().get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(data);
+        String result = sut.testCode(data.getTreedata(), data.getLibraries(), data.getRunnableNode());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);

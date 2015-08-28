@@ -48,13 +48,11 @@ public class WorkspaceProcessor {
     }
 
     public String runCode(Request req) {
-        BuildToolData data = new BuildToolData(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
-        return buildTool.runCode(data);
+        return buildTool.runCode(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
     }
 
     public String runTests(Request req) {
-        BuildToolData data = new BuildToolData(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
-        return buildTool.testCode(data);
+        return buildTool.testCode(req.getTreedata(), req.getLibraries(), req.getRunnableNode());
     }
 
     public String save(String data) {

@@ -1,6 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +22,7 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, BuildToolData data) {
+    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode) {
         try {
             Path gradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
             String info = "apply plugin:'application'\n" +
@@ -49,7 +51,7 @@ class Gradle extends BuildTool {
                     "    testCompile 'junit:junit:4.12'\n" +
                     "}\n";
 
-            info = info.replace("{runnableClassPath}", data.getRunnableNode().getPath());
+            info = info.replace("{runnableClassPath}", runnableNode.getPath());
 
 
             Files.write(gradleFile, info.getBytes());

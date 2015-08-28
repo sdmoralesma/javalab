@@ -1,8 +1,11 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
+import com.smorales.javalab.workspaceprocessor.entity.Library;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
+import sun.reflect.generics.tree.Tree;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -27,17 +30,17 @@ public abstract class BuildTool {
 
     protected abstract String buildTestCommand(Path tempDir);
 
-    protected abstract void createAuxFiles(Path tempDir, BuildToolData data);
+    protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode);
 
     // implements template method pattern
-    public String runCode(BuildToolData data) {
+    public String runCode(List<TreeData> treeData, List<Library> libraries, RunnableNode runnableNode) {
         Path tempDir = null;
         try {
             tempDir = fileHandler.createTempDir();
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            flattenDirectoryTree(projectFiles, tempDir, data.getTreedata());
+            flattenDirectoryTree(projectFiles, tempDir, treeData);
             fileHandler.createFileTree(projectFiles);
-            createAuxFiles(tempDir, data);
+            createAuxFiles(tempDir, runnableNode);
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
@@ -62,13 +65,13 @@ public abstract class BuildTool {
     }
 
     // implements template method pattern
-    public String testCode(BuildToolData data) {
+    public String testCode(List<TreeData> treeData, List<Library> libraries, RunnableNode runnableNode) {
         Path tempDir = fileHandler.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            flattenDirectoryTree(projectFiles, tempDir, data.getTreedata());
+            flattenDirectoryTree(projectFiles, tempDir, treeData);
             fileHandler.createFileTree(projectFiles);
-            createAuxFiles(tempDir, data);
+            createAuxFiles(tempDir, runnableNode);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
