@@ -10,11 +10,6 @@ import java.nio.file.Paths;
 class Gradle extends BuildTool {
 
     @Override
-    protected String buildCompileCommand(Path tempDir) {
-        return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " compileJava";
-    }
-
-    @Override
     protected String buildRunCommand(Path tempDir) {
         return "gradle  -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
     }

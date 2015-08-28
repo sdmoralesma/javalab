@@ -24,8 +24,6 @@ public abstract class BuildTool {
     @Inject
     Logger tracer;
 
-    protected abstract String buildCompileCommand(Path tempDir);
-
     protected abstract String buildRunCommand(Path tempDir);
 
     protected abstract String buildTestCommand(Path tempDir);
@@ -41,7 +39,6 @@ public abstract class BuildTool {
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
             createAuxFiles(tempDir);
-            compileFiles(tempDir);
             getRunnableClass(projectFiles, data);
             return runProject(tempDir);
         } catch (NotRunnableCodeException exc) {
@@ -83,7 +80,6 @@ public abstract class BuildTool {
             flatDirectoryTree(projectFiles, tempDir, data.getTreedata());
             fileHandler.createFileTree(projectFiles);
             createAuxFiles(tempDir);
-            compileFiles(tempDir);
             getRunnableClass(projectFiles, data);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
@@ -91,13 +87,6 @@ public abstract class BuildTool {
         } finally {
             fileHandler.removeDir(tempDir);
         }
-    }
-
-
-    private void compileFiles(Path tempDir) {
-        String cmd = buildCompileCommand(tempDir);
-        tracer.info(() -> "Compiling with cmd: " + cmd);
-        executor.execCommand(cmd);
     }
 
     private String runProject(Path tempDir) {

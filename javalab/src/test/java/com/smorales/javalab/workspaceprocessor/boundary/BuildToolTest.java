@@ -60,7 +60,7 @@ public class BuildToolTest {
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(sut.executor, times(2)).execCommand(argument.capture());
+        verify(sut.executor).execCommand(argument.capture());
         assertThat(argument.getValue()).isEqualTo(null);
     }
 
@@ -111,9 +111,11 @@ public class BuildToolTest {
         String result = sut.testCode(data);
 
         assertThat(result).isEqualTo(null);
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(sut.executor).execCommand(argument.capture());
-        assertThat(argument.getValue()).isEqualTo(null);
+        ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Executor.STD> argStd = ArgumentCaptor.forClass(Executor.STD.class);
+        verify(sut.executor).execCommand(argString.capture(), argStd.capture());
+        assertThat(argString.getValue()).isEqualTo(null);
+        assertThat(argStd.getValue()).isEqualTo(Executor.STD.OUT);
     }
 
     private BuildToolData createDataTestCode() {
