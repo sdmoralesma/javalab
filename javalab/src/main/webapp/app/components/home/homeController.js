@@ -37,8 +37,8 @@
 
             //AutoCompletion
             $scope.javaClasses = [
-                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld.java', id: 211},
-                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest.java', id: 311}
+                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld', id: 211},
+                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest', id: 311}
             ];
             $scope.initialValue = $scope.javaClasses[0];
 
@@ -139,7 +139,7 @@
                     path += pathArray[index].model.name;
                 }
             }
-            return path;
+            return path.replace('.java','');
         };
 
         $scope.addNode = function (typeToCreate, node) {
@@ -267,6 +267,7 @@
 
             var nodeFound = self.findById(selected.originalObject.id);
             $scope.appModel.runnableNode.id = nodeFound.model.id;
+            $scope.appModel.runnableNode.path = nodeFound.model.path;
         };
 
     }

@@ -24,7 +24,7 @@ class Gradle extends BuildTool {
         try {
             Path gradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
             String info = "apply plugin:'application'\n" +
-                    "mainClassName = \"com.company.project.HelloWorld\"\n" +
+                    "mainClassName = \"{runnableClassPath}\"\n" +
                     "\n" +
                     "apply plugin: 'java'\n" +
                     "sourceCompatibility = '1.8'\n" +
@@ -48,6 +48,10 @@ class Gradle extends BuildTool {
                     "    compile 'org.apache.commons:commons-lang3:3.4'\n" +
                     "    testCompile 'junit:junit:4.12'\n" +
                     "}\n";
+
+            info = info.replace("{runnableClassPath}", data.getRunnableNode().getPath());
+
+
             Files.write(gradleFile, info.getBytes());
         } catch (IOException e) {
             throw new NotRunnableCodeException("can not create build.gradle file");

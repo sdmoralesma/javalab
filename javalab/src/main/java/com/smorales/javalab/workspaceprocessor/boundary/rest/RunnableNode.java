@@ -3,6 +3,7 @@ package com.smorales.javalab.workspaceprocessor.boundary.rest;
 public class RunnableNode {
 
     private String id;
+    private String path;
     private boolean mainClass;
     private boolean testClass;
 
@@ -13,6 +14,14 @@ public class RunnableNode {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public boolean isMainClass() {
