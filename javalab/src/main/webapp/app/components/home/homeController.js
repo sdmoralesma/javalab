@@ -267,7 +267,7 @@
 
             var nodeFound = self.findById(selected.originalObject.id);
             $scope.appModel.runnableNode.id = nodeFound.model.id;
-            $scope.appModel.runnableNode.path = nodeFound.model.path;
+            $scope.appModel.runnableNode.path = self.pathAsString(nodeFound);
         };
 
     }
