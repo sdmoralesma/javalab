@@ -109,7 +109,7 @@ public abstract class BuildTool {
     private String testProject(Path tempDir) {
         String cmd = buildTestCommand(tempDir);
         tracer.info(() -> "Testing with cmd: " + cmd);
-        return executor.execCommand(cmd);
+        return executor.execCommand(cmd, Executor.STD.OUT);
     }
 
 }

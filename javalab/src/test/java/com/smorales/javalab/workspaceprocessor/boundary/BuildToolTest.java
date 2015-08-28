@@ -112,7 +112,7 @@ public class BuildToolTest {
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(sut.executor, times(2)).execCommand(argument.capture());
+        verify(sut.executor).execCommand(argument.capture());
         assertThat(argument.getValue()).isEqualTo(null);
     }
 
