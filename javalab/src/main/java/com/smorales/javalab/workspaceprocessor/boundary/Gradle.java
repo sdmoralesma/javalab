@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 
 class Gradle extends BuildTool {
@@ -42,21 +43,26 @@ class Gradle extends BuildTool {
                     "        showExceptions = true\n" +
                     "        showStackTraces = true\n" +
                     "    }\n" +
-                    "}\n" +
-                    "\n" +
-                    "dependencies {\n" +
-                    "    compile 'joda-time:joda-time:2.8'\n" +
-                    "    compile 'com.google.guava:guava:18.0'\n" +
-                    "    compile 'org.apache.commons:commons-lang3:3.4'\n" +
-                    "    testCompile 'junit:junit:4.12'\n" +
-                    "}\n";
+                    "}\n\n" +
+                    "{dependencies}";
 
             info = info.replace("{runnableClassPath}", runnableNode.getPath());
-
+            info = info.replace("{dependencies}", readDependencies(tempDir));
 
             Files.write(gradleFile, info.getBytes());
         } catch (IOException e) {
             throw new NotRunnableCodeException("can not create build.gradle file");
+        }
+    }
+
+    private String readDependencies(Path tempDir) {
+        Path depsPath = Paths.get(tempDir + "/dependencies");
+        try {
+            return Files.readAllLines(depsPath).stream()
+                    .collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NotRunnableCodeException("can not read dependencies file");
         }
     }
 }
