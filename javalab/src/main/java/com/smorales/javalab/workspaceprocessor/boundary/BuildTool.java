@@ -3,9 +3,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
-import com.smorales.javalab.workspaceprocessor.entity.Library;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
-import sun.reflect.generics.tree.Tree;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -33,7 +31,7 @@ public abstract class BuildTool {
     protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode);
 
     // implements template method pattern
-    public String runCode(List<TreeData> treeData, List<Library> libraries, RunnableNode runnableNode) {
+    public String runCode(List<TreeData> treeData, RunnableNode runnableNode) {
         Path tempDir = null;
         try {
             tempDir = fileHandler.createTempDir();
@@ -65,7 +63,7 @@ public abstract class BuildTool {
     }
 
     // implements template method pattern
-    public String testCode(List<TreeData> treeData, List<Library> libraries, RunnableNode runnableNode) {
+    public String testCode(List<TreeData> treeData, RunnableNode runnableNode) {
         Path tempDir = fileHandler.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
