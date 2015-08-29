@@ -48,7 +48,6 @@ public class BuildToolTest {
         when(sut.fileHandler.createTempDir()).thenReturn(tempDir);
 
         List<TreeData> treeData = createTreeData();
-        List<Library> libraries = new ArrayList<>();
         RunnableNode runnableNode = createRunnableNode();
 
         Path parentPath = mock(Path.class);
@@ -59,7 +58,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(treeData, libraries, runnableNode);
+        String result = sut.runCode(treeData, runnableNode);
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
@@ -99,7 +98,6 @@ public class BuildToolTest {
         mockStatic(Path.class, Paths.class, Files.class);
 
         List<TreeData> treeData = createTreeData();
-        List<Library> libraries = new ArrayList<>();
         RunnableNode runnableNode = createRunnableNode();
 
         Path tempDir = mock(Path.class);
@@ -114,7 +112,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(treeData, libraries, runnableNode);
+        String result = sut.testCode(treeData, runnableNode);
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);
