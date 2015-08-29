@@ -207,7 +207,6 @@
                             classesArray[i].path = self.pathAsString(node);
                         }
                     }
-
                 } else if (node.model.type === "folder") {
                     for (var j = 0; j < node.children.length; ++j) {
                         updatePaths(node.children[j]);
@@ -217,6 +216,9 @@
 
             updatePaths(nodeFound);
 
+            var selectedNode = self.findById($scope.appModel.runnableNode.id);
+            $scope.appModel.runnableNode.id = selectedNode.model.id;
+            $scope.appModel.runnableNode.path = self.pathAsString(selectedNode);
         };
 
         $scope.removeNode = function (node) {
