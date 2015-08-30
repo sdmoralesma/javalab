@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 class Gradle extends BuildTool {
+
+    private static final String DEPENDENCIES = "/dependencies";
 
     @Override
     protected String buildRunCommand(Path tempDir) {
@@ -44,10 +47,10 @@ class Gradle extends BuildTool {
                     "        showStackTraces = true\n" +
                     "    }\n" +
                     "}\n\n" +
-                    "{dependencies}";
+                    "dependencies { {dependenciesSet} }";
 
             info = info.replace("{runnableClassPath}", runnableNode.getPath());
-            info = info.replace("{dependencies}", readDependencies(tempDir));
+            info = info.replace("{dependenciesSet}", readDependencies(tempDir));
 
             Files.write(gradleFile, info.getBytes());
         } catch (IOException e) {
@@ -56,13 +59,39 @@ class Gradle extends BuildTool {
     }
 
     private String readDependencies(Path tempDir) {
-        Path depsPath = Paths.get(tempDir + "/dependencies");
+        Path depsPath = Paths.get(tempDir + DEPENDENCIES);
+
         try {
-            return Files.readAllLines(depsPath).stream()
+            Set<String> deps = Files.readAllLines(depsPath)
+                    .stream()
+                    .map(String::trim)
+                    .filter(dep -> !dep.isEmpty())
+                    .collect(Collectors.toSet());
+
+            findInvalidDependencies(deps);
+            return deps.stream()
+                    .filter(this::validateDependency)
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             e.printStackTrace();
             throw new NotRunnableCodeException("can not read dependencies file");
         }
     }
+
+    private void findInvalidDependencies(Set<String> deps) {
+        String invalid = deps.stream()
+                .filter(dep -> !this.validateDependency(dep))
+                .collect(Collectors.joining(", "));
+        if (!invalid.isEmpty()) {
+            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalid);
+        }
+    }
+
+    /**
+     * Validates line structure, should look like: {@code testCompile 'org.hibernate:hibernate-core:3.6.7.Final'}
+     */
+    private boolean validateDependency(String line) {
+        return line.matches("(testCompile|compile)\\s('|\")[-_.\\w]*:[\\w_.-]*:[_\\[0-9_._+_,_\\)\\w-]*('|\")");
+    }
+
 }
