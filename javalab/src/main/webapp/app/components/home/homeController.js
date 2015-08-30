@@ -84,6 +84,7 @@
                 return;
             }
 
+            $scope.appModel.console = "Running ALL Tests!";
             blockUI.start();
             $scope.selected.code = $scope.codeEditor.getValue();
             $scope.selected.cursor = $scope.codeEditor.getCursorPosition();
