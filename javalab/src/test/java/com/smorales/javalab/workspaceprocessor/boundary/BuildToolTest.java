@@ -42,30 +42,40 @@ public class BuildToolTest {
     @Test
     public void shouldRunCodeOk() throws Exception {
         mockStatic(Path.class, Paths.class, Files.class);
-        BuildToolData data = createDataRunCode();
 
         Path tempDir = mock(Path.class);
         when(tempDir.toString()).thenReturn("tempDir/");
         when(sut.fileHandler.createTempDir()).thenReturn(tempDir);
 
+        List<TreeData> treeData = createTreeData();
+        RunnableNode runnableNode = createRunnableNode();
+
         Path parentPath = mock(Path.class);
-        when(parentPath.toString()).thenReturn(data.getTreedata().get(0).getName());
+        when(parentPath.toString()).thenReturn(treeData.get(0).getName());
         when(Paths.get(anyString(), anyString())).thenReturn(parentPath);
 
         Path childPath = mock(Path.class);
-        when(childPath.toString()).thenReturn(data.getTreedata().get(0).getChildren().get(0).getName());
+        when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(data);
+        String result = sut.runCode(treeData, runnableNode);
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(sut.executor, times(2)).execCommand(argument.capture());
+        verify(sut.executor).execCommand(argument.capture());
         assertThat(argument.getValue()).isEqualTo(null);
     }
 
 
-    private BuildToolData createDataRunCode() {
+    private RunnableNode createRunnableNode() {
+        RunnableNode node = new RunnableNode();
+        node.setId("11");
+        node.setMainClass(true);
+        node.setTestClass(false);
+        return node;
+    }
+
+    private List<TreeData> createTreeData() {
         TreeData child = new TreeData();
         child.setId("11");
         child.setType("file");
@@ -79,65 +89,37 @@ public class BuildToolTest {
         parent.setName("folder");
         parent.setChildren(Collections.singletonList(child));
 
-        List<TreeData> treedata = Collections.singletonList(parent);
-
-        List<Library> libraries = new ArrayList<>();
-
-        RunnableNode node = new RunnableNode();
-        node.setId("11");
-        node.setMainClass(true);
-        node.setTestClass(false);
-        return new BuildToolData(treedata, libraries, node);
+        return Collections.singletonList(parent);
     }
 
 
     @Test
     public void shouldTestCodeOk() throws Exception {
         mockStatic(Path.class, Paths.class, Files.class);
-        BuildToolData data = createDataTestCode();
+
+        List<TreeData> treeData = createTreeData();
+        RunnableNode runnableNode = createRunnableNode();
 
         Path tempDir = mock(Path.class);
         when(tempDir.toString()).thenReturn("tempDir/");
         when(sut.fileHandler.createTempDir()).thenReturn(tempDir);
 
         Path parentPath = mock(Path.class);
-        when(parentPath.toString()).thenReturn(data.getTreedata().get(0).getName());
+        when(parentPath.toString()).thenReturn(treeData.get(0).getName());
         when(Paths.get(anyString(), anyString())).thenReturn(parentPath);
 
         Path childPath = mock(Path.class);
-        when(childPath.toString()).thenReturn(data.getTreedata().get(0).getChildren().get(0).getName());
+        when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(data);
+        String result = sut.testCode(treeData, runnableNode);
 
         assertThat(result).isEqualTo(null);
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(sut.executor, times(2)).execCommand(argument.capture());
-        assertThat(argument.getValue()).isEqualTo(null);
+        ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Executor.STD> argStd = ArgumentCaptor.forClass(Executor.STD.class);
+        verify(sut.executor).execCommand(argString.capture(), argStd.capture());
+        assertThat(argString.getValue()).isEqualTo(null);
+        assertThat(argStd.getValue()).isEqualTo(Executor.STD.OUT);
     }
 
-    private BuildToolData createDataTestCode() {
-        TreeData child = new TreeData();
-        child.setId("11");
-        child.setType("file");
-        child.setCode("hello world code");
-        child.setName("HelloWorld.java");
-        child.setChildren(new ArrayList<>());
-
-        TreeData parent = new TreeData();
-        parent.setId("1");
-        parent.setType("folder");
-        parent.setName("folder");
-        parent.setChildren(Collections.singletonList(child));
-
-        List<TreeData> treedata = Collections.singletonList(parent);
-
-        List<Library> libraries = new ArrayList<>();
-
-        RunnableNode node = new RunnableNode();
-        node.setId("11");
-        node.setMainClass(true);
-        node.setTestClass(false);
-        return new BuildToolData(treedata, libraries, node);
-    }
 }

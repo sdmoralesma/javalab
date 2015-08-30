@@ -4,12 +4,10 @@
 
 ## Installation and Running
 
-1. install docker engine
-2. install docker-compose
-3. download source code
-4. go to project folder
-5. build image : ``` docker-compose build ```
-6. run container : ``` docker-compose up ```
+1. install docker engine and docker-compose
+2. download source code and go to project folder
+3. build image : ``` docker-compose build ```
+4. run containers : ``` docker-compose up ```
 
 ## Ports
 * access the app: ``` localhost:48080 ```

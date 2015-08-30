@@ -1,33 +1,3 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="LabApp">
-
-<head>
-    <title>javalab</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico">
-
-    <meta charset="UTF-8">
-    <meta name="description" content="simple interface to run Java code with powerful features online">
-    <meta name="keywords"
-          content="java, javalab, java lab, java code online, java laboratory, java web online, java compile online,
-          java run online, online java compiler, online ide, learn java, learn programming online,
-          java programming online, run java code online, run java code, execute java code">
-    <meta name="author" content="Sergio Morales">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-    <!--styles-->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="assets/css/angular-block-ui.css" rel="stylesheet"/>
-    <link href="assets/css/base.css" rel="stylesheet"/>
-    <link href="assets/css/desktop.css" rel="stylesheet"/>
-    <link href="assets/css/tablet.css" rel="stylesheet"/>
-    <link href="assets/css/mobile.css" rel="stylesheet"/>
-
-    <!-- link for CSS when using the tree as an attribute -->
-    <link rel="stylesheet" type="text/css" href="assets/css/tree-control-attribute.css">
-</head>
-
-<body ng-controller="HomeCtrl">
-
 <nav id="ext-nav" class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
 
@@ -61,20 +31,21 @@
                                       input-class="form-control form-control-small"></angucomplete-alt>
                 </div>
                 <div class="input-group-btn">
-                    <button id="run-btn" class="btn btn-default " ng-click="runCode()">
+                    <button id="run-btn" class="btn btn-default " data-ng-click="runCode()">
                         <span class="glyphicon glyphicon-play"></span>
                     </button>
-                    <button id="test-btn" class="btn btn-default" ng-click="runTests()">
+                    <button id="test-btn" class="btn btn-default" data-ng-click="runTests()">
                         <span class="glyphicon glyphicon-check"></span>
                     </button>
                 </div>
             </div>
         </form>
+
         <!--<form class="navbar-form navbar-left">-->
-            <!--<button id="save-btn" class="btn btn-primary" ng-click="save()">-->
+            <!--<button id="save-btn" class="btn btn-primary" data-ng-click="save()">-->
                 <!--<span class="glyphicon glyphicon-floppy-disk"></span>-->
             <!--</button>-->
-            <!--<button id="new-btn" class="btn btn-success" ng-click="new()">-->
+            <!--<button id="new-btn" class="btn btn-success" data-ng-click="new()">-->
                 <!--<span class="glyphicon glyphicon-file"></span>-->
             <!--</button>-->
         <!--</form>-->
@@ -82,7 +53,7 @@
         <div class="collapse navbar-collapse" id="collapsable-menu">
             <form class="navbar-form navbar-right ">
                 <a href="https://github.com/sdmoralesma/javalab/wiki" target="_blank">
-                    <img src="assets/images/github-mark.png" alt="javalab wiki">
+                    <img src="/assets/images/github-mark.png" alt="javalab wiki">
                 </a>
             </form>
         </div>
@@ -97,27 +68,27 @@
                 <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
 
                 <div class="btn-group pull-right">
-                    <a ng-click="formatCode()" class="btn btn-default btn-xs">
+                    <a data-ng-click="formatCode()" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-indent-left"></span>
                     </a>
 
                     <div class="btn-group">
-                        <a href="#" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+                        <a class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-plus"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a ng-click="addNode('file', selected)">
+                            <li><a data-ng-click="addNode('file', selected)">
                                 <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
                             </a></li>
-                            <li><a ng-click="addNode('folder', selected)">
+                            <li><a data-ng-click="addNode('folder', selected)">
                                 <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
                             </a></li>
                         </ul>
                     </div>
-                    <a ng-click="editNode(selected)" class="btn btn-default btn-xs">
+                    <a data-ng-click="editNode(selected)" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a ng-click="removeNode(selected)" class="btn btn-default btn-xs">
+                    <a data-ng-click="removeNode(selected)" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>
@@ -136,17 +107,18 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+
+        <!--<div class="panel panel-default">
             <div class="panel-heading">
                 <span class="panel-title glyphicon glyphicon-book">&nbsp;Libraries</span>
             </div>
 
             <div class="panel-body">
                 <div>
-                    <div ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
+                    <div data-ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" ng-model="lib.checked"> {{lib.name}}
+                                <input type="checkbox" data-ng-model="lib.checked"> {{lib.name}}
                             </label>
                             <span class="label label-info">{{lib.version}}</span>
                             <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
@@ -154,36 +126,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
     </div>
 
-    <div id="code-editor" ng-model="appModel.code" class="panel panel-default"></div>
+    <div id="code-editor" data-ng-model="appModel.code" class="panel panel-default"></div>
 
-    <textarea id="console" readonly ng-model="appModel.console" class="form-control"></textarea>
+    <textarea id="console" readonly data-ng-model="appModel.console" class="form-control"></textarea>
 
 </div>
-
-<!--dependencies-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="http://codebeautify.org/js/beautify.js"></script>
-<script src="//code.angularjs.org/1.4.3/angular.js"></script>
-<script src="app/shared/angular-block-ui.js"></script>
-<script src="app/shared/angular-tree-control.js"></script>
-<script src="app/shared/angucomplete-alt.js"></script>
-<script src="assets/js/tree-model.js"></script>
-
-
-<!--application-->
-<script src="app/app.module.js"></script>
-<script src="app/app.routes.js"></script>
-<script src="app/components/home/middleService.js"></script>
-<script src="app/components/home/homeController.js"></script>
-<script src="app/components/home/homeResizeEditorVertically.js"></script>
-<script src="app/components/home/homeEvents.js"></script>
-<script src="assets/js/google-tracking.js"></script>
-</body>
-</html>

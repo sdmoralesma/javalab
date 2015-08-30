@@ -4,7 +4,7 @@ MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 #Install latest java jdk
 RUN export DEBIAN_FRONTEND=noninteractive && \ 
     apt-get -qq update && \
-    apt-get -qq install -y software-properties-common python-software-properties && \
+    apt-get -qq install -y software-properties-common python-software-properties unzip && \
     add-apt-repository ppa:webupd8team/java && \
     apt-get -qq update && \
     echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
@@ -37,21 +37,36 @@ RUN wget --quiet -O /tmp/apache-maven-$MAVEN_VERSION.tar.gz http://archive.apach
     ln -s /opt/maven/bin/mvn /usr/local/bin && \
     rm -f /tmp/apache-maven-$MAVEN_VERSION.tar.gz
 ENV MAVEN_HOME /opt/maven
+ENV USER_HOME /home/wildfly
+ENV MAVEN_M2 $USER_HOME/.m2/repository
+
+# Install Gradle
+ENV GRADLE_VERSION 2.6
+WORKDIR /usr/bin
+RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip && \
+    unzip gradle-$GRADLE_VERSION-all.zip && \
+    ln -s gradle-$GRADLE_VERSION gradle && \
+    rm gradle-$GRADLE_VERSION-all.zip
+
+# Set Appropriate Environmental Variables
+ENV GRADLE_HOME /usr/bin/gradle
+ENV PATH $PATH:$GRADLE_HOME/bin
 
 # Create the wildfly user and group
 RUN groupadd -r wildfly-group -g 433 && \
     useradd -u 431 -r -g wildfly-group -s /bin/false wildfly -m
 
-ENV USER_HOME /home/wildfly
-ENV MAVEN_M2 $USER_HOME/.m2/repository
-
 # Add lab project and download dependencies
 ADD lab $USER_HOME/lab/
 RUN mvn package -q -f $USER_HOME/lab/pom.xml -Dmaven.repo.local=$MAVEN_M2
 
+# Cache dependencies
+ADD javalab/pom.xml $USER_HOME/javalab/
+RUN mvn verify clean --fail-never -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2
+
 # Auto-Deploy javalab to Wildfly
-ADD javalab $USER_HOME/javalab/
-RUN mvn package -q -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
+ADD javalab/src $USER_HOME/javalab/src
+RUN mvn package -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 
 # Run everything below as the wildfly user

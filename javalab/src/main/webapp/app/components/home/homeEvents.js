@@ -13,6 +13,3 @@ window.onbeforeunload = function (e) {
     // For Safari
     return CODE_NOT_SAVED;
 };
-
-// resize areas if window is resized
-$(window).resize(resizeTextAreasVertically);

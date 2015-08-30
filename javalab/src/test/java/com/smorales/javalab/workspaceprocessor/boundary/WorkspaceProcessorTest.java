@@ -1,7 +1,9 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Base62;
+import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,11 +50,11 @@ public class WorkspaceProcessorTest {
         Request req = getValidRequest();
         String okMessage = "ok run message";
 
-        when(sut.buildTool.runCode(any(BuildToolData.class))).thenReturn(okMessage);
+        when(sut.buildTool.runCode(anyListOf(TreeData.class), any(RunnableNode.class))).thenReturn(okMessage);
 
         String result = sut.runCode(req);
         assertThat(result).isNotNull().isEqualTo(okMessage);
-        verify(sut.buildTool).runCode(any());
+        verify(sut.buildTool).runCode(anyListOf(TreeData.class), any(RunnableNode.class));
     }
 
     @Test
@@ -60,11 +62,11 @@ public class WorkspaceProcessorTest {
         Request req = getValidRequest();
         String okMessage = "ok test message";
 
-        when(sut.buildTool.testCode(any(BuildToolData.class))).thenReturn(okMessage);
+        when(sut.buildTool.testCode(anyListOf(TreeData.class), any(RunnableNode.class))).thenReturn(okMessage);
 
         String result = sut.runTests(req);
         assertThat(result).isNotNull().isEqualTo(okMessage);
-        verify(sut.buildTool).testCode(any());
+        verify(sut.buildTool).testCode(anyListOf(TreeData.class), any(RunnableNode.class));
     }
 
     @Test

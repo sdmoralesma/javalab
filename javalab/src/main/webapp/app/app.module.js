@@ -1,5 +1,14 @@
-var labApp = angular.module('LabApp', ['blockUI', 'treeControl', "angucomplete-alt"]);
+(function () {
+    'use strict';
 
-labApp.run(['$rootScope', 'middleService', function ($rootScope, middleService) {
+    angular.module('LabApp', ['ngRoute', 'blockUI', 'treeControl', "angucomplete-alt"]);
 
-}]);
+    angular.module('LabApp').run(LabAppRun);
+
+    LabAppRun.$inject = ['$rootScope', 'middleService'];
+
+    function LabAppRun($rootScope, middleService) {
+
+    }
+
+})();

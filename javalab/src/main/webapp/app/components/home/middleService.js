@@ -1,48 +1,53 @@
-'use strict';
-labApp.factory('middleService', ['$http', function ($http) {
+(function () {
+    'use strict';
 
-    const ENDPOINT = 'rest/process';
-    return {
-        runCode: function (model) {
-            const RUN_CODE_SERVICE = ENDPOINT + "/run";
-            $http.post(RUN_CODE_SERVICE, model, {
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
-                model.console = response.data.output;
-            }, function error(failure) {
-                alert('error code: ' + failure.status);
-            });
-        },
+    angular.module('LabApp').factory('middleService', middleService);
 
-        runTest: function (model) {
-            const RUN_TESTS_SERVICE = ENDPOINT + "/tests";
-            $http.post(RUN_TESTS_SERVICE, model, {
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
-                model.console = response.data.output;
-            }, function error(failure) {
-                alert('error code: ' + failure.status);
-            });
-        },
+    middleService.$inject = ['$http'];
 
-        saveWorkspace: function (model) {
-            const SAVE_SERVICE = ENDPOINT + "/save";
-            $http.post(SAVE_SERVICE, model, {
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
-                model.console = response.data.output;
-            }, function error(failure) {
-                alert('error code: ' + failure.status);
-            });
-        },
+    function middleService($http) {
 
-        newWorkspace: function (model) {
-            const NEW_SERVICE = ENDPOINT + "/new";
-            $http.get(NEW_SERVICE).then(function (response) {
-                model.console = response.data.output;
-            }, function error(failure) {
-                alert('error code: ' + failure.status);
-            });
-        }
-    };
-}]);
+        const ENDPOINT = 'rest/process';
+        return {
+            runCode: function (model) {
+                $http.post(ENDPOINT + "/run", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
+            },
+
+            runTest: function (model) {
+                $http.post(ENDPOINT + "/tests", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
+            },
+
+            saveWorkspace: function (model) {
+                $http.post(ENDPOINT + "/save", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
+            },
+
+            initWorkspace: function () {
+                return $http.get(ENDPOINT + "/init");
+            },
+
+            base62Workspace: function (base62Param) {
+                return $http.get(ENDPOINT + "/" + base62Param);
+            },
+
+            newWorkspace: function () {
+                return $http.get(ENDPOINT + "/new");
+            }
+        };
+    }
+
+})();
