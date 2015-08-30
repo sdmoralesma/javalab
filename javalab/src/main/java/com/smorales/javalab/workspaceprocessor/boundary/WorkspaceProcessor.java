@@ -3,9 +3,11 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.control.Base62;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
+import com.smorales.javalab.workspaceprocessor.tracing.TimeLogger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
@@ -14,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import java.io.StringReader;
 
 @Stateless
+@Interceptors({TimeLogger.class})
 public class WorkspaceProcessor {
 
     private static final int OFFSET = 1000000;

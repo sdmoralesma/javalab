@@ -9,6 +9,8 @@ import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.logging.Logger;
 
 @Stateless
 @Produces({MediaType.APPLICATION_JSON})
@@ -18,6 +20,9 @@ public class WorkspaceProcessorResource {
 
     @Inject
     WorkspaceProcessor workspaceProcessor;
+
+    @Inject
+    Logger tracer;
 
     @GET
     @Path("/init")
