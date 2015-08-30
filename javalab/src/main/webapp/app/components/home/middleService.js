@@ -10,49 +10,42 @@
         const ENDPOINT = 'rest/process';
         return {
             runCode: function (model) {
-                $http.post(ENDPOINT + "/run", model, {
-                    headers: {'Content-Type': 'application/json'}
-                }).then(function (response) {
-                    model.console = response.data.output;
-                }, function error(failure) {
-                    alert('error code: ' + failure.status);
-                });
+                $http.post(ENDPOINT + "/run", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
             },
 
             runTest: function (model) {
-                $http.post(ENDPOINT + "/tests", model, {
-                    headers: {'Content-Type': 'application/json'}
-                }).then(function (response) {
-                    model.console = response.data.output;
-                }, function error(failure) {
-                    alert('error code: ' + failure.status);
-                });
+                $http.post(ENDPOINT + "/tests", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
             },
 
             saveWorkspace: function (model) {
-                const SAVE_SERVICE = ENDPOINT + "/save";
-                $http.post(SAVE_SERVICE, model, {
-                    headers: {'Content-Type': 'application/json'}
-                }).then(function (response) {
-                    model.console = response.data.output;
-                }, function error(failure) {
-                    alert('error code: ' + failure.status);
-                });
+                $http.post(ENDPOINT + "/save", model)
+                    .then(function (response) {
+                        model.console = response.data.output;
+                    }, function error(failure) {
+                        alert('error code: ' + failure.status);
+                    });
             },
 
             initWorkspace: function () {
-                const INIT_SERVICE = ENDPOINT + "/init";
-                return $http.get(INIT_SERVICE);
+                return $http.get(ENDPOINT + "/init");
             },
 
             base62Workspace: function (base62Param) {
-                const BASE62_SERVICE = ENDPOINT + "/" + base62Param;
-                return $http.get(BASE62_SERVICE);
+                return $http.get(ENDPOINT + "/" + base62Param);
             },
 
             newWorkspace: function () {
-                const NEW_SERVICE = ENDPOINT + "/new";
-                return $http.get(NEW_SERVICE);
+                return $http.get(ENDPOINT + "/new");
             }
         };
     }

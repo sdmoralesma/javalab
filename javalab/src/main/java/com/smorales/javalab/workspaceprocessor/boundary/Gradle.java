@@ -3,17 +3,22 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
 class Gradle extends BuildTool {
 
     private static final String DEPENDENCIES = "/dependencies";
+
+    @Inject
+    Logger tracer;
 
     @Override
     protected String buildRunCommand(Path tempDir) {
@@ -73,7 +78,7 @@ class Gradle extends BuildTool {
                     .filter(this::validateDependency)
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
-            e.printStackTrace();
+            tracer.severe(e::getMessage);
             throw new NotRunnableCodeException("can not read dependencies file");
         }
     }
