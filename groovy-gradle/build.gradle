@@ -1,0 +1,18 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions = true
+        showStackTraces = true
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.10'
+    testCompile 'junit:junit:4.12'
+}
