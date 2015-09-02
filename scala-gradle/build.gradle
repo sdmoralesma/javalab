@@ -13,9 +13,6 @@ test {
 }
 
 dependencies{
-    compile 'org.slf4j:slf4j-api:1.7.5'
     compile "org.scala-lang:scala-library:2.10.4"
-    compile "org.scala-lang:scala-compiler:2.10.4"
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile "junit:junit:4.11"
 }
