@@ -17,7 +17,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-task runScript (dependsOn: 'classes', type: JavaExec) {
+task run (dependsOn: 'classes', type: JavaExec) {
     main = 'com.company.project.HelloWorld'
     classpath = sourceSets.main.runtimeClasspath
 }
