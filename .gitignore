@@ -23,3 +23,4 @@ nb-configuration.xml
 gradlew
 gradlew.bat
 gradle-wrapper.properties
+.gradle/
