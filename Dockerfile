@@ -41,16 +41,17 @@ ENV USER_HOME /home/wildfly
 ENV MAVEN_M2 $USER_HOME/.m2/repository
 
 # Install Gradle
-ENV GRADLE_VERSION 2.6
+ENV GRADLE_VERSION 2.7
 WORKDIR /usr/bin
-RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip && \
-    unzip gradle-$GRADLE_VERSION-all.zip && \
+RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
+    unzip gradle-$GRADLE_VERSION-bin.zip && \
     ln -s gradle-$GRADLE_VERSION gradle && \
-    rm gradle-$GRADLE_VERSION-all.zip
+    rm gradle-$GRADLE_VERSION-bin.zip
 
 # Set Appropriate Environmental Variables
 ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
+RUN gradle --daemon
 
 # Create the wildfly user and group
 RUN groupadd -r wildfly-group -g 433 && \
