@@ -1,0 +1,23 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions = true
+        showStackTraces = true
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    testCompile 'junit:junit:4.12'
+}
+
+task run (dependsOn: 'classes', type: JavaExec) {
+    main = 'com.company.project.HelloWorld'
+    classpath = sourceSets.main.runtimeClasspath
+}

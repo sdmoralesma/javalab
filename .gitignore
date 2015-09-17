@@ -19,3 +19,7 @@ build/
 *~
 *.DS_Store
 nb-configuration.xml
+
+gradlew
+gradlew.bat
+gradle-wrapper.properties
