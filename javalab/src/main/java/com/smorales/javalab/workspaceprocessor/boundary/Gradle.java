@@ -22,12 +22,12 @@ class Gradle extends BuildTool {
 
     @Override
     protected String buildRunCommand(Path tempDir) {
-        return "gradle  -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
+        return "gradle --daemon -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
     }
 
     @Override
     protected String buildTestCommand(Path tempDir) {
-        return "gradle  -b " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
+        return "gradle --daemon -b " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
     }
 
     @Override
@@ -59,7 +59,7 @@ class Gradle extends BuildTool {
 
             Files.write(gradleFile, info.getBytes());
         } catch (IOException e) {
-            throw new NotRunnableCodeException("can not create build.gradle file");
+            throw new NotRunnableCodeException("Cannot create build.gradle file");
         }
     }
 
@@ -79,7 +79,7 @@ class Gradle extends BuildTool {
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             tracer.severe(e::getMessage);
-            throw new NotRunnableCodeException("can not read dependencies file");
+            throw new NotRunnableCodeException("Cannot read dependencies file");
         }
     }
 
