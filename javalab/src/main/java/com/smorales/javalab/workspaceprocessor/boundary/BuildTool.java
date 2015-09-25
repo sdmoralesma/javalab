@@ -43,7 +43,7 @@ public abstract class BuildTool {
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileHandler.removeDir(tempDir);
+            fileHandler.removeDirectoryRecursively(tempDir);
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class BuildTool {
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileHandler.removeDir(tempDir);
+            fileHandler.removeDirectoryRecursively(tempDir);
         }
     }
 
