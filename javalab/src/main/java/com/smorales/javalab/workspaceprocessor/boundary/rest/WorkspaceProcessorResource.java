@@ -27,7 +27,7 @@ public class WorkspaceProcessorResource {
     @GET
     @Path("/init")
     public Response initialize() {
-        return Response.ok().entity(workspaceProcessor.initialize()).build();
+        return Response.ok().entity(workspaceProcessor.initialize("java")).build();
     }
 
     @GET

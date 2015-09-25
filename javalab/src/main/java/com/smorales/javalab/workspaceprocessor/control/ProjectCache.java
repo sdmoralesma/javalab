@@ -9,18 +9,19 @@ import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.json.*;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Singleton
 @Startup
@@ -38,25 +39,29 @@ public class ProjectCache {
     private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(.)*";
     private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(.)*";
 
-    private Map<String, JsonObject> projectsCache;
+    private Map<Language, JsonObject> projectsCache;
     private String consoleMessage;
 
     @PostConstruct
-    public void readProjects() {
+    private void readProjects() {
         projectsCache = new ConcurrentHashMap<>();
         consoleMessage = initializeConsoleMessage();
-        projectsCache.put("groovy", readProjectAsJson(LabPaths.HOME.append("groovy-gradle")));
-        projectsCache.put("scala", readProjectAsJson(LabPaths.HOME.append("scala-gradle")));
+        projectsCache.put(Language.JAVA, readProjectAsJson(LabPaths.HOME.append("java-gradle")));
+        projectsCache.put(Language.GROOVY, readProjectAsJson(LabPaths.HOME.append("groovy-gradle")));
+        projectsCache.put(Language.SCALA, readProjectAsJson(LabPaths.HOME.append("scala-gradle")));
+    }
+
+    public JsonObject get(Language language) {
+        return projectsCache.get(language);
     }
 
     private JsonObject readProjectAsJson(final Path rootDir) {
         tracer.info(() -> "Reading project: " + rootDir);
-        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
-        jsonBuilder.add("console", consoleMessage);
-        jsonBuilder.add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)));
-        jsonBuilder.add("runnableNode", createRunnableNode());
-
-        JsonObject jsonObject = jsonBuilder.build();
+        JsonObject jsonObject = Json.createObjectBuilder()
+                .add("console", consoleMessage)
+                .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)))
+                .add("runnableNode", createRunnableNode())
+                .build();
         tracer.info(() -> "Json for project: \n" + jsonObject.toString());
         return jsonObject;
     }
@@ -155,34 +160,31 @@ public class ProjectCache {
     }
 
     private String readJavalabVersion() {
-        try {
-            URL url = new URL(JAVALAB_LATEST_VERSION);
-            InputStream is = url.openStream();
-            return Json.createReader(is)
-                    .readObject()
-                    .getString("tag_name");
-        } catch (IOException ex) {
-            throw new NotRunnableCodeException("Cannot read javalab version from URL: " + JAVALAB_LATEST_VERSION);
-        }
+//        try {
+//            URL url = new URL(JAVALAB_LATEST_VERSION);
+//            InputStream is = url.openStream();
+//            return Json.createReader(is)
+//                    .readObject()
+//                    .getString("tag_name");
+//        } catch (IOException ex) {
+//            throw new NotRunnableCodeException("Cannot read javalab version from URL: " + JAVALAB_LATEST_VERSION);
+//        }
+        return "v0.2.0-dev";
     }
 
     private Map<String, String> readContentAllFilesRecursively(final Path path) {
-        Map<String, String> map = new HashMap<>();
         try {
-            Files.walk(path)
+            return Files.walk(path)
                     .filter(p -> !p.toFile().isDirectory())
                     .filter(p -> !p.getFileName().toString().equals(GIT_IGNORE_FILE))
                     .filter(p -> !p.getFileName().toString().equals(BUILD_GRADLE_FILE))
-                    .forEach(p -> {
-                        String fileName = p.getFileName().toString();
-                        if (fileName.matches(HELLO_WORLD_REGEX) || fileName.matches(HELLO_WORLD_TEST_REGEX)) {
-                            map.put(fileName, linesByFile(p));
-                        }
-                    });
+                    .filter(p -> p.getFileName().toString().matches(HELLO_WORLD_REGEX)
+                            || p.getFileName().toString().matches(HELLO_WORLD_TEST_REGEX))
+                    .collect(Collectors.toMap(p -> p.getFileName().toString(), this::linesByFile));
         } catch (final IOException e) {
             tracer.severe(e.getMessage());
+            throw new NotRunnableCodeException("Cannot walk path: " + path);
         }
-        return map;
     }
 
     private String linesByFile(final Path path) {

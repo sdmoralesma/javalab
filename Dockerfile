@@ -70,6 +70,9 @@ ADD javalab/src $USER_HOME/javalab/src
 RUN mvn package -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 
+# Add java project
+ADD java-gradle $USER_HOME/java-gradle
+
 # Add scala project
 ADD scala-gradle $USER_HOME/scala-gradle
 

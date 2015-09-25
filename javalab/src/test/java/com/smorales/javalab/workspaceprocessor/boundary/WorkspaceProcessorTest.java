@@ -33,7 +33,7 @@ public class WorkspaceProcessorTest {
         when(sut.em.createNamedQuery(Workspace.findFirstRow, Workspace.class).setMaxResults(1).getResultList().get(0))
                 .thenReturn(getValidWorkspace());
 
-        JsonObject result = sut.initialize();
+        JsonObject result = sut.initialize("java");
         assertThat(result).isNotNull();
     }
 
