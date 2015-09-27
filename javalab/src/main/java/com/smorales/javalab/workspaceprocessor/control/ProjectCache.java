@@ -14,6 +14,8 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -160,16 +162,15 @@ public class ProjectCache {
     }
 
     private String readJavalabVersion() {
-//        try {
-//            URL url = new URL(JAVALAB_LATEST_VERSION);
-//            InputStream is = url.openStream();
-//            return Json.createReader(is)
-//                    .readObject()
-//                    .getString("tag_name");
-//        } catch (IOException ex) {
-//            throw new NotRunnableCodeException("Cannot read javalab version from URL: " + JAVALAB_LATEST_VERSION);
-//        }
-        return "v0.2.0-dev";
+        try {
+            URL url = new URL(JAVALAB_LATEST_VERSION);
+            InputStream is = url.openStream();
+            return Json.createReader(is)
+                    .readObject()
+                    .getString("tag_name");
+        } catch (IOException ex) {
+            throw new NotRunnableCodeException("Cannot read javalab version from URL: " + JAVALAB_LATEST_VERSION);
+        }
     }
 
     private Map<String, String> readContentAllFilesRecursively(final Path path) {
