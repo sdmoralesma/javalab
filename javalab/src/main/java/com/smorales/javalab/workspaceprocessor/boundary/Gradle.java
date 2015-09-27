@@ -1,6 +1,5 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 
 import javax.inject.Inject;
@@ -11,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 
 class Gradle extends BuildTool {
 

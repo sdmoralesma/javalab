@@ -18,8 +18,5 @@ test {
 }
 
 dependencies {
-    compile 'joda-time:joda-time:2.8'
-    compile 'com.google.guava:guava:18.0'
-    compile 'org.apache.commons:commons-lang3:3.4'
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:+'
 }
