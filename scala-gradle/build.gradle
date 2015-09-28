@@ -14,7 +14,7 @@ test {
 
 dependencies{
     compile "org.scala-lang:scala-library:2.10.4"
-    testCompile "junit:junit:4.11"
+    testCompile "junit:junit:+"
 }
 
 task run(type: JavaExec, description: "Runs the project") {

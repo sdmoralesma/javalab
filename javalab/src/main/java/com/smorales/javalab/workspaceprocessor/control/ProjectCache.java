@@ -34,6 +34,7 @@ public class ProjectCache {
     private static final String WELCOME_MSG_TEMPLATE = "Welcome to Javalab {labVersion} !\r\n$ java -version : {javaVersion} Java HotSpot(TM) 64-Bit Server VM";
     private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(.)*";
     private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(.)*";
+    private static final String INIT_DEPS_REGEX = "init-deps";
 
     private Map<Language, JsonObject> projectsCache;
     private String consoleMessage;
@@ -50,7 +51,8 @@ public class ProjectCache {
         projectsCache.put(Language.SCALA, readProjectAsJson(LabPaths.SCALA_PROJECT.asPath()));
     }
 
-    public JsonObject get(Language language) {
+    public JsonObject get(String lang) {
+        Language language = Language.from(lang);
         return projectsCache.get(language);
     }
 
@@ -67,18 +69,19 @@ public class ProjectCache {
 
     private JsonArray createTreedataNode(Map<String, String> filesMap) {
         return Json.createArrayBuilder()
-                .add(createDependenciesNode())
+                .add(createDependenciesNode(filesMap))
                 .add(createHelloWorldNode(filesMap))
                 .add(createHelloWorldTestNode(filesMap))
                 .build();
     }
 
-    private JsonObject createDependenciesNode() {
+    private JsonObject createDependenciesNode(Map<String, String> map) {
+        String key = entry(map, INIT_DEPS_REGEX);
         return Json.createObjectBuilder()
                 .add("id", 1)
                 .add("name", "dependencies")
                 .add("type", "file")
-                .add("code", "testCompile 'junit:junit:4.+'")
+                .add("code", map.get(key))
                 .add("children", Json.createArrayBuilder().build())
                 .build();
     }
@@ -175,7 +178,8 @@ public class ProjectCache {
             return Files.walk(path)
                     .filter(p -> !p.toFile().isDirectory())
                     .filter(p -> p.getFileName().toString().matches(HELLO_WORLD_REGEX)
-                            || p.getFileName().toString().matches(HELLO_WORLD_TEST_REGEX))
+                            || p.getFileName().toString().matches(HELLO_WORLD_TEST_REGEX)
+                            || p.getFileName().toString().matches(INIT_DEPS_REGEX))
                     .collect(Collectors.toMap(p -> p.getFileName().toString(), this::linesByFile));
         } catch (final IOException e) {
             tracer.severe(e.getMessage());

@@ -2,7 +2,6 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.control.Base62;
-import com.smorales.javalab.workspaceprocessor.control.Language;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import com.smorales.javalab.workspaceprocessor.tracing.TimeLogger;
@@ -40,7 +39,7 @@ public class WorkspaceProcessor {
 //                .getResultList()
 //                .get(0);
 
-        JsonObject jsonProject = projectCache.get(Language.from(lang));
+        JsonObject jsonProject = projectCache.get(lang);
         Workspace workspace = new Workspace(1, "eeee", jsonProject.toString());
         return Json.createReader(new StringReader(workspace.getJson())).readObject();
     }
