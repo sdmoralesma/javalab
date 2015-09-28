@@ -1,0 +1,21 @@
+apply plugin:'scala'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions = true
+        showStackTraces = true
+    }
+}
+
+dependencies { {dependenciesSet} };
+
+task run(type: JavaExec, description: "Runs the project") {
+    main = "{runnableClassPath}"
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}

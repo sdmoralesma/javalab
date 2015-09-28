@@ -31,33 +31,15 @@ class Gradle extends BuildTool {
     @Override
     protected void createAuxFiles(Path tempDir, RunnableNode runnableNode) {
         try {
-            Path gradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
-            String info = "apply plugin:'application'\n" +
-                    "mainClassName = \"{runnableClassPath}\"\n" +
-                    "\n" +
-                    "apply plugin: 'java'\n" +
-                    "sourceCompatibility = '1.8'\n" +
-                    "[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'\n" +
-                    "\n" +
-                    "repositories {\n" +
-                    "    mavenCentral()\n" +
-                    "}\n" +
-                    "\n" +
-                    "test {\n" +
-                    "    testLogging {\n" +
-                    "        exceptionFormat = 'full'\n" +
-                    "        showExceptions = true\n" +
-                    "        showStackTraces = true\n" +
-                    "    }\n" +
-                    "}\n\n" +
-                    "dependencies { {dependenciesSet} }";
+            String template = new String(Files.readAllBytes(Paths.get(LabPaths.JAVA_PROJECT.asString(), "build.template")));
+            template = template.replace("{runnableClassPath}", runnableNode.getPath());
+            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
 
-            info = info.replace("{runnableClassPath}", runnableNode.getPath());
-            info = info.replace("{dependenciesSet}", readDependencies(tempDir));
-
-            Files.write(gradleFile, info.getBytes());
+            Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
+            Files.write(buildGradleFile, template.getBytes());
         } catch (IOException e) {
-            throw new NotRunnableCodeException("Cannot create build.gradle file");
+            tracer.severe(e::getMessage);
+            throw new NotRunnableCodeException("Cannot create AUX files");
         }
     }
 
@@ -82,11 +64,11 @@ class Gradle extends BuildTool {
     }
 
     private void findInvalidDependencies(Set<String> deps) {
-        String invalid = deps.stream()
+        String invalidDeps = deps.stream()
                 .filter(dep -> !this.validateDependency(dep))
                 .collect(Collectors.joining(", "));
-        if (!invalid.isEmpty()) {
-            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalid);
+        if (!invalidDeps.isEmpty()) {
+            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalidDeps);
         }
     }
 

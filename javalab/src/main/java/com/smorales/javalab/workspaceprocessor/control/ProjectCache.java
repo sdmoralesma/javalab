@@ -30,34 +30,31 @@ import java.util.stream.Collectors;
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class ProjectCache {
 
-    @Inject
-    Logger tracer;
-
-    private static final String GIT_IGNORE_FILE = ".gitignore";
-    private static final String BUILD_GRADLE_FILE = "build.gradle";
     private static final String JAVALAB_LATEST_VERSION = "https://api.github.com/repos/sdmoralesma/javalab/releases/latest";
     private static final String WELCOME_MSG_TEMPLATE = "Welcome to Javalab {labVersion} !\r\n$ java -version : {javaVersion} Java HotSpot(TM) 64-Bit Server VM";
-
     private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(.)*";
     private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(.)*";
 
     private Map<Language, JsonObject> projectsCache;
     private String consoleMessage;
 
+    @Inject
+    Logger tracer;
+
     @PostConstruct
     private void readProjects() {
         projectsCache = new ConcurrentHashMap<>();
         consoleMessage = initializeConsoleMessage();
-        projectsCache.put(Language.JAVA, readProjectAsJson(LabPaths.HOME.append("java-gradle")));
-        projectsCache.put(Language.GROOVY, readProjectAsJson(LabPaths.HOME.append("groovy-gradle")));
-        projectsCache.put(Language.SCALA, readProjectAsJson(LabPaths.HOME.append("scala-gradle")));
+        projectsCache.put(Language.JAVA, readProjectAsJson(LabPaths.JAVA_PROJECT.asPath()));
+        projectsCache.put(Language.GROOVY, readProjectAsJson(LabPaths.GROOY_PROJECT.asPath()));
+        projectsCache.put(Language.SCALA, readProjectAsJson(LabPaths.SCALA_PROJECT.asPath()));
     }
 
     public JsonObject get(Language language) {
         return projectsCache.get(language);
     }
 
-    private JsonObject readProjectAsJson(final Path rootDir) {
+    private JsonObject readProjectAsJson(Path rootDir) {
         tracer.info(() -> "Reading project: " + rootDir);
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("console", consoleMessage)
@@ -177,8 +174,6 @@ public class ProjectCache {
         try {
             return Files.walk(path)
                     .filter(p -> !p.toFile().isDirectory())
-                    .filter(p -> !p.getFileName().toString().equals(GIT_IGNORE_FILE))
-                    .filter(p -> !p.getFileName().toString().equals(BUILD_GRADLE_FILE))
                     .filter(p -> p.getFileName().toString().matches(HELLO_WORLD_REGEX)
                             || p.getFileName().toString().matches(HELLO_WORLD_TEST_REGEX))
                     .collect(Collectors.toMap(p -> p.getFileName().toString(), this::linesByFile));

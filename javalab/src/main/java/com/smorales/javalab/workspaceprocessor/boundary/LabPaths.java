@@ -5,19 +5,22 @@ import java.nio.file.Paths;
 
 public enum LabPaths {
     HOME("/home/wildfly/"),
-    REPOSITORY_DIR(HOME.path + ".m2/repository/");
+    REPOSITORY_DIR(HOME.dir + ".m2/repository/"),
+    JAVA_PROJECT(LabPaths.HOME.asString() +"java-gradle"),
+    SCALA_PROJECT(LabPaths.HOME.asString() +"scala-gradle"),
+    GROOY_PROJECT(LabPaths.HOME.asString() +"groovy-gradle");
 
-    private String path;
+    private String dir;
 
     LabPaths(String path) {
-        this.path = path;
+        this.dir = path;
     }
 
     public String asString() {
-        return this.path;
+        return this.dir;
     }
 
-    public Path append(String path) {
-        return Paths.get(this.path, path);
+    public Path asPath() {
+        return Paths.get(this.dir);
     }
 }

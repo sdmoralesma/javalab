@@ -36,8 +36,8 @@
                     });
             },
 
-            initWorkspace: function () {
-                return $http.get(ENDPOINT + "/init");
+            initWorkspace: function (lang) {
+                return $http.get(ENDPOINT + "/init/" + lang);
             },
 
             base62Workspace: function (base62Param) {

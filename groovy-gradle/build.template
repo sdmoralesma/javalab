@@ -1,0 +1,20 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions = true
+        showStackTraces = true
+    }
+}
+
+dependencies { {dependenciesSet} };
+
+task run (dependsOn: 'classes', type: JavaExec) {
+    main = '{runnableClassPath}'
+    classpath = sourceSets.main.runtimeClasspath
+}
