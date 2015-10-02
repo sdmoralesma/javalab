@@ -62,9 +62,14 @@ public class ProjectCache {
                 .add("console", consoleMessage)
                 .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)))
                 .add("runnableNode", createRunnableNode())
+                .add("init-config", createInitConfigNode())
                 .build();
         tracer.info(() -> "Json for project: \n" + jsonObject.toString());
         return jsonObject;
+    }
+
+    private JsonObject createInitConfigNode() {
+        return null;
     }
 
     private JsonArray createTreedataNode(Map<String, String> filesMap) {

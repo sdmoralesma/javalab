@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 public enum LabPaths {
     HOME("/home/wildfly/"),
     REPOSITORY_DIR(HOME.dir + ".m2/repository/"),
-    JAVA_PROJECT(LabPaths.HOME.asString() +"java-gradle"),
-    SCALA_PROJECT(LabPaths.HOME.asString() +"scala-gradle"),
-    GROOY_PROJECT(LabPaths.HOME.asString() +"groovy-gradle");
+    JAVA_PROJECT(HOME.dir + "java-gradle"),
+    SCALA_PROJECT(HOME.dir + "scala-gradle"),
+    GROOY_PROJECT(HOME.dir + "groovy-gradle");
 
     private String dir;
 
