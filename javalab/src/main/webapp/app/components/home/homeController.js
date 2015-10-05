@@ -15,13 +15,12 @@
             });
         };
 
-        self.initializeCodeEditor = function () {
+        self.initializeCodeEditor = function (mode) {
             const CRIMSON_THEME = "ace/theme/crimson_editor";
-            const JAVA_MODE = "ace/mode/java";
             $scope.codeEditor = ace.edit("code-editor");
             $scope.codeEditor.$blockScrolling = Infinity;
             $scope.codeEditor.setTheme(CRIMSON_THEME);
-            $scope.codeEditor.getSession().setMode(JAVA_MODE);
+            $scope.codeEditor.getSession().setMode(mode);
             $scope.codeEditor.getSession().setValue($scope.selected.code);
         };
 
@@ -36,15 +35,12 @@
             $scope.selected = self.findById(211).model;
 
             //AutoCompletion
-            $scope.javaClasses = [
-                {name: 'HelloWorld.java', path: 'com.company.project.HelloWorld', id: 211},
-                {name: 'HelloWorldTest.java', path: 'com.company.project.HelloWorldTest', id: 311}
-            ];
-            $scope.initialValue = $scope.javaClasses[0];
+            $scope.javaClasses = $scope.appModel.initConfig.javaClasses;
+            $scope.initialValue = $scope.appModel.initConfig.javaClasses[0];
 
             $rootScope.$broadcast('resize', {});
 
-            self.initializeCodeEditor();
+            self.initializeCodeEditor($scope.appModel.initConfig.language);
         });
 
         $scope.formatCode = function () {

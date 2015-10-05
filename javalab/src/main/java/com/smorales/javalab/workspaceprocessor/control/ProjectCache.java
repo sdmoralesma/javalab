@@ -62,14 +62,28 @@ public class ProjectCache {
                 .add("console", consoleMessage)
                 .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)))
                 .add("runnableNode", createRunnableNode())
-                .add("init-config", createInitConfigNode())
+                .add("initConfig", createInitConfigNode())
                 .build();
         tracer.info(() -> "Json for project: \n" + jsonObject.toString());
         return jsonObject;
     }
 
     private JsonObject createInitConfigNode() {
-        return null;
+        return Json.createObjectBuilder()
+                .add("language", "ace/mode/groovy")
+                .add("javaClasses", Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("id", 211)
+                                .add("name", "HelloWorld.java")
+                                .add("path", "com.company.project.HelloWorld")
+                                .build())
+                        .add(Json.createObjectBuilder()
+                                .add("id", 311)
+                                .add("name", "HelloWorldTest.java")
+                                .add("path", "com.company.project.HelloWorldTest")
+                                .build())
+                        .build())
+                .build();
     }
 
     private JsonArray createTreedataNode(Map<String, String> filesMap) {
