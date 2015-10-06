@@ -16,7 +16,7 @@
         };
 
         self.initializeCodeEditor = function (mode) {
-            const CRIMSON_THEME = "ace/theme/crimson_editor";
+            var CRIMSON_THEME = "ace/theme/crimson_editor";
             $scope.codeEditor = ace.edit("code-editor");
             $scope.codeEditor.$blockScrolling = Infinity;
             $scope.codeEditor.setTheme(CRIMSON_THEME);
