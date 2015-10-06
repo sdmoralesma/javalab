@@ -7,7 +7,7 @@
 
     function middleService($http) {
 
-        const ENDPOINT = 'rest/process';
+        var ENDPOINT = 'rest/process';
         return {
             runCode: function (model) {
                 $http.post(ENDPOINT + "/run", model)

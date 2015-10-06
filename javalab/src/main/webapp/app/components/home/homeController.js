@@ -16,8 +16,8 @@
         };
 
         self.initializeCodeEditor = function () {
-            const CRIMSON_THEME = "ace/theme/crimson_editor";
-            const JAVA_MODE = "ace/mode/java";
+            var CRIMSON_THEME = "ace/theme/crimson_editor";
+            var JAVA_MODE = "ace/mode/java";
             $scope.codeEditor = ace.edit("code-editor");
             $scope.codeEditor.$blockScrolling = Infinity;
             $scope.codeEditor.setTheme(CRIMSON_THEME);
