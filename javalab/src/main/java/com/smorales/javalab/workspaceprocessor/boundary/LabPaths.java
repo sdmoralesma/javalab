@@ -1,5 +1,7 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.control.Language;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -22,5 +24,18 @@ public enum LabPaths {
 
     public Path asPath() {
         return Paths.get(this.dir);
+    }
+
+    public static LabPaths pathByLanguage(Language lang) {
+        switch (lang) {
+            case GROOVY:
+                return GROOY_PROJECT;
+            case JAVA:
+                return JAVA_PROJECT;
+            case SCALA:
+                return SCALA_PROJECT;
+            default:
+                throw new NotRunnableCodeException("Unknown lang:" + lang);
+        }
     }
 }

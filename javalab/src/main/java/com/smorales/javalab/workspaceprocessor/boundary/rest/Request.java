@@ -10,6 +10,7 @@ public class Request {
     private List<Library> libraries;
     private List<TreeData> treedata;
     private RunnableNode runnableNode;
+    private InitConfig initConfig;
 
     public List<Library> getLibraries() {
         return libraries;
@@ -33,5 +34,13 @@ public class Request {
 
     public void setRunnableNode(RunnableNode runnableNode) {
         this.runnableNode = runnableNode;
+    }
+
+    public InitConfig getInitConfig() {
+        return initConfig;
+    }
+
+    public void setInitConfig(InitConfig initConfig) {
+        this.initConfig = initConfig;
     }
 }

@@ -46,9 +46,9 @@ public class ProjectCache {
     private void readProjects() {
         projectsCache = new ConcurrentHashMap<>();
         consoleMessage = initializeConsoleMessage();
-        projectsCache.put(Language.JAVA, readProjectAsJson(LabPaths.JAVA_PROJECT.asPath()));
-        projectsCache.put(Language.GROOVY, readProjectAsJson(LabPaths.GROOY_PROJECT.asPath()));
-        projectsCache.put(Language.SCALA, readProjectAsJson(LabPaths.SCALA_PROJECT.asPath()));
+        projectsCache.put(Language.GROOVY, readProjectAsJson(Language.GROOVY));
+        projectsCache.put(Language.JAVA, readProjectAsJson(Language.JAVA));
+        projectsCache.put(Language.SCALA, readProjectAsJson(Language.SCALA));
     }
 
     public JsonObject get(String lang) {
@@ -56,21 +56,24 @@ public class ProjectCache {
         return projectsCache.get(language);
     }
 
-    private JsonObject readProjectAsJson(Path rootDir) {
+    private JsonObject readProjectAsJson(Language lang) {
+
+        Path rootDir = LabPaths.pathByLanguage(lang).asPath();
+
         tracer.info(() -> "Reading project: " + rootDir);
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("console", consoleMessage)
                 .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)))
                 .add("runnableNode", createRunnableNode())
-                .add("initConfig", createInitConfigNode())
+                .add("initConfig", createInitConfigNode(lang))
                 .build();
         tracer.info(() -> "Json for project: \n" + jsonObject.toString());
         return jsonObject;
     }
 
-    private JsonObject createInitConfigNode() {
+    private JsonObject createInitConfigNode(Language lang) {
         return Json.createObjectBuilder()
-                .add("language", "ace/mode/groovy")
+                .add("language", "ace/mode/" + lang.name().toLowerCase())
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
                                 .add("id", 211)
