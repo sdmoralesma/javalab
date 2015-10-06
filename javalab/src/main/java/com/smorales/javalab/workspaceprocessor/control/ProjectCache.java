@@ -32,8 +32,8 @@ public class ProjectCache {
 
     private static final String JAVALAB_LATEST_VERSION = "https://api.github.com/repos/sdmoralesma/javalab/releases/latest";
     private static final String WELCOME_MSG_TEMPLATE = "Welcome to Javalab {labVersion} !\r\n$ java -version : {javaVersion} Java HotSpot(TM) 64-Bit Server VM";
-    private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(.)*";
-    private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(.)*";
+    private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(java|scala|groovy)";
+    private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(java|scala|groovy)";
     private static final String INIT_DEPS_REGEX = "init-deps";
 
     private Map<Language, JsonObject> projectsCache;
