@@ -57,9 +57,7 @@ public class ProjectCache {
     }
 
     private JsonObject readProjectAsJson(Language lang) {
-
         Path rootDir = LabPaths.pathByLanguage(lang).asPath();
-
         tracer.info(() -> "Reading project: " + rootDir);
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("console", consoleMessage)
@@ -73,16 +71,16 @@ public class ProjectCache {
 
     private JsonObject createInitConfigNode(Language lang) {
         return Json.createObjectBuilder()
-                .add("language", "ace/mode/" + lang.name().toLowerCase())
+                .add("language", "ace/mode/" + lang.getDescription())
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
                                 .add("id", 211)
-                                .add("name", "HelloWorld.java")
+                                .add("name", "HelloWorld" + lang.getExtension())
                                 .add("path", "com.company.project.HelloWorld")
                                 .build())
                         .add(Json.createObjectBuilder()
                                 .add("id", 311)
-                                .add("name", "HelloWorldTest.java")
+                                .add("name", "HelloWorldTest" + lang.getExtension())
                                 .add("path", "com.company.project.HelloWorldTest")
                                 .build())
                         .build())
