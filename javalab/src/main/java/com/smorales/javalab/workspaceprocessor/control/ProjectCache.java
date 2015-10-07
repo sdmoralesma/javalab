@@ -71,7 +71,8 @@ public class ProjectCache {
 
     private JsonObject createInitConfigNode(Language lang) {
         return Json.createObjectBuilder()
-                .add("language", "ace/mode/" + lang.getDescription())
+                .add("language", lang.getDescription())
+                .add("languageMode", "ace/mode/" + lang.getDescription())
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(Json.createObjectBuilder()
                                 .add("id", 211)

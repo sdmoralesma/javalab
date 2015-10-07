@@ -12,7 +12,7 @@ test {
     }
 }
 
-dependencies { {dependenciesSet} };
+dependencies { {dependenciesSet} }
 
 task run (dependsOn: 'classes', type: JavaExec) {
     main = '{runnableClassPath}'

@@ -1,11 +1,12 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
-import com.smorales.javalab.workspaceprocessor.entity.Library;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -58,7 +59,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(treeData, runnableNode);
+        String result = sut.runCode(treeData, runnableNode, new InitConfig());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
@@ -112,7 +113,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getName());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(treeData, runnableNode);
+        String result = sut.testCode(treeData, runnableNode, new InitConfig());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);

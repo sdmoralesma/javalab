@@ -1,6 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.control.Language;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -29,10 +31,11 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode) {
+    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode, InitConfig initConfig) {
         try {
-            String template = new String(Files.readAllBytes(Paths.get(LabPaths.JAVA_PROJECT.asString(), "build.template")));
-            template = template.replace("{runnableClassPath}", runnableNode.getPath());
+            String pathByLang = LabPaths.pathByLanguage(Language.from(initConfig.getLanguage())).asString();
+            String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
+            template = template.replace("{runnableClassPath}", removeExtension(runnableNode.getPath()));
             template = template.replace("{dependenciesSet}", readDependencies(tempDir));
 
             Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
@@ -41,6 +44,10 @@ class Gradle extends BuildTool {
             tracer.severe(e::getMessage);
             throw new NotRunnableCodeException("Cannot create AUX files");
         }
+    }
+
+    private String removeExtension(String path) {
+        return path.substring(0, path.lastIndexOf('.'));
     }
 
     private String readDependencies(Path tempDir) {

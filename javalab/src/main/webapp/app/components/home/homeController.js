@@ -40,7 +40,7 @@
 
             $rootScope.$broadcast('resize', {});
 
-            self.initializeCodeEditor($scope.appModel.initConfig.language);
+            self.initializeCodeEditor($scope.appModel.initConfig.languageMode);
         });
 
         $scope.formatCode = function () {

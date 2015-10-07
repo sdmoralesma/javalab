@@ -6,6 +6,7 @@ public class InitConfig {
 
     private List<JavaClasses> javaClasses;
     private String language;
+    private String languageMode;
 
     public List<JavaClasses> getJavaClasses() {
         return javaClasses;
@@ -21,5 +22,13 @@ public class InitConfig {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getLanguageMode() {
+        return languageMode;
+    }
+
+    public void setLanguageMode(String languageMode) {
+        this.languageMode = languageMode;
     }
 }
