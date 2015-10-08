@@ -61,7 +61,7 @@ public class ProjectCache {
         tracer.info(() -> "Reading project: " + rootDir);
         JsonObject jsonObject = Json.createObjectBuilder()
                 .add("console", consoleMessage)
-                .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir)))
+                .add("treedata", createTreedataNode(readContentAllFilesRecursively(rootDir), lang))
                 .add("runnableNode", createRunnableNode())
                 .add("initConfig", createInitConfigNode(lang))
                 .build();
@@ -88,11 +88,11 @@ public class ProjectCache {
                 .build();
     }
 
-    private JsonArray createTreedataNode(Map<String, String> filesMap) {
+    private JsonArray createTreedataNode(Map<String, String> filesMap, Language lang) {
         return Json.createArrayBuilder()
                 .add(createDependenciesNode(filesMap))
-                .add(createHelloWorldNode(filesMap))
-                .add(createHelloWorldTestNode(filesMap))
+                .add(createHelloWorldNode(filesMap, lang))
+                .add(createHelloWorldTestNode(filesMap, lang))
                 .build();
     }
 
@@ -107,7 +107,7 @@ public class ProjectCache {
                 .build();
     }
 
-    private JsonObject createHelloWorldNode(Map<String, String> map) {
+    private JsonObject createHelloWorldNode(Map<String, String> map, Language lang) {
         String key = entry(map, HELLO_WORLD_REGEX);
         JsonValue helloWorldNode = Json.createObjectBuilder()
                 .add("id", 211)
@@ -127,7 +127,7 @@ public class ProjectCache {
 
         return Json.createObjectBuilder()
                 .add("id", 2)
-                .add("name", "src/main/java/")
+                .add("name", "src/main/" + lang.getDescription() + "/")
                 .add("type", "folder")
                 .add("children", Json.createArrayBuilder().add(packageNode))
                 .build();
@@ -141,7 +141,7 @@ public class ProjectCache {
         return first.get();
     }
 
-    private JsonObject createHelloWorldTestNode(Map<String, String> map) {
+    private JsonObject createHelloWorldTestNode(Map<String, String> map, Language lang) {
         String key = entry(map, HELLO_WORLD_TEST_REGEX);
         JsonValue helloWorldTestNode = Json.createObjectBuilder()
                 .add("id", 311)
@@ -161,7 +161,7 @@ public class ProjectCache {
 
         return Json.createObjectBuilder()
                 .add("id", 3)
-                .add("name", "src/test/java/")
+                .add("name", "src/test/" + lang.getDescription() + "/")
                 .add("type", "folder")
                 .add("children", Json.createArrayBuilder().add(packageNode))
                 .build();
