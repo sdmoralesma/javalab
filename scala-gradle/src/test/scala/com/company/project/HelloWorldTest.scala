@@ -1,4 +1,4 @@
-package org.company.project
+package com.company.project
 
 import _root_.junit.framework.TestCase
 
