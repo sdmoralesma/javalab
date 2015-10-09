@@ -48,7 +48,7 @@ public class FileHandler {
         }
     }
 
-    public void removeDir(Path file) {
+    public void removeDirectoryRecursively(Path file) {
         Objects.nonNull(file);
         try {
             Files.walkFileTree(file, new SimpleFileVisitor<Path>() {

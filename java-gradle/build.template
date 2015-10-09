@@ -1,5 +1,5 @@
 apply plugin:'application'
-mainClassName = "com.smorales.lab.HelloWorld"
+mainClassName = "{runnableClassPath}"
 
 apply plugin: 'java'
 sourceCompatibility = '1.8'
@@ -17,9 +17,4 @@ test {
     }
 }
 
-dependencies {
-    compile 'joda-time:joda-time:2.8'
-    compile 'com.google.guava:guava:18.0'
-    compile 'org.apache.commons:commons-lang3:3.4'
-    testCompile 'junit:junit:4.12'
-}
+dependencies { {dependenciesSet} };

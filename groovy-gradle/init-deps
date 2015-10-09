@@ -1,0 +1,2 @@
+compile 'org.codehaus.groovy:groovy-all:+'
+testCompile 'junit:junit:+'

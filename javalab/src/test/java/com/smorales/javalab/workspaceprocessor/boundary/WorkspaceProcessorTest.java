@@ -1,5 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Base62;
@@ -33,7 +34,7 @@ public class WorkspaceProcessorTest {
         when(sut.em.createNamedQuery(Workspace.findFirstRow, Workspace.class).setMaxResults(1).getResultList().get(0))
                 .thenReturn(getValidWorkspace());
 
-        JsonObject result = sut.initialize();
+        JsonObject result = sut.initialize("java");
         assertThat(result).isNotNull();
     }
 
@@ -53,11 +54,11 @@ public class WorkspaceProcessorTest {
         Request req = getValidRequest();
         String okMessage = "ok run message";
 
-        when(sut.buildTool.runCode(anyListOf(TreeData.class), any(RunnableNode.class))).thenReturn(okMessage);
+        when(sut.buildTool.runCode(anyListOf(TreeData.class), any(RunnableNode.class), any(InitConfig.class))).thenReturn(okMessage);
 
         String result = sut.runCode(req);
         assertThat(result).isNotNull().isEqualTo(okMessage);
-        verify(sut.buildTool).runCode(anyListOf(TreeData.class), any(RunnableNode.class));
+        verify(sut.buildTool).runCode(anyListOf(TreeData.class), any(RunnableNode.class), any(InitConfig.class));
     }
 
     @Test
@@ -65,11 +66,11 @@ public class WorkspaceProcessorTest {
         Request req = getValidRequest();
         String okMessage = "ok test message";
 
-        when(sut.buildTool.testCode(anyListOf(TreeData.class), any(RunnableNode.class))).thenReturn(okMessage);
+        when(sut.buildTool.testCode(anyListOf(TreeData.class), any(RunnableNode.class), any(InitConfig.class))).thenReturn(okMessage);
 
         String result = sut.runTests(req);
         assertThat(result).isNotNull().isEqualTo(okMessage);
-        verify(sut.buildTool).testCode(anyListOf(TreeData.class), any(RunnableNode.class));
+        verify(sut.buildTool).testCode(anyListOf(TreeData.class), any(RunnableNode.class), any(InitConfig.class));
     }
 
     @Test

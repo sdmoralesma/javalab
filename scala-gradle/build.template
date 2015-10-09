@@ -1,4 +1,4 @@
-apply plugin: 'scala'
+apply plugin:'scala'
 
 repositories {
     mavenCentral()
@@ -12,13 +12,10 @@ test {
     }
 }
 
-dependencies{
-    compile "org.scala-lang:scala-library:2.10.4"
-    testCompile "junit:junit:+"
-}
+dependencies { {dependenciesSet} };
 
 task run(type: JavaExec, description: "Runs the project") {
-    main = "com.company.project.HelloWorld"
+    main = "{runnableClassPath}"
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }

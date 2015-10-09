@@ -1,7 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-
+import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.control.Language;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 
 class Gradle extends BuildTool {
 
@@ -31,36 +31,23 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode) {
+    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode, InitConfig initConfig) {
         try {
-            Path gradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
-            String info = "apply plugin:'application'\n" +
-                    "mainClassName = \"{runnableClassPath}\"\n" +
-                    "\n" +
-                    "apply plugin: 'java'\n" +
-                    "sourceCompatibility = '1.8'\n" +
-                    "[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'\n" +
-                    "\n" +
-                    "repositories {\n" +
-                    "    mavenCentral()\n" +
-                    "}\n" +
-                    "\n" +
-                    "test {\n" +
-                    "    testLogging {\n" +
-                    "        exceptionFormat = 'full'\n" +
-                    "        showExceptions = true\n" +
-                    "        showStackTraces = true\n" +
-                    "    }\n" +
-                    "}\n\n" +
-                    "dependencies { {dependenciesSet} }";
+            String pathByLang = LabPaths.pathByLanguage(Language.from(initConfig.getLanguage())).asString();
+            String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
+            template = template.replace("{runnableClassPath}", removeExtension(runnableNode.getPath()));
+            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
 
-            info = info.replace("{runnableClassPath}", runnableNode.getPath());
-            info = info.replace("{dependenciesSet}", readDependencies(tempDir));
-
-            Files.write(gradleFile, info.getBytes());
+            Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
+            Files.write(buildGradleFile, template.getBytes());
         } catch (IOException e) {
-            throw new NotRunnableCodeException("Cannot create build.gradle file");
+            tracer.severe(e::getMessage);
+            throw new NotRunnableCodeException("Cannot create AUX files");
         }
+    }
+
+    private String removeExtension(String path) {
+        return path.substring(0, path.lastIndexOf('.'));
     }
 
     private String readDependencies(Path tempDir) {
@@ -84,11 +71,11 @@ class Gradle extends BuildTool {
     }
 
     private void findInvalidDependencies(Set<String> deps) {
-        String invalid = deps.stream()
+        String invalidDeps = deps.stream()
                 .filter(dep -> !this.validateDependency(dep))
                 .collect(Collectors.joining(", "));
-        if (!invalid.isEmpty()) {
-            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalid);
+        if (!invalidDeps.isEmpty()) {
+            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalidDeps);
         }
     }
 

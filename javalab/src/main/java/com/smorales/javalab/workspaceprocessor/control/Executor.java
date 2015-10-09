@@ -34,10 +34,14 @@ public class Executor {
                 return getStreamAsString(proc.getInputStream());
             }
 
+            String stdErrorMsg = getStreamAsString(proc.getErrorStream());
+            String stdOutMsg = getStreamAsString(proc.getInputStream());
             if (returnOnError == STD.ERR) {
-                throw new NotRunnableCodeException(getStreamAsString(proc.getErrorStream()));
+                tracer.info(() -> "STD OUT MSG: \n" + stdOutMsg);
+                throw new NotRunnableCodeException(stdErrorMsg);
             } else if (returnOnError == STD.OUT) {
-                throw new NotRunnableCodeException(getStreamAsString(proc.getInputStream()));
+                tracer.info(() -> "STD ERROR MSG: \n" + stdErrorMsg);
+                throw new NotRunnableCodeException(stdOutMsg);
             } else {
                 throw new NotRunnableCodeException("unknown STD: " + returnOnError);
             }
@@ -48,6 +52,10 @@ public class Executor {
     }
 
     private String getStreamAsString(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return "";
+        }
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }

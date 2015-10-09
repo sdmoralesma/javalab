@@ -25,9 +25,9 @@ public class WorkspaceProcessorResource {
     Logger tracer;
 
     @GET
-    @Path("/init")
-    public Response initialize() {
-        return Response.ok().entity(workspaceProcessor.initialize()).build();
+    @Path("/init/{lang}")
+    public Response initialize(@PathParam("lang") String lang) {
+        return Response.ok().entity(workspaceProcessor.initialize(lang)).build();
     }
 
     @GET

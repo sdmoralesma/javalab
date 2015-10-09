@@ -70,6 +70,21 @@ ADD javalab/src $USER_HOME/javalab/src
 RUN mvn package -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2 && \
     cp $USER_HOME/javalab/target/javalab.war $JBOSS_HOME/standalone/deployments/
 
+# Gradle workaround, will explode if TERM isn't declared
+ENV TERM xterm
+
+# Add java project
+ADD java-gradle $USER_HOME/java-gradle
+RUN cd $USER_HOME/java-gradle && gradle build --quiet --refresh-dependencies
+
+# Add scala project
+ADD scala-gradle $USER_HOME/scala-gradle
+RUN cd $USER_HOME/scala-gradle && gradle build --quiet --refresh-dependencies
+
+# Add groovy project
+ADD groovy-gradle $USER_HOME/groovy-gradle
+RUN cd $USER_HOME/groovy-gradle && gradle build --quiet --refresh-dependencies
+
 # Run everything below as the wildfly user
 RUN chown -R wildfly:wildfly-group $JBOSS_HOME/* && \
     chown -R wildfly:wildfly-group $USER_HOME/* && \

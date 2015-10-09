@@ -13,7 +13,7 @@
                 $http.post(ENDPOINT + "/run", model)
                     .then(function (response) {
                         model.console = response.data.output;
-                    }, function error(failure) {
+                    }, function (failure) {
                         alert('error code: ' + failure.status);
                     });
             },
@@ -22,7 +22,7 @@
                 $http.post(ENDPOINT + "/tests", model)
                     .then(function (response) {
                         model.console = response.data.output;
-                    }, function error(failure) {
+                    }, function (failure) {
                         alert('error code: ' + failure.status);
                     });
             },
@@ -31,13 +31,13 @@
                 $http.post(ENDPOINT + "/save", model)
                     .then(function (response) {
                         model.console = response.data.output;
-                    }, function error(failure) {
+                    }, function (failure) {
                         alert('error code: ' + failure.status);
                     });
             },
 
-            initWorkspace: function () {
-                return $http.get(ENDPOINT + "/init");
+            initWorkspace: function (lang) {
+                return $http.get(ENDPOINT + "/init/" + lang);
             },
 
             base62Workspace: function (base62Param) {

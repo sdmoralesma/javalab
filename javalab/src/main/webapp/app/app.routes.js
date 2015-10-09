@@ -3,16 +3,26 @@
 
     angular.module('LabApp').config(LabAppConfig);
 
-    LabAppConfig.$inject = ['$routeProvider', '$locationProvider'];
+    LabAppConfig.$inject = ['$routeProvider'];
 
-    function LabAppConfig($routeProvider, $locationProvider) {
+    function LabAppConfig($routeProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'app/components/partials/main-interface.html',
                 controller: 'HomeCtrl',
                 resolve: {
                     initData: ["middleService", function (middleService) {
-                        return middleService.initWorkspace();
+                        return middleService.initWorkspace('java');
+                    }]
+                }
+
+            })
+            .when('/:lang', {
+                templateUrl: 'app/components/partials/main-interface.html',
+                controller: 'HomeCtrl',
+                resolve: {
+                    initData: ['middleService', '$route', function (middleService, $route) {
+                        return middleService.initWorkspace($route.current.params.lang);
                     }]
                 }
 
@@ -21,7 +31,7 @@
                 templateUrl: 'app/components/partials/main-interface.html',
                 controller: 'HomeCtrl',
                 resolve: {
-                    initData: ["middleService", "$route", function (middleService, $route) {
+                    initData: ['middleService', '$route', function (middleService, $route) {
                         return middleService.base62Workspace($route.current.params.idBase62);
                     }]
                 }
