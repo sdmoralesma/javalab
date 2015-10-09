@@ -18,7 +18,7 @@ dependencies{
 }
 
 task run(type: JavaExec, description: "Runs the project") {
-    main = "org.company.project.HelloWorld"
+    main = "com.company.project.HelloWorld"
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
