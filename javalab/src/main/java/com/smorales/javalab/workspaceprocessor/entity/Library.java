@@ -76,4 +76,16 @@ public class Library {
         result = 31 * result + version.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Library{" +
+                "name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", link='" + link + '\'' +
+                ", checked=" + checked +
+                ", visible=" + visible +
+                ", jar='" + jar + '\'' +
+                '}';
+    }
 }

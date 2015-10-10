@@ -60,4 +60,16 @@ public class TreeData {
     public void setChildren(List<TreeData> children) {
         this.children = children;
     }
+
+    @Override
+    public String toString() {
+        return "TreeData{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", code='" + code + '\'' +
+                ", cursor=" + cursor +
+                ", children=" + children +
+                '}';
+    }
 }

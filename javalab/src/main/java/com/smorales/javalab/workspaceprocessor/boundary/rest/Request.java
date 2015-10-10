@@ -43,4 +43,14 @@ public class Request {
     public void setInitConfig(InitConfig initConfig) {
         this.initConfig = initConfig;
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "libraries=" + libraries +
+                ", treedata=" + treedata +
+                ", runnableNode=" + runnableNode +
+                ", initConfig=" + initConfig +
+                '}';
+    }
 }

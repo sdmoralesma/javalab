@@ -136,7 +136,7 @@
                     path += pathArray[index].model.name;
                 }
             }
-            return path.replace('.java','');
+            return path;
         };
 
         $scope.addNode = function (typeToCreate, node) {

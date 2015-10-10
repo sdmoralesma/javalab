@@ -13,6 +13,8 @@ import org.junit.Test;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 
+import java.util.logging.Logger;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -26,6 +28,7 @@ public class WorkspaceProcessorTest {
         sut.em = mock(EntityManager.class, RETURNS_DEEP_STUBS);
         sut.base62 = mock(Base62.class);
         sut.buildTool = mock(BuildTool.class);
+        sut.tracer = mock(Logger.class);
     }
 
     @Test

@@ -14,6 +14,7 @@ import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 @Stateless
 @Interceptors({TimeLogger.class})
@@ -32,6 +33,9 @@ public class WorkspaceProcessor {
 
     @Inject
     ProjectCache projectCache;
+
+    @Inject
+    Logger tracer;
 
     public JsonObject initialize(String lang) {
 //        Workspace workspace = em.createNamedQuery(Workspace.findFirstRow, Workspace.class)
@@ -57,10 +61,12 @@ public class WorkspaceProcessor {
     }
 
     public String runCode(Request req) {
+        tracer.info("RUN CODE >>> \n" + req.toString());
         return buildTool.runCode(req.getTreedata(), req.getRunnableNode(), req.getInitConfig());
     }
 
     public String runTests(Request req) {
+        tracer.info("RUN TEST >>> \n" + req.toString());
         return buildTool.testCode(req.getTreedata(), req.getRunnableNode(), req.getInitConfig());
     }
 

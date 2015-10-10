@@ -31,4 +31,13 @@ public class InitConfig {
     public void setLanguageMode(String languageMode) {
         this.languageMode = languageMode;
     }
+
+    @Override
+    public String toString() {
+        return "InitConfig{" +
+                "javaClasses=" + javaClasses +
+                ", language='" + language + '\'' +
+                ", languageMode='" + languageMode + '\'' +
+                '}';
+    }
 }

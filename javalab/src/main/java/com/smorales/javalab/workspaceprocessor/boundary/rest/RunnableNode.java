@@ -7,7 +7,6 @@ public class RunnableNode {
     private boolean mainClass;
     private boolean testClass;
 
-
     public String getId() {
         return id;
     }
@@ -38,5 +37,15 @@ public class RunnableNode {
 
     public void setTestClass(boolean testClass) {
         this.testClass = testClass;
+    }
+
+    @Override
+    public String toString() {
+        return "RunnableNode{" +
+                "id='" + id + '\'' +
+                ", path='" + path + '\'' +
+                ", mainClass=" + mainClass +
+                ", testClass=" + testClass +
+                '}';
     }
 }
