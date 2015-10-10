@@ -5,6 +5,6 @@ import _root_.junit.framework.TestCase
 class HelloWorldTest extends TestCase {
 
   def test(): Unit = {
-    assert(2 == 2)
+    assert(1 == 1)
   }
 }

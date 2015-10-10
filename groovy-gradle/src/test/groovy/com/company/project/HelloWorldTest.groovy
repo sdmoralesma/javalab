@@ -1,13 +1,11 @@
 package com.company.project
 
-import org.junit.Test
-
-import static org.junit.Assert.assertEquals
+import org.junit.*
 
 class HelloWorldTest {
 
     @Test
     public void test() {
-        assertEquals(1, 1)
+        Assert.assertEquals(1, 1)
     }
 }
