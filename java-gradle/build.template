@@ -17,4 +17,4 @@ test {
     }
 }
 
-dependencies { {dependenciesSet} };
+dependencies { {dependenciesSet} }
