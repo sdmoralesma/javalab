@@ -57,10 +57,6 @@ RUN gradle --daemon
 RUN groupadd -r wildfly-group -g 433 && \
     useradd -u 431 -r -g wildfly-group -s /bin/false wildfly -m
 
-# Add lab project and download dependencies
-ADD lab $USER_HOME/lab/
-RUN mvn package -q -f $USER_HOME/lab/pom.xml -Dmaven.repo.local=$MAVEN_M2
-
 # Cache dependencies
 ADD javalab/pom.xml $USER_HOME/javalab/
 RUN mvn verify clean --fail-never -f $USER_HOME/javalab/pom.xml -Dmaven.repo.local=$MAVEN_M2
