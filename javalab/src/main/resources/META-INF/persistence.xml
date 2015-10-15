@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="labPU" transaction-type="JTA">
+        <jta-data-source>java:/MySQLDS</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="javax.persistence.schema-generation.scripts.action" value="drop-and-create"/>
+
+            <!-- This is usefull to read the ddl that create and drop the tables-->
+            <property name="javax.persistence.schema-generation.scripts.drop-target" value="/tmp/mydrop.sql"/>
+            <property name="javax.persistence.schema-generation.scripts.create-target" value="/tmp/mycreate.sql"/>
+
+
+            <property name="javax.persistence.schema-generation.create-source" value="script"/>
+            <property name="javax.persistence.schema-generation.create-script-source" value="META-INF/sql/create.sql"/>
+            <property name="javax.persistence.sql-load-script-source" value="META-INF/sql/load.sql"/>
+
+        </properties>
+    </persistence-unit>
+</persistence>

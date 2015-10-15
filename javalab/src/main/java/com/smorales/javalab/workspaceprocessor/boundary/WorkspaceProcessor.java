@@ -13,6 +13,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.io.StringReader;
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ public class WorkspaceProcessor {
 
     private static final int OFFSET = 1000000;
 
-    //    @PersistenceContext
+    @PersistenceContext
     EntityManager em;
 
     @Inject

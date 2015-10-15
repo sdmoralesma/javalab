@@ -8,4 +8,5 @@ class HelloWorldTest {
     public void test() {
         Assert.assertEquals(1, 1)
     }
+
 }
