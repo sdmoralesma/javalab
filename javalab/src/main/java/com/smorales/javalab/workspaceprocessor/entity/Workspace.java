@@ -5,16 +5,12 @@ import java.io.Serializable;
 
 @Entity(name = "Workspace")
 @NamedQueries({
-        @NamedQuery(name = Workspace.findFirstRow, query = "select w from Workspace w order by w.id asc"),
-        @NamedQuery(name = Workspace.findIdLastRow, query = "select w.id from Workspace w order by w.id desc"),
-        @NamedQuery(name = Workspace.findByBase62, query = "select w from Workspace w where w.path = :base62"),
+        @NamedQuery(name = Workspace.findById, query = "select w from Workspace w where w.path = :id"),
 })
 public class Workspace implements Serializable {
 
     private static final String PREFIX = "Workspace.";
-    public static final String findFirstRow = PREFIX + "findFirstRow";
-    public static final String findIdLastRow = PREFIX + "findIdLastRow";
-    public static final String findByBase62 = PREFIX + "findByBase62";
+    public static final String findById = PREFIX + "findById";
 
     @Id
     @Column(name = "id")

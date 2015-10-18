@@ -40,8 +40,8 @@
                 return $http.get(ENDPOINT + "/init/" + lang);
             },
 
-            base62Workspace: function (base62Param) {
-                return $http.get(ENDPOINT + "/" + base62Param);
+            workspaceByLabId: function (labId) {
+                return $http.get(ENDPOINT + "/" + labId);
             },
 
             newWorkspace: function () {

@@ -27,12 +27,12 @@
                 }
 
             })
-            .when('/data/:idBase62', {
+            .when('/labs/:labId', {
                 templateUrl: 'app/components/partials/main-interface.html',
                 controller: 'HomeCtrl',
                 resolve: {
                     initData: ['middleService', '$route', function (middleService, $route) {
-                        return middleService.base62Workspace($route.current.params.idBase62);
+                        return middleService.workspaceByLabId($route.current.params.labId);
                     }]
                 }
             })

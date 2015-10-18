@@ -3,7 +3,6 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
-import com.smorales.javalab.workspaceprocessor.control.Base62;
 import com.smorales.javalab.workspaceprocessor.entity.TreeData;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.Test;
 
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
-
 import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +24,6 @@ public class WorkspaceProcessorTest {
     public void setUp() {
         sut = new WorkspaceProcessor();
         sut.em = mock(EntityManager.class, RETURNS_DEEP_STUBS);
-        sut.base62 = mock(Base62.class);
         sut.buildTool = mock(BuildTool.class);
         sut.tracer = mock(Logger.class);
     }
@@ -34,8 +31,7 @@ public class WorkspaceProcessorTest {
     @Test
     @Ignore
     public void shouldInitializeOk() {
-        when(sut.em.createNamedQuery(Workspace.findFirstRow, Workspace.class).setMaxResults(1).getResultList().get(0))
-                .thenReturn(getValidWorkspace());
+        when(sut.em.find(anyObject(), anyInt())).thenReturn(getValidWorkspace());
 
         JsonObject result = sut.initialize("java");
         assertThat(result).isNotNull();
@@ -45,7 +41,7 @@ public class WorkspaceProcessorTest {
     @Ignore
     public void shouldGetByBase62Ok() {
         Workspace validWorkspace = getValidWorkspace();
-        when(sut.em.createNamedQuery(Workspace.findByBase62, Workspace.class).setParameter("base62", validWorkspace.getPath()).getSingleResult())
+        when(sut.em.createNamedQuery(Workspace.findById, Workspace.class).setParameter("base62", validWorkspace.getPath()).getSingleResult())
                 .thenReturn(validWorkspace);
 
         JsonObject result = sut.getByBase62(validWorkspace.getPath());
@@ -81,9 +77,7 @@ public class WorkspaceProcessorTest {
     public void shouldSave() {
         Workspace validWorkspace = getValidWorkspace();
         int lastId = 5;
-        sut.base62 = new Base62();
-        when(sut.em.createNamedQuery(Workspace.findIdLastRow, Integer.class).setMaxResults(1).getResultList().get(0))
-                .thenReturn(lastId);
+        when(sut.em.find(anyObject(), anyInt())).thenReturn(lastId);
 
         String result = sut.save(validWorkspace.getJson());
         assertThat(result).isNotNull().isEqualTo("emji");
