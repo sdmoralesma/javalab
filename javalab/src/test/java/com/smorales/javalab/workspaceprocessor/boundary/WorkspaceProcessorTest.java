@@ -41,10 +41,10 @@ public class WorkspaceProcessorTest {
     @Ignore
     public void shouldGetByBase62Ok() {
         Workspace validWorkspace = getValidWorkspace();
-        when(sut.em.createNamedQuery(Workspace.findById, Workspace.class).setParameter("base62", validWorkspace.getPath()).getSingleResult())
+        when(sut.em.createNamedQuery(Workspace.findById, Workspace.class).setParameter("base62", validWorkspace.getId()).getSingleResult())
                 .thenReturn(validWorkspace);
 
-        JsonObject result = sut.getByBase62(validWorkspace.getPath());
+        JsonObject result = sut.getById(validWorkspace.getId().toString());
         assertThat(result).isNotNull();
     }
 
@@ -79,7 +79,7 @@ public class WorkspaceProcessorTest {
         int lastId = 5;
         when(sut.em.find(anyObject(), anyInt())).thenReturn(lastId);
 
-        String result = sut.save(validWorkspace.getJson());
+        Integer result = sut.save(validWorkspace.getJson());
         assertThat(result).isNotNull().isEqualTo("emji");
         verify(sut.em).persist(any(Workspace.class));
     }
@@ -90,7 +90,7 @@ public class WorkspaceProcessorTest {
     }
 
     private Workspace getValidWorkspace() {
-        return new Workspace(1, "ejkl", "{\"exampleJson\":\"a simple example\"}");
+        return new Workspace(1, "{\"exampleJson\":\"a simple example\"}");
     }
 
     private Request getValidRequest() {

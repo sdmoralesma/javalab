@@ -34,11 +34,11 @@ public class WorkspaceProcessor {
 
     public JsonObject initialize(String lang) {
         JsonObject jsonProject = projectCache.get(lang);
-        Workspace workspace = new Workspace(1, "eeee", jsonProject.toString());
+        Workspace workspace = new Workspace(1, jsonProject.toString());
         return Json.createReader(new StringReader(workspace.getJson())).readObject();
     }
 
-    public JsonObject getByBase62(String labId) {
+    public JsonObject getById(String labId) {
         try {
             Workspace workspace = em.find(Workspace.class, labId);
             return Json.createReader(new StringReader(workspace.getJson())).readObject();
@@ -57,13 +57,12 @@ public class WorkspaceProcessor {
         return buildTool.testCode(req.getTreedata(), req.getRunnableNode(), req.getInitConfig());
     }
 
-    public String save(String data) {
+    public Integer save(String data) {
         Workspace workspace = new Workspace();
         workspace.setId(null);
         workspace.setJson(data);
-        workspace.setPath("1");//TODO:remove hardcoded 1
         em.persist(workspace);
-        return workspace.getPath();
+        return workspace.getId();
     }
 
     public String newWorkspace() {

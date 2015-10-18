@@ -9,7 +9,6 @@ import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
 import java.util.logging.Logger;
 
 @Stateless
@@ -41,7 +40,7 @@ public class WorkspaceProcessorResource {
     @GET
     @Path("/{idBase62}")
     public Response getByBase62(@PathParam("idBase62") String idBase62) {
-        return Response.ok().entity(workspaceProcessor.getByBase62(idBase62)).build();
+        return Response.ok().entity(workspaceProcessor.getById(idBase62)).build();
     }
 
     @POST
@@ -64,7 +63,7 @@ public class WorkspaceProcessorResource {
     @POST
     @Path("/save")
     public Response save(String data) {
-        String result = workspaceProcessor.save(data);
+        Integer result = workspaceProcessor.save(data);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(output).build();
     }

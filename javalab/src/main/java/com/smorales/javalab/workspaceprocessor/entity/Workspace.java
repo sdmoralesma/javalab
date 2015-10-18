@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 @Entity(name = "Workspace")
 @NamedQueries({
-        @NamedQuery(name = Workspace.findById, query = "select w from Workspace w where w.path = :id"),
 })
 public class Workspace implements Serializable {
 
@@ -17,18 +16,14 @@ public class Workspace implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "path")
-    private String path;
-
     @Column(name = "json")
     private String json;
 
     public Workspace() {
     }
 
-    public Workspace(int id, String path, String json) {
+    public Workspace(int id, String json) {
         this.id = id;
-        this.path = path;
         this.json = json;
     }
 
@@ -38,14 +33,6 @@ public class Workspace implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String base62) {
-        this.path = base62;
     }
 
     public String getJson() {
