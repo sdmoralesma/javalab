@@ -41,14 +41,25 @@
             </div>
         </form>
 
-        <!--<form class="navbar-form navbar-left">-->
-            <!--<button id="save-btn" class="btn btn-primary" data-ng-click="save()">-->
-                <!--<span class="glyphicon glyphicon-floppy-disk"></span>-->
-            <!--</button>-->
-            <!--<button id="new-btn" class="btn btn-success" data-ng-click="new()">-->
-                <!--<span class="glyphicon glyphicon-file"></span>-->
-            <!--</button>-->
-        <!--</form>-->
+        <form class="navbar-form navbar-left">
+            <button id="save-btn" class="btn btn-primary" data-ng-click="save()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+            </button>
+
+            <div class="btn-group">
+                <button id="new-btn" class="btn btn-success" data-ng-click="new()">
+                    <span class="glyphicon glyphicon-file"></span>
+                </button>
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Java</a></li>
+                    <li><a href="#">Groovy</a></li>
+                    <li><a href="#">Scala</a></li>
+                </ul>
+            </div>
+        </form>
 
         <div class="collapse navbar-collapse" id="collapsable-menu">
             <form class="navbar-form navbar-right ">
@@ -114,17 +125,7 @@
             </div>
 
             <div class="panel-body">
-                <div>
-                    <div data-ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" data-ng-model="lib.checked"> {{lib.name}}
-                            </label>
-                            <span class="label label-info">{{lib.version}}</span>
-                            <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
-                        </div>
-                    </div>
-                </div>
+                <textarea id="description" data-ng-model="description" rows="3"></textarea>
             </div>
         </div>
 
@@ -135,17 +136,7 @@
             </div>
 
             <div class="panel-body">
-                <div>
-                    <div data-ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" data-ng-model="lib.checked"> {{lib.name}}
-                            </label>
-                            <span class="label label-info">{{lib.version}}</span>
-                            <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
-                        </div>
-                    </div>
-                </div>
+                <textarea id="tags" data-ng-model="tags" rows="3"></textarea>
             </div>
         </div>
 

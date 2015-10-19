@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:14.04.3
 MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 
 #Install latest java jdk
@@ -51,7 +51,6 @@ RUN wget --quiet https://services.gradle.org/distributions/gradle-$GRADLE_VERSIO
 # Set Appropriate Environmental Variables
 ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
-RUN gradle --daemon
 
 # Create the wildfly user and group
 RUN groupadd -r wildfly-group -g 433 && \

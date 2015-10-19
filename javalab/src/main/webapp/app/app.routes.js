@@ -15,7 +15,6 @@
                         return middleService.initWorkspace('java');
                     }]
                 }
-
             })
             .when('/:lang', {
                 templateUrl: 'app/components/partials/main-interface.html',
@@ -25,7 +24,6 @@
                         return middleService.initWorkspace($route.current.params.lang);
                     }]
                 }
-
             })
             .when('/labs/:labId', {
                 templateUrl: 'app/components/partials/main-interface.html',

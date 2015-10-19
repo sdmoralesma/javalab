@@ -269,6 +269,10 @@
             $scope.appModel.runnableNode.path = self.pathAsString(nodeFound);
         };
 
+        $scope.description = "this is a test";
+
+        $scope.tags = "tag1, tag2, tag3";
+
     }
 
 })();
