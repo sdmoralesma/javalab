@@ -109,7 +109,7 @@ public class Workspace implements Serializable {
 
     @Override
     public String toString() {
-        return "com.smorales.javalab.workspaceprocessor.entity.Workspace[ id=" + id + " ]";
+        return "Workspace[ id=" + id + " ]";
     }
 
 }

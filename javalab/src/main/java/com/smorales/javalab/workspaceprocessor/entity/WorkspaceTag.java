@@ -6,13 +6,14 @@ import java.io.Serializable;
 @Entity
 @Table(name = "Workspace_Tag")
 @NamedQueries({
-        @NamedQuery(name = "WorkspaceTag.findAll", query = "SELECT w FROM WorkspaceTag w")})
+        @NamedQuery(name = "WorkspaceTag.findAll", query = "SELECT w FROM WorkspaceTag w")
+})
 public class WorkspaceTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
 
@@ -77,7 +78,7 @@ public class WorkspaceTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.smorales.javalab.workspaceprocessor.entity.WorkspaceTag[ id=" + id + " ]";
+        return "WorkspaceTag[ id=" + id + " ]";
     }
 
 }

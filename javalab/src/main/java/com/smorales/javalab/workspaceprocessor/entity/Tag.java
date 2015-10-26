@@ -87,7 +87,7 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.smorales.javalab.workspaceprocessor.entity.Tag[ id=" + id + " ]";
+        return "Tag[ id=" + id + " ]";
     }
 
 }
