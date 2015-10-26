@@ -1,8 +1,5 @@
 package com.smorales.javalab.workspaceprocessor.boundary.rest;
 
-import com.smorales.javalab.workspaceprocessor.entity.Library;
-import com.smorales.javalab.workspaceprocessor.entity.TreeData;
-
 import java.util.List;
 
 public class Request {

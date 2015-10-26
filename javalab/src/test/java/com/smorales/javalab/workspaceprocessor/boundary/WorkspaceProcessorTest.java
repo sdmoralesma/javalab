@@ -3,7 +3,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
-import com.smorales.javalab.workspaceprocessor.entity.TreeData;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.TreeData;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -34,17 +34,6 @@ public class WorkspaceProcessorTest {
         when(sut.em.find(anyObject(), anyInt())).thenReturn(getValidWorkspace());
 
         JsonObject result = sut.initialize("java");
-        assertThat(result).isNotNull();
-    }
-
-    @Test
-    @Ignore
-    public void shouldGetByBase62Ok() {
-        Workspace validWorkspace = getValidWorkspace();
-        when(sut.em.createNamedQuery(Workspace.findById, Workspace.class).setParameter("base62", validWorkspace.getId()).getSingleResult())
-                .thenReturn(validWorkspace);
-
-        JsonObject result = sut.getById(validWorkspace.getId().toString());
         assertThat(result).isNotNull();
     }
 

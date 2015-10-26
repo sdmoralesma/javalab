@@ -1,4 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.entity;
+package com.smorales.javalab.workspaceprocessor.boundary.rest;
 
 public class Library {
 
