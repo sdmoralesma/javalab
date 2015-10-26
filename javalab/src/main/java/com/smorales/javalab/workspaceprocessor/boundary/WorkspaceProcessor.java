@@ -2,6 +2,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
+import com.smorales.javalab.workspaceprocessor.entity.User;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import com.smorales.javalab.workspaceprocessor.tracing.TimeLogger;
 
@@ -61,6 +62,7 @@ public class WorkspaceProcessor {
         Workspace workspace = new Workspace();
         workspace.setId(null);
         workspace.setJson(data);
+        workspace.setUserid(em.getReference(User.class, 1));
         em.persist(workspace);
         return workspace.getId();
     }
