@@ -39,7 +39,7 @@ public class WorkspaceProcessorResource {
 
     @GET
     @Path("/{labId}")
-    public Response getByBase62(@PathParam("labId") String labId) {
+    public Response getByBase62(@PathParam("labId") Integer labId) {
         return Response.ok().entity(workspaceProcessor.getById(labId)).build();
     }
 

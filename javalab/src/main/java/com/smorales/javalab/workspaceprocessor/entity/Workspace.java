@@ -74,11 +74,11 @@ public class Workspace implements Serializable {
         this.description = description;
     }
 
-    public List<Tag> getWorkspaceTagList() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setWorkspaceTagList(List<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

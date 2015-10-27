@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 @Stateless
@@ -39,7 +40,7 @@ public class WorkspaceProcessor {
         return Json.createReader(new StringReader(workspace.getJson())).readObject();
     }
 
-    public JsonObject getById(String labId) {
+    public JsonObject getById(Integer labId) {
         try {
             Workspace workspace = em.find(Workspace.class, labId);
             return Json.createReader(new StringReader(workspace.getJson())).readObject();
@@ -62,7 +63,9 @@ public class WorkspaceProcessor {
         Workspace workspace = new Workspace();
         workspace.setId(null);
         workspace.setJson(data);
+        workspace.setDescription("A HARD CODED DESCRIPTION");
         workspace.setUserid(em.getReference(User.class, 1));
+        workspace.setTags(new ArrayList<>());
         em.persist(workspace);
         return workspace.getId();
     }
