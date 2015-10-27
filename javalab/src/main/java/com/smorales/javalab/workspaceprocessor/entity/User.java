@@ -3,7 +3,7 @@ package com.smorales.javalab.workspaceprocessor.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String password;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "userid")
-    private List<Workspace> workspaceList;
+    private Set<Workspace> workspaceList;
 
     public User() {
     }
@@ -61,11 +61,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<Workspace> getWorkspaceList() {
+    public Set<Workspace> getWorkspaceList() {
         return workspaceList;
     }
 
-    public void setWorkspaceList(List<Workspace> workspaceList) {
+    public void setWorkspaceList(Set<Workspace> workspaceList) {
         this.workspaceList = workspaceList;
     }
 

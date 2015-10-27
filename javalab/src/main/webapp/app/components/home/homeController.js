@@ -38,6 +38,9 @@
             $scope.javaClasses = $scope.appModel.initConfig.javaClasses;
             $scope.initialValue = $scope.appModel.initConfig.javaClasses[0];
 
+            $scope.description = "this is a test";
+            $scope.tags = "tag1, tag2, tag3";
+
             $rootScope.$broadcast('resize', {});
 
             self.initializeCodeEditor($scope.appModel.initConfig.languageMode);
@@ -268,10 +271,6 @@
             $scope.appModel.runnableNode.id = nodeFound.model.id;
             $scope.appModel.runnableNode.path = self.pathAsString(nodeFound);
         };
-
-        $scope.description = "this is a test";
-
-        $scope.tags = "tag1, tag2, tag3";
 
     }
 

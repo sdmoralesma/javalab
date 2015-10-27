@@ -2,6 +2,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.Request;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
+import com.smorales.javalab.workspaceprocessor.entity.Tag;
 import com.smorales.javalab.workspaceprocessor.entity.User;
 import com.smorales.javalab.workspaceprocessor.entity.Workspace;
 import com.smorales.javalab.workspaceprocessor.tracing.TimeLogger;
@@ -15,7 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 @Stateless
@@ -65,7 +66,7 @@ public class WorkspaceProcessor {
         workspace.setJson(data);
         workspace.setDescription("A HARD CODED DESCRIPTION");
         workspace.setUserid(em.getReference(User.class, 1));
-        workspace.setTags(new ArrayList<>());
+        workspace.setTags(Collections.singleton(em.find(Tag.class, 1)));
         em.persist(workspace);
         return workspace.getId();
     }

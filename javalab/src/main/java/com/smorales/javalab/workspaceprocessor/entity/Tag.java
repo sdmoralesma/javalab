@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Tag")
@@ -27,7 +27,7 @@ public class Tag implements Serializable {
     private String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "tags")
-    private List<Workspace> workspaces;
+    private Set<Workspace> workspaces;
 
     public Tag() {
     }
@@ -57,11 +57,11 @@ public class Tag implements Serializable {
         this.name = name;
     }
 
-    public List<Workspace> getWorkspaceTagList() {
+    public Set<Workspace> getWorkspaceTagList() {
         return workspaces;
     }
 
-    public void setWorkspaceTagList(List<Workspace> workspaces) {
+    public void setWorkspaceTagList(Set<Workspace> workspaces) {
         this.workspaces = workspaces;
     }
 
