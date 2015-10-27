@@ -26,8 +26,8 @@ public class Tag implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "idTag")
-    private List<WorkspaceTag> workspaceTagList;
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "tags")
+    private List<Workspace> workspaces;
 
     public Tag() {
     }
@@ -57,12 +57,12 @@ public class Tag implements Serializable {
         this.name = name;
     }
 
-    public List<WorkspaceTag> getWorkspaceTagList() {
-        return workspaceTagList;
+    public List<Workspace> getWorkspaceTagList() {
+        return workspaces;
     }
 
-    public void setWorkspaceTagList(List<WorkspaceTag> workspaceTagList) {
-        this.workspaceTagList = workspaceTagList;
+    public void setWorkspaceTagList(List<Workspace> workspaces) {
+        this.workspaces = workspaces;
     }
 
     @Override

@@ -32,8 +32,11 @@ public class Workspace implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "idWorkspace")
-    private List<WorkspaceTag> workspaceTagList;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Workspace_Tag",
+            joinColumns = @JoinColumn(name = "id_workspace"),
+            inverseJoinColumns = @JoinColumn(name = "id_tag"))
+    private List<Tag> tags;
 
     @JoinColumn(name = "User_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -71,12 +74,12 @@ public class Workspace implements Serializable {
         this.description = description;
     }
 
-    public List<WorkspaceTag> getWorkspaceTagList() {
-        return workspaceTagList;
+    public List<Tag> getWorkspaceTagList() {
+        return tags;
     }
 
-    public void setWorkspaceTagList(List<WorkspaceTag> workspaceTagList) {
-        this.workspaceTagList = workspaceTagList;
+    public void setWorkspaceTagList(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public User getUserid() {
