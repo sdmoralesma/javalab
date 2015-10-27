@@ -4,18 +4,9 @@ import java.util.List;
 
 public class Request {
 
-    private List<Library> libraries;
     private List<TreeData> treedata;
     private RunnableNode runnableNode;
     private InitConfig initConfig;
-
-    public List<Library> getLibraries() {
-        return libraries;
-    }
-
-    public void setLibraries(List<Library> libraries) {
-        this.libraries = libraries;
-    }
 
     public List<TreeData> getTreedata() {
         return treedata;
@@ -44,8 +35,7 @@ public class Request {
     @Override
     public String toString() {
         return "Request{" +
-                "libraries=" + libraries +
-                ", treedata=" + treedata +
+                "treedata=" + treedata +
                 ", runnableNode=" + runnableNode +
                 ", initConfig=" + initConfig +
                 '}';

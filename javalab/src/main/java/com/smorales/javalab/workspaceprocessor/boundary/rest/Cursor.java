@@ -5,7 +5,6 @@ public class Cursor {
     private String column;
     private String row;
 
-
     public Cursor() {
     }
 
