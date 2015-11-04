@@ -2,6 +2,8 @@
 app:
   build: .
   command: /opt/wildfly/bin/standalone.sh --debug 8787 -b 0.0.0.0 -bmanagement 0.0.0.0
+  volumes:
+    - ./javalab/target/javalab.war:/opt/wildfly/standalone/deployments/javalab.war:ro
   ports:
     - "49990:9990"
     - "48080:8080"
@@ -10,7 +12,7 @@ app:
     - labdb:labdb
 labdb:
   build: database/
-  #Will override values on Dockerfile
+  #Will override values of Dockerfile
   environment:
     MYSQL_DATABASE: labdb
     MYSQL_USER: mysql
