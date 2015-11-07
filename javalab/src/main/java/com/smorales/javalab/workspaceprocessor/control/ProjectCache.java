@@ -14,8 +14,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,8 +28,6 @@ import java.util.stream.Collectors;
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class ProjectCache {
 
-    private static final String JAVALAB_LATEST_VERSION = "https://api.github.com/repos/sdmoralesma/javalab/releases/latest";
-    private static final String WELCOME_MSG_TEMPLATE = "Welcome to Javalab {labVersion} !\r\n$ java -version : {javaVersion} Java HotSpot(TM) 64-Bit Server VM";
     private static final String HELLO_WORLD_REGEX = "HelloWorld\\.(java|scala|groovy)";
     private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(java|scala|groovy)";
     private static final String INIT_DEPS_REGEX = "init-deps";
@@ -42,10 +38,13 @@ public class ProjectCache {
     @Inject
     Logger tracer;
 
+    @Inject
+    ConsoleMsgInitializer consoleMsgInitializer;
+
     @PostConstruct
     private void readProjects() {
         projectsCache = new ConcurrentHashMap<>();
-        consoleMessage = initializeConsoleMessage();
+        consoleMessage = consoleMsgInitializer.get();
         projectsCache.put(Language.GROOVY, readProjectAsJson(Language.GROOVY));
         projectsCache.put(Language.JAVA, readProjectAsJson(Language.JAVA));
         projectsCache.put(Language.SCALA, readProjectAsJson(Language.SCALA));
@@ -173,25 +172,6 @@ public class ProjectCache {
                 .add("mainClass", false)
                 .add("testClass", false)
                 .build();
-    }
-
-    private String initializeConsoleMessage() {
-        String template = WELCOME_MSG_TEMPLATE;
-        template = template.replace("{labVersion}", readJavalabVersion());
-        template = template.replace("{javaVersion}", System.getProperty("java.version"));
-        return template;
-    }
-
-    private String readJavalabVersion() {
-        try {
-            URL url = new URL(JAVALAB_LATEST_VERSION);
-            InputStream is = url.openStream();
-            return Json.createReader(is)
-                    .readObject()
-                    .getString("tag_name");
-        } catch (IOException ex) {
-            throw new NotRunnableCodeException("Cannot read javalab version from URL: " + JAVALAB_LATEST_VERSION);
-        }
     }
 
     private Map<String, String> readContentAllFilesRecursively(final Path path) {
