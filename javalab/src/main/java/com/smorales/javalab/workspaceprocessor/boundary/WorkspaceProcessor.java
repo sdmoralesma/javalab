@@ -15,8 +15,14 @@ import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.StringReader;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Stateless
@@ -36,9 +42,7 @@ public class WorkspaceProcessor {
     Logger tracer;
 
     public JsonObject initialize(String lang) {
-        JsonObject jsonProject = projectCache.get(lang);
-        Workspace workspace = new Workspace(1, jsonProject.toString());
-        return Json.createReader(new StringReader(workspace.getJson())).readObject();
+        return projectCache.get(lang);
     }
 
     public JsonObject getById(Integer labId) {
@@ -64,15 +68,42 @@ public class WorkspaceProcessor {
         Workspace workspace = new Workspace();
         workspace.setId(null);
         workspace.setJson(data);
-        workspace.setDescription("A HARD CODED DESCRIPTION");
+
+        workspace.setDescription(getStringFromJson("description", data));
         workspace.setUserid(em.getReference(User.class, 1));
-        workspace.setTags(Collections.singleton(em.find(Tag.class, 1)));
+        workspace.setTags(createTags(getStringFromJson("tags", data)));
         em.persist(workspace);
         return workspace.getId();
     }
 
     public String newWorkspace() {
         return "new workspace";
+    }
+
+
+    private String getStringFromJson(String toFind, String json) {
+        String script = "Java.asJSONCompatible(" + json + ")";
+        ScriptEngineManager sem = new ScriptEngineManager();
+        ScriptEngine engine = sem.getEngineByName("javascript");
+        Map result = null;
+        try {
+            result = (Map) engine.eval(script);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+
+        return (String) result.get(toFind);
+    }
+
+    private Set<Tag> createTags(String tagsAsString) {
+        HashSet<String> split = new HashSet<>(Arrays.asList(tagsAsString.split(",")));
+        HashSet<Tag> tags = new HashSet<>();
+        for (String tagName : split) {
+            Tag tag = new Tag(tagName);
+            tags.add(tag);
+            em.persist(tag);
+        }
+        return tags;
     }
 }
 

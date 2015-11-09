@@ -76,7 +76,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
+                <span class="panel-title glyphicon glyphicon-th"> Project</span>
 
                 <div class="btn-group pull-right">
                     <a data-ng-click="formatCode()" class="btn btn-default btn-xs">
@@ -89,10 +89,10 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a data-ng-click="addNode('file', selected)">
-                                <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
+                                <span class="glyphicon glyphicon glyphicon-file"> File</span>
                             </a></li>
                             <li><a data-ng-click="addNode('folder', selected)">
-                                <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
+                                <span class="glyphicon glyphicon-folder-close"> Folder</span>
                             </a></li>
                         </ul>
                     </div>
@@ -120,21 +120,21 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-list">&nbsp;Description</span>
+                <span class="panel-title glyphicon glyphicon-list"> Description</span>
             </div>
 
             <div class="panel-body">
-                <textarea id="description" data-ng-model="description" rows="3"></textarea>
+                <textarea id="description" data-ng-model="appModel.description" rows="3"></textarea>
             </div>
         </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-tags">&nbsp;Tags</span>
+                <span class="panel-title glyphicon glyphicon-tags"> Tags</span>
             </div>
 
             <div class="panel-body">
-                <textarea id="tags" data-ng-model="tags" rows="3"></textarea>
+                <textarea id="tags" data-ng-model="appModel.tags" rows="3"></textarea>
             </div>
         </div>
 
