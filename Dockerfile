@@ -2,7 +2,7 @@ FROM ubuntu:14.04.3
 
 MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 
-#Instal packages on ubuntu base image
+#Install packages on ubuntu base image
 RUN \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
