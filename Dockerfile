@@ -32,9 +32,13 @@ ENV JBOSS_HOME /opt/wildfly
 # Create admin user for wildfly
 RUN $JBOSS_HOME/bin/add-user.sh admin admin123 --silent
 
+# dowload mysql connector
+RUN mkdir $JBOSS_HOME/connector/ && \
+  cd $JBOSS_HOME/connector/ && \
+  wget http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar
+
 #add datasource to wildfly
 ADD wildfly-config/scripts $JBOSS_HOME/scripts/
-ADD wildfly-config/connector $JBOSS_HOME/connector/
 RUN $JBOSS_HOME/scripts/execute.sh
 
 # Solves bug in history
