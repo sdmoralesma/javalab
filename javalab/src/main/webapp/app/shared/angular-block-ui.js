@@ -1,5 +1,5 @@
 /*!
- angular-block-ui v0.2.0
+ angular-block-ui v0.2.1
  (c) 2015 (null) McNull https://github.com/McNull/angular-block-ui
  License: MIT
  */
@@ -385,6 +385,9 @@
 
       var $body = $document.find('body');
 
+      // These properties are not allowed to be specified in the start method.
+      var reservedStateProperties = ['id', 'blockCount', 'blocking'];
+
       function BlockUI(id) {
 
          var self = this;
@@ -400,15 +403,37 @@
 
          this._refs = 0;
 
-         this.start = function(message) {
+         this.start = function(messageOrOptions) {
 
-            if(state.blockCount > 0) {
-               message = message || state.message || blockUIConfig.message;
+            messageOrOptions = messageOrOptions || {};
+
+            if(angular.isString(messageOrOptions)) {
+               messageOrOptions = {
+                  message: messageOrOptions
+               };
             } else {
-               message = message || blockUIConfig.message;
+               angular.forEach(reservedStateProperties, function(x) {
+                  if(messageOrOptions[x]) {
+                     throw new Error('The property ' + x + ' is reserved for the block state.');
+                  }
+               });
             }
 
-            state.message = message;
+            angular.extend(state, messageOrOptions);
+
+            if(state.blockCount > 0) {
+               state.message = messageOrOptions.message || state.message || blockUIConfig.message;
+            } else {
+               state.message = messageOrOptions.message || blockUIConfig.message;
+            }
+
+            // if(state.blockCount > 0) {
+            //   messageOrOptions = messageOrOptions || state.message || blockUIConfig.message;
+            // } else {
+            //   messageOrOptions = messageOrOptions || blockUIConfig.message;
+            // }
+
+            // state.message = messageOrOptions;
 
             state.blockCount++;
 
@@ -429,17 +454,22 @@
 
                $timeout(function() {
                   // Ensure we still need to blur
-                  if(self._restoreFocus) {
+                  // Don't restore if active element is body, since this causes IE to switch windows (see http://tjvantoll.com/2013/08/30/bugs-with-document-activeelement-in-internet-explorer/)
+                  if (self._restoreFocus && self._restoreFocus !== $body[0]) {
                      self._restoreFocus.blur();
                   }
                });
             }
 
-            if (!startPromise) {
-               startPromise = $timeout(function() {
-                  startPromise = null;
-                  state.blocking = true;
-               }, blockUIConfig.delay);
+            if (!startPromise && blockUIConfig.delay !== 0) {
+               startPromise = $timeout(block, blockUIConfig.delay);
+            } else if (blockUIConfig.delay === 0) {
+               block();
+            }
+
+            function block () {
+               startPromise = null;
+               state.blocking = true;
             }
          };
 
@@ -456,6 +486,10 @@
             if (state.blockCount === 0) {
                self.reset(true);
             }
+         };
+
+         this.isBlocking = function () {
+            return state.blocking;
          };
 
          this.message = function(value) {
@@ -482,7 +516,23 @@
 
             if(self._restoreFocus &&
                 (!$document[0].activeElement || $document[0].activeElement === $body[0])) {
-               self._restoreFocus.focus();
+
+               //IE8 will throw if element for setting focus is invisible
+               try {
+                  self._restoreFocus.focus();
+               } catch(e1) {
+                  (function () {
+                     var elementToFocus = self._restoreFocus;
+                     $timeout(function() {
+                        if(elementToFocus) {
+                           try {
+                              elementToFocus.focus();
+                           } catch(e2) { }
+                        }
+                     },100);
+                  })();
+               }
+
                self._restoreFocus = null;
             }
 
@@ -680,3 +730,4 @@
       $templateCache.put('angular-block-ui/angular-block-ui.ng.html', '<div class=\"block-ui-overlay\"></div><div class=\"block-ui-message-container\" aria-live=\"assertive\" aria-atomic=\"true\"><div class=\"block-ui-message\" ng-class=\"$_blockUiMessageClass\">{{ state.message }}</div></div>');
    }]);
 })(angular);
+//# sourceMappingURL=angular-block-ui.js.map
