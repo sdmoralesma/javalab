@@ -4,7 +4,7 @@ import com.smorales.javalab.workspaceprocessor.boundary.rest.InitConfig;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
-import com.smorales.javalab.workspaceprocessor.entity.TreeData;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.TreeData;
 
 import javax.inject.Inject;
 import java.nio.file.Path;

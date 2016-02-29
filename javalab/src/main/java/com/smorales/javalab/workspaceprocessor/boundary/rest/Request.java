@@ -1,24 +1,14 @@
 package com.smorales.javalab.workspaceprocessor.boundary.rest;
 
-import com.smorales.javalab.workspaceprocessor.entity.Library;
-import com.smorales.javalab.workspaceprocessor.entity.TreeData;
-
 import java.util.List;
 
 public class Request {
 
-    private List<Library> libraries;
     private List<TreeData> treedata;
     private RunnableNode runnableNode;
     private InitConfig initConfig;
-
-    public List<Library> getLibraries() {
-        return libraries;
-    }
-
-    public void setLibraries(List<Library> libraries) {
-        this.libraries = libraries;
-    }
+    private String description;
+    private String tags;
 
     public List<TreeData> getTreedata() {
         return treedata;
@@ -44,13 +34,30 @@ public class Request {
         this.initConfig = initConfig;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
-                "libraries=" + libraries +
-                ", treedata=" + treedata +
+                "treedata=" + treedata +
                 ", runnableNode=" + runnableNode +
                 ", initConfig=" + initConfig +
+                ", description='" + description + '\'' +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }

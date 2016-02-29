@@ -1,6 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.entity;
-
-import com.smorales.javalab.workspaceprocessor.boundary.rest.Cursor;
+package com.smorales.javalab.workspaceprocessor.boundary.rest;
 
 import java.util.List;
 

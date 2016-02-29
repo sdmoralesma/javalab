@@ -38,6 +38,9 @@
             $scope.javaClasses = $scope.appModel.initConfig.javaClasses;
             $scope.initialValue = $scope.appModel.initConfig.javaClasses[0];
 
+            $scope.description = $scope.appModel.description;
+            $scope.tags = $scope.appModel.tags;
+
             $rootScope.$broadcast('resize', {});
 
             self.initializeCodeEditor($scope.appModel.initConfig.languageMode);

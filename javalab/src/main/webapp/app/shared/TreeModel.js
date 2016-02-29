@@ -1,10 +1,8 @@
-/**
- * Manipulate and traverse tree-like structures in javascript.
- * http://jnuno.com/tree-model-js
- * https://github.com/joaonuno/tree-model-js
+/*
+ * https://github.com/joaonuno/tree-model-js v1.0.4
  */
 
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.TreeModel=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.TreeModel = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var mergeSort, findInsertIndex;
 mergeSort = require('mergesort');
 findInsertIndex = require('find-insert-index');
@@ -15,6 +13,12 @@ module.exports = (function () {
   var walkStrategies;
 
   walkStrategies = {};
+
+  function k(result) {
+    return function () {
+      return result;
+    };
+  }
 
   function TreeModel(config) {
     config = config || {};
@@ -80,6 +84,32 @@ module.exports = (function () {
     return addChild(this, child, index);
   };
 
+  Node.prototype.setIndex = function (index) {
+    if (hasComparatorFunction(this)) {
+      throw new Error('Cannot set node index when using a comparator function.');
+    }
+
+    if (this.isRoot()) {
+      if (index === 0) {
+        return this;
+      }
+      throw new Error('Invalid index.');
+    }
+
+    if (index < 0 || index >= this.parent.children.length) {
+      throw new Error('Invalid index.');
+    }
+
+    var oldIndex = this.parent.children.indexOf(this);
+
+    this.parent.children.splice(index, 0, this.parent.children.splice(oldIndex, 1)[0]);
+
+    this.parent.model[this.parent.config.childrenPropertyName]
+    .splice(index, 0, this.parent.model[this.parent.config.childrenPropertyName].splice(oldIndex, 1)[0]);
+
+    return this;
+  };
+
   function addChild(self, child, insertIndex) {
     var index;
 
@@ -95,9 +125,9 @@ module.exports = (function () {
     if (hasComparatorFunction(self)) {
       // Find the index to insert the child
       index = findInsertIndex(
-      self.config.modelComparatorFn,
-      self.model[self.config.childrenPropertyName],
-      child.model);
+          self.config.modelComparatorFn,
+          self.model[self.config.childrenPropertyName],
+          child.model);
 
       // Add to the model children
       self.model[self.config.childrenPropertyName].splice(index, 0, child.model);
@@ -113,7 +143,7 @@ module.exports = (function () {
           throw new Error('Invalid index.');
         }
         self.model[self.config.childrenPropertyName].splice(insertIndex, 0, child.model);
-        self.children.splice(index, 0, child);
+        self.children.splice(insertIndex, 0, child);
       }
     }
     return child;
@@ -130,6 +160,13 @@ module.exports = (function () {
     return path;
   };
 
+  Node.prototype.getIndex = function () {
+    if (this.isRoot()) {
+      return 0;
+    }
+    return this.parent.children.indexOf(this);
+  };
+
   /**
    * Parse the arguments of traversal functions. These functions can take one optional
    * first argument which is an options object. If present, this object will be stored
@@ -143,7 +180,11 @@ module.exports = (function () {
   function parseArgs() {
     var args = {};
     if (arguments.length === 1) {
-      args.fn = arguments[0];
+      if (typeof arguments[0] === 'function') {
+        args.fn = arguments[0];
+      } else {
+        args.options = arguments[0];
+      }
     } else if (arguments.length === 2) {
       if (typeof arguments[0] === 'function') {
         args.fn = arguments[0];
@@ -217,6 +258,7 @@ module.exports = (function () {
   Node.prototype.all = function () {
     var args, all = [];
     args = parseArgs.apply(this, arguments);
+    args.fn = args.fn || k(true);
     walkStrategies[args.options.strategy].call(this, function (node) {
       if (args.fn.call(args.ctx, node)) {
         all.push(node);
@@ -228,6 +270,7 @@ module.exports = (function () {
   Node.prototype.first = function () {
     var args, first;
     args = parseArgs.apply(this, arguments);
+    args.fn = args.fn || k(true);
     walkStrategies[args.options.strategy].call(this, function (node) {
       if (args.fn.call(args.ctx, node)) {
         first = node;

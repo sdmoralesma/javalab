@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="/">javalab</a>
+            <a class="navbar-brand" href="/">Javalab</a>
         </div>
 
         <form class="navbar-form navbar-left">
@@ -41,14 +41,25 @@
             </div>
         </form>
 
-        <!--<form class="navbar-form navbar-left">-->
-            <!--<button id="save-btn" class="btn btn-primary" data-ng-click="save()">-->
-                <!--<span class="glyphicon glyphicon-floppy-disk"></span>-->
-            <!--</button>-->
-            <!--<button id="new-btn" class="btn btn-success" data-ng-click="new()">-->
-                <!--<span class="glyphicon glyphicon-file"></span>-->
-            <!--</button>-->
-        <!--</form>-->
+        <form class="navbar-form navbar-left">
+            <button id="save-btn" class="btn btn-primary" data-ng-click="save()">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+            </button>
+
+            <div class="btn-group">
+                <button id="new-btn" class="btn btn-success" data-ng-click="new()">
+                    <span class="glyphicon glyphicon-file"></span>
+                </button>
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="/#/java">Java</a></li>
+                    <li><a href="/#/groovy">Groovy</a></li>
+                    <li><a href="/#/scala">Scala</a></li>
+                </ul>
+            </div>
+        </form>
 
         <div class="collapse navbar-collapse" id="collapsable-menu">
             <form class="navbar-form navbar-right ">
@@ -65,7 +76,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-th">&nbsp;Project</span>
+                <span class="panel-title glyphicon glyphicon-th"> Project</span>
 
                 <div class="btn-group pull-right">
                     <a data-ng-click="formatCode()" class="btn btn-default btn-xs">
@@ -78,10 +89,10 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a data-ng-click="addNode('file', selected)">
-                                <span class="glyphicon glyphicon glyphicon-file">&nbsp;File</span>
+                                <span class="glyphicon glyphicon glyphicon-file"> File</span>
                             </a></li>
                             <li><a data-ng-click="addNode('folder', selected)">
-                                <span class="glyphicon glyphicon-folder-close">&nbsp;Folder</span>
+                                <span class="glyphicon glyphicon-folder-close"> Folder</span>
                             </a></li>
                         </ul>
                     </div>
@@ -107,26 +118,25 @@
             </div>
         </div>
 
-
-        <!--<div class="panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title glyphicon glyphicon-book">&nbsp;Libraries</span>
+                <span class="panel-title glyphicon glyphicon-list"> Description</span>
             </div>
 
             <div class="panel-body">
-                <div>
-                    <div data-ng-repeat="lib in appModel.libraries | filter: { visible: 'true' }">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" data-ng-model="lib.checked"> {{lib.name}}
-                            </label>
-                            <span class="label label-info">{{lib.version}}</span>
-                            <a class="glyphicon glyphicon-info-sign" target="_blank" href="{{lib.link}}"></a>
-                        </div>
-                    </div>
-                </div>
+                <textarea id="description" data-ng-model="appModel.description" rows="3"></textarea>
             </div>
-        </div>-->
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="panel-title glyphicon glyphicon-tags"> Tags</span>
+            </div>
+
+            <div class="panel-body">
+                <textarea id="tags" data-ng-model="appModel.tags" rows="3"></textarea>
+            </div>
+        </div>
 
     </div>
 
