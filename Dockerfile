@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.3
+FROM ubuntu:14.04.4
 
 MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 
@@ -21,7 +21,7 @@ RUN \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Install WildFly to /opt
-ENV WILDFLY_VERSION 9.0.1.Final
+ENV WILDFLY_VERSION 10.0.0.Final
 RUN cd /opt && wget http://download.jboss.org/wildfly/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.tar.gz && \
   tar xvf wildfly-$WILDFLY_VERSION.tar.gz && \
   ln -s /opt/wildfly-$WILDFLY_VERSION /opt/wildfly && \
@@ -45,7 +45,7 @@ RUN $JBOSS_HOME/scripts/execute.sh
 RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/current
 
 # Install Gradle
-ENV GRADLE_VERSION 2.7
+ENV GRADLE_VERSION 2.11
 WORKDIR /usr/bin
 RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
   unzip gradle-$GRADLE_VERSION-bin.zip && \
