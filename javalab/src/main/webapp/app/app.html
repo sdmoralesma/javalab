@@ -1,0 +1,31 @@
+<div [style.height.px]="height">
+
+    <div class="ui-grid ui-grid-responsive">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <nav-bar> the nav bar</nav-bar>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <filemanager (fileSelected)="showFileContent($event)"></filemanager>
+
+                <description></description>
+
+                <tags></tags>
+            </div>
+
+            <div class="ui-grid-col-9">
+                <codemirror (fileContentChanged)="updateFileContent($event)"></codemirror>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <terminal></terminal>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,7 @@
+<p-panel header="Tags">
+    <p-autoComplete [(value)]="countries" [suggestions]="filteredCountriesMultiple"
+                    (completeMethod)="filterCountryMultiple($event)"
+                    [minLength]="1" placeholder="Countries" field="name" [multiple]="true"
+                    [style]="{'width':'100%'}">
+    </p-autoComplete>
+</p-panel>

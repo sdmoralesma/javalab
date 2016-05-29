@@ -1,0 +1,63 @@
+<p-toolbar>
+    <div class="ui-toolbar-group-right">
+        <button pButton type="button" data-icon="fa-folder" (click)="newNodeName=''; displayNewFolder=true"></button>
+        <button pButton type="button" data-icon="fa-file" (click)="newNodeName=''; displayNewFile=true"></button>
+        <button pButton type="button" data-icon="fa-pencil" [disabled]="selectedNode==null"
+                (click)="newNodeName='';  newNodeName=selectedNode.label; displayRename=true"></button>
+        <button pButton type="button" data-icon="fa-close" [disabled]="selectedNode==null"
+                (click)="newNodeName='';  newNodeName=selectedNode.label; displayDelete=true"></button>
+    </div>
+</p-toolbar>
+
+<div style="margin-bottom: 10px;">
+    <p-tree [value]="files" selectionMode="single" [(selection)]="selectedNode"
+            [style]="{'display':'block','width':'auto'}" (onNodeSelect)="nodeSelect($event)">
+    </p-tree>
+</div>
+
+<p-dialog header="New Folder" [(visible)]="displayNewFolder" modal="modal"
+          showEffect="fade" [resizable]="false" [draggable]="false">
+    <label for="folderName">Enter new folder name</label>
+    <input id="folderName" style="width: 90%" type="text" pInputText [(ngModel)]="newNodeName"/>
+    <footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="displayNewFolder=false" label="Cancel"></button>
+            <button type="button" pButton icon="fa-check" (click)="createFolder(); displayNewFolder=false" label="Create"></button>
+        </div>
+    </footer>
+</p-dialog>
+
+<p-dialog header="New File" [(visible)]="displayNewFile" modal="modal"
+          showEffect="fade" [resizable]="false" [draggable]="false">
+    <label for="fileName">Enter new file name</label>
+    <input id="fileName" style="width: 90%" type="text" pInputText [(ngModel)]="newNodeName"/>
+    <footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="displayNewFile=false" label="Cancel"></button>
+            <button type="button" pButton icon="fa-check" (click)="createFile(); displayNewFile=false" label="Create"></button>
+        </div>
+    </footer>
+</p-dialog>
+
+<p-dialog header="Rename" [(visible)]="displayRename" modal="modal"
+          showEffect="fade" [resizable]="false" [draggable]="false">
+    <label for="newNodeName">Change name to</label>
+    <input id="newNodeName" style="width: 90%" type="text" pInputText [(ngModel)]="newNodeName"/>
+    <footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="displayRename=false;" label="Cancel"></button>
+            <button type="button" pButton icon="fa-check" (click)="renameItem(); displayRename=false" label="Rename"></button>
+        </div>
+    </footer>
+</p-dialog>
+
+<p-dialog header="Delete" [(visible)]="displayDelete" modal="modal"
+          showEffect="fade" [resizable]="false" [draggable]="false">
+    <label>Delete "{{newNodeName}}"?</label>
+    <footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="displayDelete=false" label="Cancel"></button>
+            <button type="button" pButton icon="fa-check" (click)="deleteItem(); displayDelete=false" label="Delete"></button>
+        </div>
+    </footer>
+</p-dialog>

@@ -1,0 +1,31 @@
+<p-toolbar [style]="{'margin-bottom':'7px'}">
+
+    <div class="ui-toolbar-group-left">
+        <h2 class="title">
+            <a href="https://github.com/sdmoralesma/javalab/wiki" class="title-link" target="_blank">
+                javalab.co
+            </a>
+        </h2>
+
+        <p-autoComplete [(value)]="text" [suggestions]="results" (completeMethod)="search($event)"
+                        (onDropdownClick)="handleDropdown(event)">
+        </p-autoComplete>
+        <button pButton type="button" label="Run" data-icon="fa-play"></button>
+        <button pButton type="button" label="Test" data-icon="fa-check-square-o"></button>
+        <p-splitButton label="Download..." icon="fa-cloud-download" (onClick)="download()">
+            <p-splitButtonItem icon="fa-file-archive-o" label="Jar" (onClick)="download()"></p-splitButtonItem>
+            <p-splitButtonItem icon="fa-file-archive-o" label="Zip" (onClick)="download()"></p-splitButtonItem>
+            <!--<p-splitButtonItem icon="fa-file-archive-o" label="Maven Project"-->
+                               <!--(onClick)="download()"></p-splitButtonItem>-->
+            <!--<p-splitButtonItem icon="fa-file-archive-o" label="Gradle Project"-->
+                               <!--(onClick)="download()"></p-splitButtonItem>-->
+        </p-splitButton>
+    </div>
+
+    <div class="ui-toolbar-group-right">
+        <iframe src="http://ghbtns.com/github-btn.html?user=sdmoralesma&repo=javalab&type=watch&count=true&size=large"
+                height="30" width="120" frameborder="0" scrolling="0" style="display: inline"
+                allowTransparency="true"></iframe>
+    </div>
+
+</p-toolbar>

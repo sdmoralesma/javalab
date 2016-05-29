@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="LabApp" resize>
+<html>
 
 <head>
+    <base href="/">
     <title>Javalab | An Open Source Web Lab</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico">
 
     <meta charset="UTF-8">
     <meta name="description"
@@ -13,46 +13,38 @@
           java run online, online java compiler, online ide, learn java, learn programming online,
           java programming online, run java code online, run java code, execute java code">
     <meta name="author" content="Sergio Morales">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--styles-->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="assets/css/angular-block-ui.css" rel="stylesheet"/>
-    <link href="assets/css/base.css" rel="stylesheet"/>
-    <link href="assets/css/desktop.css" rel="stylesheet"/>
-    <link href="assets/css/tablet.css" rel="stylesheet"/>
-    <link href="assets/css/mobile.css" rel="stylesheet"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico"/>
 
-    <!-- link for CSS when using the tree as an attribute -->
-    <link rel="stylesheet" type="text/css" href="assets/css/tree-control-attribute.css">
+    <!-- PrimeNG/PrimeUI CSS dependencies-->
+    <link rel="stylesheet" type="text/css" href="node_modules/primeui/themes/bootstrap/theme.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/primeui/primeui-ng-all.min.css"/>
+
+    <!-- Load Angular libraries -->
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/primeui/primeui-ng-all.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app').catch(function(err){ console.error(err);  });
+    </script>
+
+    <!--CodeMirror setup-->
+    <link rel="stylesheet" href="assets/css/codemirror.css"/>
+    <script src="node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="node_modules/codemirror/mode/clike/clike.js"></script>
+
 </head>
 
+<!-- 3. Display the application -->
 <body>
 
-<div data-ng-view></div>
-
-<!--dependencies-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
-<script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/app/shared/beautify.js"></script>
-<script src="//code.angularjs.org/1.5.0/angular.js"></script>
-<script src="//code.angularjs.org/1.5.0/angular-route.js"></script>
-<script src="app/shared/angular-block-ui.js"></script>
-<script src="app/shared/angular-tree-control.js"></script>
-<script src="app/shared/angucomplete-alt.js"></script>
-<script src="app/shared/TreeModel.js"></script>
-
-
-<!--application-->
-<script src="app/app.module.js"></script>
-<script src="app/app.routes.js"></script>
-<script src="app/components/home/middleService.js"></script>
-<script src="app/components/home/homeController.js"></script>
-<script src="app/components/home/resizeDirective.js"></script>
-<script src="app/components/home/homeEvents.js"></script>
-<script src="assets/js/google-tracking.js"></script>
+<javalab-app>Loading...</javalab-app>
 
 </body>
+
 </html>

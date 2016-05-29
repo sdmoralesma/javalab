@@ -1,0 +1,14 @@
+.title {
+    padding: 3px 10px 0 3px;
+    display: inline;
+}
+
+.title-link {
+    text-decoration: none;
+}
+
+.title-link:hover,
+.title-link:active {
+    color: #1f89ce;
+    text-decoration: underline;
+}
