@@ -8,25 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var mock_response_1 = require("./mock-response");
 var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
 var JavalabService = (function () {
-    function JavalabService() {
+    // private javalab = "localhost:48080/rest/process/new"; //TODO: fix CORS filter
+    function JavalabService(http) {
+        this.http = http;
+        this.javalab = "assets/json/mock-response.json";
     }
     JavalabService.prototype.getMockResponse = function () {
-        return mock_response_1.MockResponse;
-    };
-    // See the "Take it slow" appendix
-    JavalabService.prototype.getHeroesSlowly = function () {
-        return new Promise(function (resolve) {
-            return setTimeout(function () { return resolve(mock_response_1.MockResponse); }, 2000);
-        } // 2 seconds
-         // 2 seconds
-        );
+        return this.http.get(this.javalab).map(function (res) { return res.json(); });
+        // return this.initialData
     };
     JavalabService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], JavalabService);
     return JavalabService;
 }());

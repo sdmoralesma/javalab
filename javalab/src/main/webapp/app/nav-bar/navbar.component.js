@@ -13,18 +13,31 @@ var primeng_1 = require("primeng/primeng");
 var NavBarComponent = (function () {
     function NavBarComponent() {
     }
-    NavBarComponent.prototype.ngOnInit = function () {
-        var vm = this;
-        this.text = "my testing text";
-    };
     NavBarComponent.prototype.search = function (event) {
-        this.results = ["asdf", "qwerty"];
+        var query = event.query;
+        this.suggestions = this.filterOptions(query, this.options);
     };
-    NavBarComponent.prototype.handleDropdown = function (event) {
-        //event.query = current value in input field
+    NavBarComponent.prototype.filterOptions = function (query, options) {
+        var filtered = [];
+        for (var i = 0; i < options.length; i++) {
+            var country = options[i];
+            if (country.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(country);
+            }
+        }
+        return filtered;
     };
     NavBarComponent.prototype.download = function () {
-        console.log("download clicked!");
+        alert("Downloading project!");
+    };
+    NavBarComponent.prototype.handleDropdownClick = function ($event) {
+        this.suggestions = this.options;
+    };
+    NavBarComponent.prototype.runCode = function () {
+        alert("running: " + this.selected);
+    };
+    NavBarComponent.prototype.testCode = function () {
+        alert("testing: " + this.selected);
     };
     NavBarComponent = __decorate([
         core_1.Component({

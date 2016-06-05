@@ -10,25 +10,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var primeng_1 = require("primeng/primeng");
-var country_service_1 = require("../country.service");
-var http_1 = require("@angular/http");
+var tag_service_1 = require("../tag.service");
 var TagsComponent = (function () {
-    function TagsComponent(countryService) {
-        this.countryService = countryService;
+    function TagsComponent(tagService) {
+        this.tagService = tagService;
     }
-    TagsComponent.prototype.filterCountryMultiple = function (event) {
+    TagsComponent.prototype.filterTagsMultiple = function (event) {
         var _this = this;
         var query = event.query;
-        this.countryService.getCountries()
-            .subscribe(function (countries) { return _this.filteredCountriesMultiple = _this.filterCountry(query, countries); }, function (error) { return _this.errorMessage = error; });
+        this.tagService.getTags()
+            .subscribe(function (tags) { return _this.tagsSuggested = _this.filterTags(query, tags); }, function (error) { return _this.errorMessage = error; });
     };
-    TagsComponent.prototype.filterCountry = function (query, countries) {
-        //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    TagsComponent.prototype.filterTags = function (query, tagList) {
         var filtered = [];
-        for (var i = 0; i < countries.length; i++) {
-            var country = countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
+        for (var i = 0; i < tagList.length; i++) {
+            var tag = tagList[i];
+            if (tag.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(tag);
             }
         }
         return filtered;
@@ -37,10 +35,9 @@ var TagsComponent = (function () {
         core_1.Component({
             selector: 'tags',
             templateUrl: './app/tags/tags.html',
-            directives: [primeng_1.AutoComplete, primeng_1.Panel],
-            providers: [http_1.HTTP_PROVIDERS, country_service_1.CountryService]
+            directives: [primeng_1.AutoComplete, primeng_1.Panel]
         }), 
-        __metadata('design:paramtypes', [country_service_1.CountryService])
+        __metadata('design:paramtypes', [tag_service_1.TagService])
     ], TagsComponent);
     return TagsComponent;
 }());

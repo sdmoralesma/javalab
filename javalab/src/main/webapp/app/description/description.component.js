@@ -12,7 +12,6 @@ var core_1 = require("@angular/core");
 var primeng_1 = require("primeng/primeng");
 var DescriptionComponent = (function () {
     function DescriptionComponent() {
-        this.descriptionText = "hello my fucking world!";
     }
     DescriptionComponent = __decorate([
         core_1.Component({

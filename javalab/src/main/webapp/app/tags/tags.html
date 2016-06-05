@@ -1,7 +1,5 @@
 <p-panel header="Tags">
-    <p-autoComplete [(value)]="countries" [suggestions]="filteredCountriesMultiple"
-                    (completeMethod)="filterCountryMultiple($event)"
-                    [minLength]="1" placeholder="Countries" field="name" [multiple]="true"
-                    [style]="{'width':'100%'}">
+    <p-autoComplete [(ngModel)]="selectedTags" [suggestions]="tagsSuggested" [style]="{'width':'100%'}"
+                    [minLength]="1" [multiple]="true" (completeMethod)="filterTagsMultiple($event)">
     </p-autoComplete>
 </p-panel>

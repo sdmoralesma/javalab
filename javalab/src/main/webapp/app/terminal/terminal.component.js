@@ -13,14 +13,31 @@ var primeng_1 = require("primeng/primeng");
 var TerminalComponent = (function () {
     function TerminalComponent() {
     }
-    TerminalComponent.prototype.updateHeight = function (height) {
-        this.height = height;
-    };
     TerminalComponent.prototype.onCommand = function (event) {
-        if (event.command === 'date')
-            this.response = new Date().toDateString();
-        else
-            this.response = 'Unknown command: ' + event.command;
+        var command = (event.command === null) ? "" : event.command.trim();
+        switch (command) {
+            case "":
+                this.response = "";
+                break;
+            case "ls":
+                this.response = "nice try buddy";
+                break;
+            case "cd":
+                this.response = "you can't simply walk into cd";
+                break;
+            case "date":
+                this.response = new Date().toDateString();
+                break;
+            case "whoami":
+                this.response = "javalab-user-" + this.randomIntFromInterval(1, 1000);
+                break;
+            default:
+                this.response = "not implemented... yet";
+                break;
+        }
+    };
+    TerminalComponent.prototype.randomIntFromInterval = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
     };
     TerminalComponent = __decorate([
         core_1.Component({
