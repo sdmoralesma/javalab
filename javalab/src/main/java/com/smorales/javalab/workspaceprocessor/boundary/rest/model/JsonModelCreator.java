@@ -27,6 +27,11 @@ public class JsonModelCreator {
     private static final String HELLO_WORLD_TEST_REGEX = "HelloWorldTest\\.(java|scala|groovy)";
     private static final String INIT_DEPS_REGEX = "init-deps";
 
+    public static final String FA_FOLDER_OPEN = "fa-folder-open";
+    public static final String FA_TH_LARGE = "fa-th-large";
+    public static final String FA_FOLDER = "fa-folder";
+    public static final String FA_FILE_TEXT_O = "fa-file-text-o";
+
     @Inject
     Logger tracer;
 
@@ -65,7 +70,7 @@ public class JsonModelCreator {
     private JsonObject createConfigNode(Language lang) {
         return Json.createObjectBuilder()
                 .add("language", lang.getDescription())
-                .add("languageMode", "ace/mode/" + lang.getDescription())
+                .add("languageMode", lang.getMode())
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(generateUUID())
                         .add(generateUUID())
@@ -76,7 +81,6 @@ public class JsonModelCreator {
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }
-
 
     private JsonArray createTreedataNode(Map<String, String> filesMap, Language lang) {
         return Json.createArrayBuilder()
@@ -90,9 +94,9 @@ public class JsonModelCreator {
         String key = entry(map, INIT_DEPS_REGEX);
         return Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", "dependencies")
-                .add("type", "file")
-                .add("code", map.get(key))
+                .add("label", "dependencies")
+                .add("icon", FA_FILE_TEXT_O)
+                .add("data", map.get(key))
                 .add("children", Json.createArrayBuilder().build())
                 .build();
     }
@@ -101,24 +105,25 @@ public class JsonModelCreator {
         String key = entry(map, HELLO_WORLD_REGEX);
         JsonValue helloWorldNode = Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", key)
-                .add("type", "file")
-                .add("code", map.get(key))
+                .add("label", key)
+                .add("icon", FA_FILE_TEXT_O)
+                .add("data", map.get(key))
                 .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 
         JsonValue packageNode = Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", "com.company.project")
-                .add("type", "folder")
+                .add("label", "com.company.project")
+                .add("icon", FA_TH_LARGE)
                 .add("children", Json.createArrayBuilder().add(helloWorldNode))
                 .build();
 
         return Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", "src/main/" + lang.getDescription() + "/")
-                .add("type", "folder")
+                .add("label", "src/main/" + lang.getDescription() + "/")
+                .add("expandedIcon", FA_FOLDER_OPEN)
+                .add("collapsedIcon", FA_FOLDER)
                 .add("children", Json.createArrayBuilder().add(packageNode))
                 .build();
     }
@@ -127,24 +132,25 @@ public class JsonModelCreator {
         String key = entry(map, HELLO_WORLD_TEST_REGEX);
         JsonValue helloWorldTestNode = Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", key)
-                .add("type", "file")
-                .add("code", map.get(key))
+                .add("label", key)
+                .add("icon", FA_FILE_TEXT_O)
+                .add("data", map.get(key))
                 .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 
         JsonValue packageNode = Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", "com.company.project")
-                .add("type", "folder")
+                .add("label", "com.company.project")
+                .add("icon", FA_TH_LARGE)
                 .add("children", Json.createArrayBuilder().add(helloWorldTestNode))
                 .build();
 
         return Json.createObjectBuilder()
                 .add("id", this.generateUUID())
-                .add("name", "src/test/" + lang.getDescription() + "/")
-                .add("type", "folder")
+                .add("label", "src/test/" + lang.getDescription() + "/")
+                .add("expandedIcon", FA_FOLDER_OPEN)
+                .add("collapsedIcon", FA_FOLDER)
                 .add("children", Json.createArrayBuilder().add(packageNode))
                 .build();
     }
