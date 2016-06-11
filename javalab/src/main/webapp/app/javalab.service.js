@@ -11,10 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var JavalabService = (function () {
-    // private javalab = "localhost:48080/rest/process/new"; //TODO: fix CORS filter
+    // private javalab = "localhost:48080/rest/process/new";
     function JavalabService(http) {
         this.http = http;
-        this.javalab = "assets/json/mock-response.json";
+        //this.javalab = "assets/json/mock-response.json";
+        this.javalab = "http://localhost:48080/rest/process/init/java";
     }
     JavalabService.prototype.getMockResponse = function () {
         return this.http.get(this.javalab).map(function (res) { return res.json(); });

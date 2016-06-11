@@ -1,4 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.boundary.rest;
+package com.smorales.javalab.workspaceprocessor.boundary.rest.model;
 
 import java.util.List;
 
