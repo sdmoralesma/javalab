@@ -1,10 +1,10 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.InitConfig;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.InitConfig;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.TreeData;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

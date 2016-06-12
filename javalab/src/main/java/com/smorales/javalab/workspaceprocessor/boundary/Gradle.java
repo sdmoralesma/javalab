@@ -1,7 +1,7 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.InitConfig;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.InitConfig;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Language;
 
 import javax.inject.Inject;

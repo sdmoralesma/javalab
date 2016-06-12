@@ -1,6 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.Request;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Request;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
 import com.smorales.javalab.workspaceprocessor.entity.Tag;
 import com.smorales.javalab.workspaceprocessor.entity.User;

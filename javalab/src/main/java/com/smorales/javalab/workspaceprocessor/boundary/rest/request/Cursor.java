@@ -1,4 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.boundary.rest.model;
+package com.smorales.javalab.workspaceprocessor.boundary.rest.request;
 
 public class Cursor {
 

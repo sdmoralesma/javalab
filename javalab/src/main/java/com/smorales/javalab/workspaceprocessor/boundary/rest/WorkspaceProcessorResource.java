@@ -1,7 +1,7 @@
 package com.smorales.javalab.workspaceprocessor.boundary.rest;
 
 import com.smorales.javalab.workspaceprocessor.boundary.WorkspaceProcessor;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.Request;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Request;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

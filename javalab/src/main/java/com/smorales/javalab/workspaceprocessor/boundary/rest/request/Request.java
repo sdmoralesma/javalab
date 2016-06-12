@@ -1,8 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.boundary.rest.model;
-
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.InitConfig;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.RunnableNode;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.model.TreeData;
+package com.smorales.javalab.workspaceprocessor.boundary.rest.request;
 
 import java.util.List;
 
