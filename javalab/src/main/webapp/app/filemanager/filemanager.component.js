@@ -14,7 +14,7 @@ var uuid_1 = require("./uuid");
 var FILE_CLASS = "fa-file-text-o";
 var FileManagerComponent = (function () {
     function FileManagerComponent() {
-        //Dialog variables
+        // dialog variables
         this.displayNewFolder = false;
         this.displayNewFile = false;
         this.displayRename = false;
@@ -22,7 +22,6 @@ var FileManagerComponent = (function () {
         this.newNodeName = "";
         // file management
         this.selectedNode = null;
-        //events
         this.fileSelected = new core_1.EventEmitter();
     }
     FileManagerComponent.prototype.nodeSelect = function (event) {

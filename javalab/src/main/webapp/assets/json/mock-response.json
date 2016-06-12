@@ -67,7 +67,8 @@
   ],
   "config": {
     "language": "java",
-    "languageMode": "c-like",
+    "languageMode": "text/x-java",
+    "value": "package com.company.project;\n\nimport org.junit.*;\n\npublic class HelloWorldTest {\n\n    @Test\n    public void test() {\n        Assert.assertEquals(1, 1);\n    }\n}\n",
     "javaClasses": [
       "e597e833-8f97-4a13-b119-71a3b093aecc",
       "d45d9ee5-d049-4e46-8ee4-f6abe6ad6fe6",

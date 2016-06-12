@@ -32,7 +32,7 @@ var TerminalComponent = (function () {
                 this.response = "javalab-user-" + this.randomIntFromInterval(1, 1000);
                 break;
             default:
-                this.response = "not implemented... yet";
+                this.response = "command not found: " + command;
                 break;
         }
     };

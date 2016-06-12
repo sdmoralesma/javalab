@@ -14,7 +14,6 @@ var JavalabService = (function () {
     // private javalab = "localhost:48080/rest/process/new";
     function JavalabService(http) {
         this.http = http;
-        //this.javalab = "assets/json/mock-response.json";
         this.javalab = "http://localhost:48080/rest/process/init/java";
     }
     JavalabService.prototype.getMockResponse = function () {

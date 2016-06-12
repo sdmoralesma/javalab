@@ -40,12 +40,16 @@ var AppComponent = (function () {
             _this.description.text = data.description;
             _this.terminal.welcomeMessage = data.terminal;
             _this.tagsComponent.selectedTags = data.tags;
+            _this.editor.config = data.config;
         }, function (error) { return _this.errorMessage = error; });
     };
     AppComponent.prototype.showFileContent = function (event) {
         this.editor.updateCode(event.value);
     };
     AppComponent.prototype.updateFileContent = function (event) {
+        if (this.filemanager.selectedNode === null) {
+            return;
+        }
         this.filemanager.selectedNode.data = event.value;
     };
     __decorate([

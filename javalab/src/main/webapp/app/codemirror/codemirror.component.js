@@ -9,36 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var EDITOR_WIDTH = "75%";
+var EDITOR_HEIGHT = "595px";
 var CodeMirrorComponent = (function () {
     function CodeMirrorComponent(elRef) {
-        //events
         this.fileContentChanged = new core_1.EventEmitter();
         this.editorNativeElement = elRef.nativeElement;
     }
-    CodeMirrorComponent.prototype.ngOnInit = function () {
-    };
     CodeMirrorComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
         var config = {
             mode: "text/x-java",
             lineNumbers: true,
-            value: "import com.demo.util.MyType;\r\nimport com.demo.util.MyInterface;\r\n\r\npublic enum Enum {\r\n  VAL1, VAL2, VAL3\r\n}\r\n\r\npublic class Class<T, V> implements MyInterface {\r\n  public static final MyType<T, V> member;\r\n  \r\n  private class InnerClass {\r\n    public int zero() {\r\n      return 0;\r\n    }\r\n  }\r\n\r\n  @Override\r\n  public MyType method() {\r\n    return member;\r\n  }\r\n\r\n  public void method2(MyType<T, V> value) {\r\n    method();\r\n    value.method3();\r\n    member = value;\r\n  }\r\n}\r\n"
+            value: ""
         };
         this.editor = CodeMirror(this.editorNativeElement, config);
-        this.editor.setSize("75%", "595px");
+        this.editor.setSize(EDITOR_WIDTH, EDITOR_HEIGHT);
         this.editor.setOption("matchbrackets", true);
         this.editor.on('change', function (editor) {
             var content = _this.editor.getDoc().getValue();
             _this.fileContentChanged.emit({ value: content });
         });
     };
-    CodeMirrorComponent.prototype.ngOnChanges = function (changes) {
-        console.log("on changes");
-    };
     CodeMirrorComponent.prototype.updateHeight = function (height) {
         this.height = height;
     };
     CodeMirrorComponent.prototype.updateCode = function (newCode) {
+        this.editor.setValue(this.config.value);
+        this.editor.setOption("mode", this.config.languageMode);
         this.editor.setValue(newCode);
     };
     __decorate([
