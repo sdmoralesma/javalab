@@ -21,20 +21,12 @@ var hero_list_component_1 = require("./hero-list/hero-list.component");
 var AppComponent = (function () {
     function AppComponent(javalabService) {
         this.javalabService = javalabService;
-        //this.attachWindowEvents(); //TODO: activate on prod
     }
-    AppComponent.prototype.attachWindowEvents = function () {
-        window.onbeforeunload = function (e) {
-            e = e || window.event;
-            e.preventDefault();
-            e.cancelBubble = true;
-            e.returnValue = 'Code not saved!';
-        };
-    };
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.javalabService.getMockResponse()
-            .subscribe(function (data) {
+        this.javalabService.initialize()
+            .then(function (data) {
+            _this.model = data;
             _this.filemanager.files = data.filesTree;
             _this.navBar.options = data.config.javaClasses;
             _this.description.text = data.description;
@@ -42,6 +34,26 @@ var AppComponent = (function () {
             _this.tagsComponent.selectedTags = data.tags;
             _this.editor.config = data.config;
         }, function (error) { return _this.errorMessage = error; });
+        setTimeout(function () {
+            _this.initializeEditor();
+            _this.initializeNavBar();
+        }, 800);
+    };
+    AppComponent.prototype.initializeEditor = function () {
+        this.filemanager.selectedNode = this.javalabService.findNodeById(this.javalabService.model.config.initialNode, this.javalabService.model.filesTree);
+        this.editor.editor.setValue(this.filemanager.selectedNode.data);
+        this.editor.editor.setOption("mode", this.model.config.languageMode);
+    };
+    AppComponent.prototype.initializeNavBar = function () {
+        var optionsAsObjects = [];
+        for (var _i = 0, _a = this.model.config.javaClasses; _i < _a.length; _i++) {
+            var suggestionId = _a[_i];
+            var found = this.javalabService.findNodeById(suggestionId, this.javalabService.model.filesTree);
+            optionsAsObjects.push(found);
+        }
+        this.navBar.options = optionsAsObjects;
+        this.navBar.options.push({ "id": "all-tests", "label": "all-tests" });
+        this.navBar.selected = this.filemanager.selectedNode;
     };
     AppComponent.prototype.showFileContent = function (event) {
         this.editor.updateCode(event.value);
@@ -51,6 +63,12 @@ var AppComponent = (function () {
             return;
         }
         this.filemanager.selectedNode.data = event.value;
+    };
+    AppComponent.prototype.runCode = function ($event) {
+        this.javalabService.runCode(this.model);
+    };
+    AppComponent.prototype.testCode = function ($event) {
+        this.javalabService.runCode(this.model);
     };
     __decorate([
         core_1.ViewChild(description_component_1.DescriptionComponent), 

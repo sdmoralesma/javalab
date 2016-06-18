@@ -33,6 +33,7 @@ public class JsonModelCreator {
     LanguageSourcesReader languageSourcesReader;
 
     private String terminalMessage;
+    private String initialNode;
 
     @PostConstruct
     private void init() {
@@ -65,6 +66,7 @@ public class JsonModelCreator {
         return Json.createObjectBuilder()
                 .add("language", lang.getDescription())
                 .add("languageMode", lang.getMode())
+                .add("initialNode", this.initialNode)
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(generateUUID())
                         .add(generateUUID())
@@ -100,8 +102,9 @@ public class JsonModelCreator {
         String packageUUID = this.generateUUID();
         String filename = entry(map, LanguageSourcesReader.HELLO_WORLD_REGEX);
 
+        this.initialNode = this.generateUUID();
         JsonValue helloWorldNode = Json.createObjectBuilder()
-                .add("id", this.generateUUID())
+                .add("id", this.initialNode)
                 .add("label", filename)
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)

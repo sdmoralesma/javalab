@@ -12,6 +12,8 @@ var core_1 = require("@angular/core");
 var primeng_1 = require("primeng/primeng");
 var NavBarComponent = (function () {
     function NavBarComponent() {
+        this.runCodeClicked = new core_1.EventEmitter();
+        this.testCodeClicked = new core_1.EventEmitter();
     }
     NavBarComponent.prototype.search = function (event) {
         var query = event.query;
@@ -20,25 +22,33 @@ var NavBarComponent = (function () {
     NavBarComponent.prototype.filterOptions = function (query, options) {
         var filtered = [];
         for (var i = 0; i < options.length; i++) {
-            var country = options[i];
-            if (country.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
+            var option = options[i];
+            if (option.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(option);
             }
         }
         return filtered;
-    };
-    NavBarComponent.prototype.download = function () {
-        alert("Downloading project!");
     };
     NavBarComponent.prototype.handleDropdownClick = function ($event) {
         this.suggestions = this.options;
     };
     NavBarComponent.prototype.runCode = function () {
-        alert("running: " + this.selected);
+        this.runCodeClicked.emit(this.selected);
     };
     NavBarComponent.prototype.testCode = function () {
-        alert("testing: " + this.selected);
+        this.testCodeClicked.emit(this.selected);
     };
+    NavBarComponent.prototype.download = function () {
+        alert("Downloading project!");
+    };
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], NavBarComponent.prototype, "runCodeClicked", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], NavBarComponent.prototype, "testCodeClicked", void 0);
     NavBarComponent = __decorate([
         core_1.Component({
             selector: 'nav-bar',

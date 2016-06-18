@@ -21,7 +21,7 @@ var CodeMirrorComponent = (function () {
         var config = {
             mode: "text/x-java",
             lineNumbers: true,
-            value: ""
+            value: "default text; // if you are reading this there was a problem :("
         };
         this.editor = CodeMirror(this.editorNativeElement, config);
         this.editor.setSize(EDITOR_WIDTH, EDITOR_HEIGHT);
@@ -35,8 +35,6 @@ var CodeMirrorComponent = (function () {
         this.height = height;
     };
     CodeMirrorComponent.prototype.updateCode = function (newCode) {
-        this.editor.setValue(this.config.value);
-        this.editor.setOption("mode", this.config.languageMode);
         this.editor.setValue(newCode);
     };
     __decorate([

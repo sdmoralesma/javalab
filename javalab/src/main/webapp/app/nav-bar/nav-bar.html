@@ -6,7 +6,7 @@
         </h2>
 
         <p-autoComplete [(ngModel)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
-                        placeholder="Select Class to Run/Test" (completeMethod)="search($event)"
+                        placeholder="Select Class to Run/Test" (completeMethod)="search($event)" field="label"
                         (onDropdownClick)="handleDropdownClick($event)">
         </p-autoComplete>
         <span style="margin-left:40px"></span>

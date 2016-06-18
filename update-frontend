@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 #
+# transpile to js the frontend project
+cd /home/sergio/WebstormProjects/javalab-ang2/
+source /home/sergio/WebstormProjects/javalab-ang2/build
+
+#
 source_dir="/home/sergio/WebstormProjects/javalab-ang2/dist"
 target_dir="/home/sergio/IdeaProjects/javalab/javalab/src/main/webapp"
 
@@ -17,3 +22,6 @@ cp -a $source_dir"/assets" $target_dir
 cp -a $source_dir"/node_modules" $target_dir
 cp $source_dir"/index.html" $target_dir"/index.html"
 cp $source_dir"/systemjs.config.js" $target_dir"/systemjs.config.js"
+
+cd /home/sergio/IdeaProjects/javalab/javalab/
+mvn package

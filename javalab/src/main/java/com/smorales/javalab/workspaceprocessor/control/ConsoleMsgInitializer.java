@@ -14,7 +14,7 @@ public class ConsoleMsgInitializer {
 
     public String get() {
         String template = WELCOME_MSG_TEMPLATE;
-        template = template.replace("{javalabVersion}", readJavalabVersion());
+        template = template.replace("{javalabVersion}", "0.4.0");
         template = template.replace("{javaVersion}", System.getProperty("java.version"));
         return template;
     }
