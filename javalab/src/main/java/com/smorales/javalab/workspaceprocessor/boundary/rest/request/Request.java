@@ -5,11 +5,12 @@ import java.util.List;
 public class Request {
 
     private List<TreeData> filesTree;
-    private RunnableNode runnableNode;
     private Config config;
     private String terminal;
     private String description;
     private List<String> tags;
+
+    private RunnableNode runnableNode;
 
     public List<TreeData> getFilesTree() {
         return filesTree;
@@ -17,14 +18,6 @@ public class Request {
 
     public void setFilesTree(List<TreeData> filesTree) {
         this.filesTree = filesTree;
-    }
-
-    public RunnableNode getRunnableNode() {
-        return runnableNode;
-    }
-
-    public void setRunnableNode(RunnableNode runnableNode) {
-        this.runnableNode = runnableNode;
     }
 
     public Config getConfig() {
@@ -59,12 +52,21 @@ public class Request {
         this.tags = tags;
     }
 
+
+    public RunnableNode getRunnableNode() {
+        return runnableNode;
+    }
+
+    public void setRunnableNode(RunnableNode runnableNode) {
+        this.runnableNode = runnableNode;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
                 "filesTree=" + filesTree +
-                ", runnableNode=" + runnableNode +
                 ", config=" + config +
+                ", terminal=" + terminal +
                 ", description='" + description + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';

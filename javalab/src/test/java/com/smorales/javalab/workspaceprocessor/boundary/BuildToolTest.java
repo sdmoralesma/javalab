@@ -3,7 +3,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
-import com.smorales.javalab.workspaceprocessor.control.FileHandler;
+import com.smorales.javalab.workspaceprocessor.control.FileManager;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeData;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class BuildToolTest {
     @Before
     public void setUp() {
         sut = mock(BuildTool.class, CALLS_REAL_METHODS);
-        sut.fileHandler = mock(FileHandler.class);
+        sut.fileManager = mock(FileManager.class);
         sut.executor = mock(Executor.class);
         sut.tracer = mock(Logger.class);
     }
@@ -45,7 +45,7 @@ public class BuildToolTest {
 
         Path tempDir = mock(Path.class);
         when(tempDir.toString()).thenReturn("tempDir/");
-        when(sut.fileHandler.createTempDir()).thenReturn(tempDir);
+        when(sut.fileManager.createTempDir()).thenReturn(tempDir);
 
         List<TreeData> treeData = createTreeData();
         RunnableNode runnableNode = createRunnableNode();
@@ -102,7 +102,7 @@ public class BuildToolTest {
 
         Path tempDir = mock(Path.class);
         when(tempDir.toString()).thenReturn("tempDir/");
-        when(sut.fileHandler.createTempDir()).thenReturn(tempDir);
+        when(sut.fileManager.createTempDir()).thenReturn(tempDir);
 
         Path parentPath = mock(Path.class);
         when(parentPath.toString()).thenReturn(treeData.get(0).getLabel());

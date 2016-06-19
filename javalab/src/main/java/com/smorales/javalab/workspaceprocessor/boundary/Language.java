@@ -1,4 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.control;
+package com.smorales.javalab.workspaceprocessor.boundary;
 
 public enum Language {
     GROOVY("groovy", ".groovy", "text/x-groovy"),

@@ -2,7 +2,7 @@ package com.smorales.javalab.workspaceprocessor.boundary.rest.model;
 
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.control.ConsoleMsgInitializer;
-import com.smorales.javalab.workspaceprocessor.control.Language;
+import com.smorales.javalab.workspaceprocessor.boundary.Language;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -67,6 +67,8 @@ public class JsonModelCreator {
                 .add("language", lang.getDescription())
                 .add("languageMode", lang.getMode())
                 .add("initialNode", this.initialNode)
+                .add("runnable", this.initialNode)
+                .add("action", "RUN")
                 .add("javaClasses", Json.createArrayBuilder()
                         .add(generateUUID())
                         .add(generateUUID())

@@ -3,7 +3,7 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
-import com.smorales.javalab.workspaceprocessor.control.FileHandler;
+import com.smorales.javalab.workspaceprocessor.control.FileManager;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeData;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ public abstract class BuildTool {
     Executor executor;
 
     @Inject
-    FileHandler fileHandler;
+    FileManager fileManager;
 
     @Inject
     Logger tracer;
@@ -35,16 +35,16 @@ public abstract class BuildTool {
     public String runCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
         Path tempDir = null;
         try {
-            tempDir = fileHandler.createTempDir();
+            tempDir = fileManager.createTempDir();
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             flattenDirectoryTree(projectFiles, tempDir, treeData);
-            fileHandler.createFileTree(projectFiles);
+            fileManager.createFileTree(projectFiles);
             createAuxFiles(tempDir, runnableNode, config);
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileHandler.removeDirectoryRecursively(tempDir);
+            fileManager.removeDirectoryRecursively(tempDir);
         }
     }
 
@@ -65,17 +65,17 @@ public abstract class BuildTool {
 
     // implements template method pattern
     public String testCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
-        Path tempDir = fileHandler.createTempDir();
+        Path tempDir = fileManager.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             flattenDirectoryTree(projectFiles, tempDir, treeData);
-            fileHandler.createFileTree(projectFiles);
+            fileManager.createFileTree(projectFiles);
             createAuxFiles(tempDir, runnableNode, config);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileHandler.removeDirectoryRecursively(tempDir);
+            fileManager.removeDirectoryRecursively(tempDir);
         }
     }
 

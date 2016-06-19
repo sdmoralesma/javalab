@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Executor {
 
-    public static final int OK = 0;
+    public static final int EXIT_CODE_OK = 0;
 
     public enum STD {
         OUT, ERR
@@ -30,7 +30,7 @@ public class Executor {
         try {
             Process proc = Runtime.getRuntime().exec(command);
             int status = proc.waitFor();
-            if (status == OK) {
+            if (status == EXIT_CODE_OK) {
                 return getStreamAsString(proc.getInputStream());
             }
 

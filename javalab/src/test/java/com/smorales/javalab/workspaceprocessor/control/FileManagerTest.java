@@ -24,15 +24,15 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileHandler.class)
-public class FileHandlerTest {
+@PrepareForTest(FileManager.class)
+public class FileManagerTest {
 
     public static final String REGEX_UUID = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
-    private FileHandler sut;
+    private FileManager sut;
 
     @Before
     public void setUp() {
-        sut = new FileHandler();
+        sut = new FileManager();
         sut.tracer = mock(Logger.class);
     }
 

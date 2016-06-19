@@ -2,7 +2,6 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
-import com.smorales.javalab.workspaceprocessor.control.Language;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -32,15 +31,15 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode, Config config) {
+    protected void createAuxFiles(Path tempDir, RunnableNode runnable, Config config) {
         Objects.requireNonNull(tempDir);
-        Objects.requireNonNull(runnableNode);
+        Objects.requireNonNull(runnable);
         Objects.requireNonNull(config);
 
         try {
             String pathByLang = LabPaths.pathByLanguage(Language.from(config.getLanguage())).asString();
             String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
-            template = template.replace("{runnableClassPath}", removeExtension(runnableNode.getPath()));
+            template = template.replace("{runnableClassPath}", removeExtension(runnable.getPath()));
             template = template.replace("{dependenciesSet}", readDependencies(tempDir));
 
             Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
