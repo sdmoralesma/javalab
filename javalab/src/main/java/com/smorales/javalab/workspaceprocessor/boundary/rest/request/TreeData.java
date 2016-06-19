@@ -5,10 +5,13 @@ import java.util.List;
 public class TreeData {
 
     private String id;
-    private String name;
-    private String type;
-    private String code;
-    private Cursor cursor;
+    private String label;
+    private String icon;
+    private String parentId;
+    private String expandedIcon;
+    private String collapsedIcon;
+    private String data;
+    private Cursor cursor;//TODO: verify usefulness
     private List<TreeData> children;
 
     public String getId() {
@@ -19,28 +22,52 @@ public class TreeData {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public String getType() {
-        return type;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
-    public String getCode() {
-        return code;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getExpandedIcon() {
+        return expandedIcon;
+    }
+
+    public void setExpandedIcon(String expandedIcon) {
+        this.expandedIcon = expandedIcon;
+    }
+
+    public String getCollapsedIcon() {
+        return collapsedIcon;
+    }
+
+    public void setCollapsedIcon(String collapsedIcon) {
+        this.collapsedIcon = collapsedIcon;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public Cursor getCursor() {
@@ -63,9 +90,9 @@ public class TreeData {
     public String toString() {
         return "TreeData{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", code='" + code + '\'' +
+                ", label='" + label + '\'' +
+                ", icon='" + icon + '\'' +
+                ", data='" + data + '\'' +
                 ", cursor=" + cursor +
                 ", children=" + children +
                 '}';

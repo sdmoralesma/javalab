@@ -27,12 +27,12 @@ var AppComponent = (function () {
         this.javalabService.initialize()
             .then(function (data) {
             _this.model = data;
-            _this.filemanager.files = data.filesTree;
+            _this.filemanager.files = _this.model.filesTree;
             _this.navBar.options = data.config.javaClasses;
-            _this.description.text = data.description;
-            _this.terminal.welcomeMessage = data.terminal;
-            _this.tagsComponent.selectedTags = data.tags;
-            _this.editor.config = data.config;
+            _this.description.text = _this.model.description;
+            _this.terminal.welcomeMessage = _this.model.terminal;
+            _this.tagsComponent.selectedTags = _this.model.tags;
+            _this.editor.config = _this.model.config;
         }, function (error) { return _this.errorMessage = error; });
         setTimeout(function () {
             _this.initializeEditor();
@@ -40,7 +40,7 @@ var AppComponent = (function () {
         }, 800);
     };
     AppComponent.prototype.initializeEditor = function () {
-        this.filemanager.selectedNode = this.javalabService.findNodeById(this.javalabService.model.config.initialNode, this.javalabService.model.filesTree);
+        this.filemanager.selectedNode = this.javalabService.findNodeById(this.model.config.initialNode, this.model.filesTree);
         this.editor.editor.setValue(this.filemanager.selectedNode.data);
         this.editor.editor.setOption("mode", this.model.config.languageMode);
     };
@@ -48,7 +48,7 @@ var AppComponent = (function () {
         var optionsAsObjects = [];
         for (var _i = 0, _a = this.model.config.javaClasses; _i < _a.length; _i++) {
             var suggestionId = _a[_i];
-            var found = this.javalabService.findNodeById(suggestionId, this.javalabService.model.filesTree);
+            var found = this.javalabService.findNodeById(suggestionId, this.model.filesTree);
             optionsAsObjects.push(found);
         }
         this.navBar.options = optionsAsObjects;

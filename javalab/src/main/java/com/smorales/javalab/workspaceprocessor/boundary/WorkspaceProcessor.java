@@ -56,12 +56,12 @@ public class WorkspaceProcessor {
 
     public String runCode(Request req) {
         tracer.info("RUN CODE >>> \n" + req.toString());
-        return buildTool.runCode(req.getTreedata(), req.getRunnableNode(), req.getInitConfig());
+        return buildTool.runCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
     }
 
     public String runTests(Request req) {
         tracer.info("RUN TEST >>> \n" + req.toString());
-        return buildTool.testCode(req.getTreedata(), req.getRunnableNode(), req.getInitConfig());
+        return buildTool.testCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
     }
 
     public Integer save(String data) {

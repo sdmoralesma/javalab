@@ -1,6 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.InitConfig;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileHandler;
@@ -29,17 +29,17 @@ public abstract class BuildTool {
 
     protected abstract String buildTestCommand(Path tempDir);
 
-    protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode, InitConfig initConfig);
+    protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode, Config config);
 
     // implements template method pattern
-    public String runCode(List<TreeData> treeData, RunnableNode runnableNode, InitConfig initConfig) {
+    public String runCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
         Path tempDir = null;
         try {
             tempDir = fileHandler.createTempDir();
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             flattenDirectoryTree(projectFiles, tempDir, treeData);
             fileHandler.createFileTree(projectFiles);
-            createAuxFiles(tempDir, runnableNode, initConfig);
+            createAuxFiles(tempDir, runnableNode, config);
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
@@ -50,11 +50,11 @@ public abstract class BuildTool {
 
     private void flattenDirectoryTree(Set<FlattenNode> flattenNodeSet, Path parentPath, List<TreeData> treeData) {
         for (TreeData node : treeData) {
-            if ("file".equals(node.getType())) {
-                Path path = Paths.get(parentPath.toString() + "/" + node.getName());
-                flattenNodeSet.add(new FlattenNode(node.getId(), path, node.getType(), node.getCode()));
-            } else if ("folder".equals(node.getType())) {
-                String packagePathAsString = node.getName().replaceAll("\\.", "\\/");
+            if ("file".equals(node.getIcon())) {
+                Path path = Paths.get(parentPath.toString() + "/" + node.getLabel());
+                flattenNodeSet.add(new FlattenNode(node.getId(), path, node.getIcon(), node.getData()));
+            } else if ("folder".equals(node.getIcon())) {
+                String packagePathAsString = node.getLabel().replaceAll("\\.", "\\/");
                 Path path = Paths.get(parentPath.toString(), packagePathAsString);
                 if (!node.getChildren().isEmpty()) {
                     flattenDirectoryTree(flattenNodeSet, path, node.getChildren());
@@ -64,13 +64,13 @@ public abstract class BuildTool {
     }
 
     // implements template method pattern
-    public String testCode(List<TreeData> treeData, RunnableNode runnableNode, InitConfig initConfig) {
+    public String testCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
         Path tempDir = fileHandler.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             flattenDirectoryTree(projectFiles, tempDir, treeData);
             fileHandler.createFileTree(projectFiles);
-            createAuxFiles(tempDir, runnableNode, initConfig);
+            createAuxFiles(tempDir, runnableNode, config);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();

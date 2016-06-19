@@ -16,16 +16,11 @@ var JavalabService = (function () {
         this.http = http;
     }
     JavalabService.prototype.initialize = function () {
-        var _this = this;
         // let url = "assets/json/mock-response.json";
         var url = "http://localhost:48080/rest/process/init/java";
         return this.http.get(url)
             .toPromise()
-            .then(function (res) {
-            var json = res.json();
-            _this.model = json;
-            return json;
-        })
+            .then(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     JavalabService.prototype.handleError = function (error) {
@@ -35,7 +30,7 @@ var JavalabService = (function () {
     JavalabService.prototype.runCode = function (model) {
         var _this = this;
         var runCodeURL = "http://localhost:48080/rest/process/run";
-        var body = JSON.stringify({ model: model });
+        var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(runCodeURL, body, options)
@@ -46,7 +41,7 @@ var JavalabService = (function () {
     JavalabService.prototype.testCode = function (model) {
         var _this = this;
         var runCodeURL = "http://localhost:48080/rest/process/run";
-        var body = JSON.stringify({ model: model });
+        var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
         return this.http.post(runCodeURL, body, options)

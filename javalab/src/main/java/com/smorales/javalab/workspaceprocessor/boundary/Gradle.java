@@ -1,6 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.InitConfig;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Language;
 
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -31,9 +32,13 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode, InitConfig initConfig) {
+    protected void createAuxFiles(Path tempDir, RunnableNode runnableNode, Config config) {
+        Objects.requireNonNull(tempDir);
+        Objects.requireNonNull(runnableNode);
+        Objects.requireNonNull(config);
+
         try {
-            String pathByLang = LabPaths.pathByLanguage(Language.from(initConfig.getLanguage())).asString();
+            String pathByLang = LabPaths.pathByLanguage(Language.from(config.getLanguage())).asString();
             String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
             template = template.replace("{runnableClassPath}", removeExtension(runnableNode.getPath()));
             template = template.replace("{dependenciesSet}", readDependencies(tempDir));

@@ -4,18 +4,19 @@ import java.util.List;
 
 public class Request {
 
-    private List<TreeData> treedata;
+    private List<TreeData> filesTree;
     private RunnableNode runnableNode;
-    private InitConfig initConfig;
+    private Config config;
+    private String terminal;
     private String description;
-    private String tags;
+    private List<String> tags;
 
-    public List<TreeData> getTreedata() {
-        return treedata;
+    public List<TreeData> getFilesTree() {
+        return filesTree;
     }
 
-    public void setTreedata(List<TreeData> treedata) {
-        this.treedata = treedata;
+    public void setFilesTree(List<TreeData> filesTree) {
+        this.filesTree = filesTree;
     }
 
     public RunnableNode getRunnableNode() {
@@ -26,12 +27,20 @@ public class Request {
         this.runnableNode = runnableNode;
     }
 
-    public InitConfig getInitConfig() {
-        return initConfig;
+    public Config getConfig() {
+        return config;
     }
 
-    public void setInitConfig(InitConfig initConfig) {
-        this.initConfig = initConfig;
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    public String getTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+        this.terminal = terminal;
     }
 
     public String getDescription() {
@@ -42,20 +51,20 @@ public class Request {
         this.description = description;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
     @Override
     public String toString() {
         return "Request{" +
-                "treedata=" + treedata +
+                "filesTree=" + filesTree +
                 ", runnableNode=" + runnableNode +
-                ", initConfig=" + initConfig +
+                ", config=" + config +
                 ", description='" + description + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
