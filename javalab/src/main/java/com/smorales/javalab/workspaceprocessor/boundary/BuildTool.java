@@ -4,7 +4,7 @@ import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeData;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -32,12 +32,12 @@ public abstract class BuildTool {
     protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode, Config config);
 
     // implements template method pattern
-    public String runCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
+    public String runCode(List<TreeNode> treeNode, RunnableNode runnableNode, Config config) {
         Path tempDir = null;
         try {
             tempDir = fileManager.createTempDir();
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            flattenDirectoryTree(projectFiles, tempDir, treeData);
+            flattenDirectoryTree(projectFiles, tempDir, treeNode);
             fileManager.createFileTree(projectFiles);
             createAuxFiles(tempDir, runnableNode, config);
             return runClass(tempDir);
@@ -48,8 +48,8 @@ public abstract class BuildTool {
         }
     }
 
-    private void flattenDirectoryTree(Set<FlattenNode> flattenNodeSet, Path parentPath, List<TreeData> treeData) {
-        for (TreeData node : treeData) {
+    private void flattenDirectoryTree(Set<FlattenNode> flattenNodeSet, Path parentPath, List<TreeNode> treeNode) {
+        for (TreeNode node : treeNode) {
             if ("file".equals(node.getIcon())) {
                 Path path = Paths.get(parentPath.toString() + "/" + node.getLabel());
                 flattenNodeSet.add(new FlattenNode(node.getId(), path, node.getIcon(), node.getData()));
@@ -64,11 +64,11 @@ public abstract class BuildTool {
     }
 
     // implements template method pattern
-    public String testCode(List<TreeData> treeData, RunnableNode runnableNode, Config config) {
+    public String testCode(List<TreeNode> treeNode, RunnableNode runnableNode, Config config) {
         Path tempDir = fileManager.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            flattenDirectoryTree(projectFiles, tempDir, treeData);
+            flattenDirectoryTree(projectFiles, tempDir, treeNode);
             fileManager.createFileTree(projectFiles);
             createAuxFiles(tempDir, runnableNode, config);
             return testProject(tempDir);

@@ -2,9 +2,9 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,18 +47,18 @@ public class BuildToolTest {
         when(tempDir.toString()).thenReturn("tempDir/");
         when(sut.fileManager.createTempDir()).thenReturn(tempDir);
 
-        List<TreeData> treeData = createTreeData();
+        List<TreeNode> treeNode = createTreeData();
         RunnableNode runnableNode = createRunnableNode();
 
         Path parentPath = mock(Path.class);
-        when(parentPath.toString()).thenReturn(treeData.get(0).getLabel());
+        when(parentPath.toString()).thenReturn(treeNode.get(0).getLabel());
         when(Paths.get(anyString(), anyString())).thenReturn(parentPath);
 
         Path childPath = mock(Path.class);
-        when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getLabel());
+        when(childPath.toString()).thenReturn(treeNode.get(0).getChildren().get(0).getLabel());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(treeData, runnableNode, new Config());
+        String result = sut.runCode(treeNode, runnableNode, new Config());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
@@ -75,15 +75,15 @@ public class BuildToolTest {
         return node;
     }
 
-    private List<TreeData> createTreeData() {
-        TreeData child = new TreeData();
+    private List<TreeNode> createTreeData() {
+        TreeNode child = new TreeNode();
         child.setId("11");
         child.setIcon("file");
         child.setData("hello world code");
         child.setLabel("HelloWorld.java");
         child.setChildren(new ArrayList<>());
 
-        TreeData parent = new TreeData();
+        TreeNode parent = new TreeNode();
         parent.setId("1");
         parent.setIcon("folder");
         parent.setLabel("folder");
@@ -97,7 +97,7 @@ public class BuildToolTest {
     public void shouldTestCodeOk() throws Exception {
         mockStatic(Path.class, Paths.class, Files.class);
 
-        List<TreeData> treeData = createTreeData();
+        List<TreeNode> treeNode = createTreeData();
         RunnableNode runnableNode = createRunnableNode();
 
         Path tempDir = mock(Path.class);
@@ -105,14 +105,14 @@ public class BuildToolTest {
         when(sut.fileManager.createTempDir()).thenReturn(tempDir);
 
         Path parentPath = mock(Path.class);
-        when(parentPath.toString()).thenReturn(treeData.get(0).getLabel());
+        when(parentPath.toString()).thenReturn(treeNode.get(0).getLabel());
         when(Paths.get(anyString(), anyString())).thenReturn(parentPath);
 
         Path childPath = mock(Path.class);
-        when(childPath.toString()).thenReturn(treeData.get(0).getChildren().get(0).getLabel());
+        when(childPath.toString()).thenReturn(treeNode.get(0).getChildren().get(0).getLabel());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(treeData, runnableNode, new Config());
+        String result = sut.testCode(treeNode, runnableNode, new Config());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);

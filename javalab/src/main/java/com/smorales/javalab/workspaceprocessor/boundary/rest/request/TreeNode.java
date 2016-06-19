@@ -2,7 +2,7 @@ package com.smorales.javalab.workspaceprocessor.boundary.rest.request;
 
 import java.util.List;
 
-public class TreeData {
+public class TreeNode {
 
     private String id;
     private String label;
@@ -12,7 +12,7 @@ public class TreeData {
     private String collapsedIcon;
     private String data;
     private Cursor cursor;//TODO: verify usefulness
-    private List<TreeData> children;
+    private List<TreeNode> children;
 
     public String getId() {
         return id;
@@ -78,17 +78,17 @@ public class TreeData {
         this.cursor = cursor;
     }
 
-    public List<TreeData> getChildren() {
+    public List<TreeNode> getChildren() {
         return children;
     }
 
-    public void setChildren(List<TreeData> children) {
+    public void setChildren(List<TreeNode> children) {
         this.children = children;
     }
 
     @Override
     public String toString() {
-        return "TreeData{" +
+        return "TreeNode{" +
                 "id='" + id + '\'' +
                 ", label='" + label + '\'' +
                 ", icon='" + icon + '\'' +
