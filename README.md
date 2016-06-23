@@ -16,13 +16,6 @@
 ## Versioning
 javalab follows [semantic versioning](http://semver.org/)
 
-## License
-Copyright 2012-2015 ZHENG Ye
-
-Licensed under MIT License (the "License"); You may obtain a copy of the License in the LICENSE file, or at:
-
-https://raw.github.com/dreamhead/moco/master/MIT-LICENSE.txt
-
 ## Powered By
 
 <img src="http://resources.jetbrains.com/assets/media/open-graph/intellij-idea_250x250.png">
