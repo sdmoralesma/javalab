@@ -2,6 +2,7 @@ package com.smorales.javalab.workspaceprocessor.control;
 
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +11,14 @@ import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +56,7 @@ public class FileManagerTest {
         Paths.get(argument.capture());
 
         assertThat(result).isNotNull();
-        assertThat(argument.getValue()).matches(LabPaths.HOME.asString() + REGEX_UUID + "/");
+        assertThat(argument.getValue()).matches(LabPaths.HOME.asString() + REGEX_UUID + File.separator);
     }
 
     @Test
@@ -62,6 +67,60 @@ public class FileManagerTest {
         when(Files.createDirectory(any(Path.class))).thenThrow(new IOException());
 
         assertThatThrownBy(sut::createTempDir).isInstanceOf(NotRunnableCodeException.class);
+    }
+
+
+    @Test
+    public void shouldThrowExceptionWhenNoIdDefined() {
+        //arrange
+        TreeNode toFind = new TreeNode("asdf");
+        List<TreeNode> arrayOfNodes = Arrays.asList(new TreeNode(), toFind);
+
+        //act, assert
+        assertThatThrownBy(() -> sut.findNode(toFind, arrayOfNodes)).isInstanceOf(NotRunnableCodeException.class)
+                .hasMessageContaining("Id not defined");
+    }
+
+    @Test
+    public void shouldFindNodeWhenPlainHierarchy() {
+        //arrange
+        TreeNode toFind = new TreeNode("asdf");
+
+        int i = 0;
+        List<TreeNode> arrayOfNodes = Arrays.asList(
+                new TreeNode("" + i++), new TreeNode("" + i++),
+                new TreeNode("" + i++), toFind, new TreeNode("" + i++)
+        );
+
+        //act
+        TreeNode node = sut.findNode(toFind, arrayOfNodes);
+
+        //assert
+        assertThat(node).isEqualTo(toFind);
+    }
+
+
+    @Test
+    public void shouldFindNodeWhenNestedHierarchy() {
+        //arrange
+        TreeNode toFind = new TreeNode("asdf");
+
+        int i = 0;
+        TreeNode parent = new TreeNode("" + i++);
+        parent.setChildren(Collections.singletonList(toFind));
+
+        TreeNode grandParent = new TreeNode("" + i++);
+        grandParent.setChildren(Collections.singletonList(parent));
+
+        List<TreeNode> arrayOfNodes = Arrays.asList(
+                new TreeNode("" + i++), new TreeNode("" + i++), grandParent, new TreeNode("" + i++), new TreeNode("" + i++)
+        );
+
+        //act
+        TreeNode node = sut.findNode(toFind, arrayOfNodes);
+
+        //assert
+        assertThat(node).isEqualTo(toFind);
     }
 
 }

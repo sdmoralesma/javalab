@@ -14,6 +14,13 @@ public class TreeNode {
     private Cursor cursor;//TODO: verify usefulness
     private List<TreeNode> children;
 
+    public TreeNode() {
+    }
+
+    public TreeNode(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
@@ -84,6 +91,22 @@ public class TreeNode {
 
     public void setChildren(List<TreeNode> children) {
         this.children = children;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TreeNode treeNode = (TreeNode) o;
+
+        return id != null ? id.equals(treeNode.id) : treeNode.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
