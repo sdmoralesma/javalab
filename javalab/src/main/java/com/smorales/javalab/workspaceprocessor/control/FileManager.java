@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,27 +53,46 @@ public class FileManager {
         }
     }
 
-    public Path calculatePathForNode(TreeNode node, List<TreeNode> treeNode) {
-        TreeNode nodeById = findNode(node, treeNode);
-        List<TreeNode> parents = findAllParentsForNode(node);
-        return null;
+    public Path calculatePathForNode(TreeNode node, List<TreeNode> treeNode) {// TODO: use this method
+        List<TreeNode> parents = findParentsForNode(node, treeNode);
+        String path = "";
+        for (TreeNode p : parents) {
+            path += p.getLabel();
+        }
+
+        return Paths.get(path);
     }
 
-    private List<TreeNode> findAllParentsForNode(TreeNode node) {
-        return null;
+    public List<TreeNode> findParentsForNode(TreeNode node, List<TreeNode> treeNode) {
+        List<TreeNode> parentList = new ArrayList<>();
+
+        String parentId = node.getParentId();
+        if (parentId == null) {
+            return parentList;
+        }
+
+        while (true) {
+            TreeNode parentNode = findNode(new TreeNode(parentId), treeNode);
+            parentId = parentNode.getParentId();
+            parentList.add(parentNode);
+
+            if (parentId == null) {
+                return parentList;
+            }
+        }
     }
 
     public TreeNode findNode(TreeNode toFind, List<TreeNode> nodeList) {
         verifyId(toFind);
 
-        for (TreeNode n : nodeList) {
-            verifyId(n);
-            if (n.getId().equals(toFind.getId())) {
-                return n;
+        for (TreeNode node : nodeList) {
+            verifyId(node);
+            if (node.getId().equals(toFind.getId())) {
+                return node;
             }
 
-            if (n.getChildren() != null && n.getChildren().size() > 0) {
-                return findNode(toFind, n.getChildren());
+            if (node.getChildren() != null && node.getChildren().size() > 0) {
+                return findNode(toFind, node.getChildren());
             }
         }
 

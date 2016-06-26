@@ -104,23 +104,43 @@ public class FileManagerTest {
     public void shouldFindNodeWhenNestedHierarchy() {
         //arrange
         TreeNode toFind = new TreeNode("asdf");
-
-        int i = 0;
-        TreeNode parent = new TreeNode("" + i++);
-        parent.setChildren(Collections.singletonList(toFind));
-
-        TreeNode grandParent = new TreeNode("" + i++);
-        grandParent.setChildren(Collections.singletonList(parent));
-
-        List<TreeNode> arrayOfNodes = Arrays.asList(
-                new TreeNode("" + i++), new TreeNode("" + i++), grandParent, new TreeNode("" + i++), new TreeNode("" + i++)
-        );
+        List<TreeNode> arrayOfNodes = createNestedHierarchyOfNodes(toFind);
 
         //act
         TreeNode node = sut.findNode(toFind, arrayOfNodes);
 
         //assert
         assertThat(node).isEqualTo(toFind);
+    }
+
+    @Test
+    public void shouldReturnParentList() {
+        //arrange
+        TreeNode toFind = new TreeNode("asdf");
+        toFind.setParentId("0");
+        List<TreeNode> arrayOfNodes = createNestedHierarchyOfNodes(toFind);
+
+        List<TreeNode> expectedParents = Arrays.asList(new TreeNode("0"), new TreeNode("1"));
+        //act
+        List<TreeNode> parentsForNode = sut.findParentsForNode(toFind, arrayOfNodes);
+
+        //assert
+
+        assertThat(parentsForNode).isEqualTo(expectedParents);
+    }
+
+
+    private List<TreeNode> createNestedHierarchyOfNodes(TreeNode toFind) {
+        TreeNode parent = new TreeNode("0");
+        parent.setParentId("1");
+        parent.setChildren(Collections.singletonList(toFind));
+
+        TreeNode grandParent = new TreeNode("1");
+        grandParent.setChildren(Collections.singletonList(parent));
+
+        return Arrays.asList(
+                new TreeNode("2"), new TreeNode("3"), new TreeNode("4"), grandParent, new TreeNode("5")
+        );
     }
 
 }

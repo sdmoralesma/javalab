@@ -55,7 +55,7 @@ public abstract class BuildTool {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
             fileManager.flattenDirectoryTree(projectFiles, tempDir, treeNode);
             fileManager.createFileTree(projectFiles);
-//            createAuxFiles(tempDir, runnableNode, config);
+//            createAuxFiles(tempDir, runnableNode, config);//Todo: fix this
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
