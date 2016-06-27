@@ -1,7 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
@@ -48,7 +47,6 @@ public class BuildToolTest {
         when(sut.fileManager.createTempDir()).thenReturn(tempDir);
 
         List<TreeNode> treeNode = createTreeData();
-        RunnableNode runnableNode = createRunnableNode();
 
         Path parentPath = mock(Path.class);
         when(parentPath.toString()).thenReturn(treeNode.get(0).getLabel());
@@ -58,21 +56,12 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeNode.get(0).getChildren().get(0).getLabel());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.runCode(treeNode, runnableNode, new Config());
+        String result = sut.runCode(treeNode, new Config());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         verify(sut.executor).execCommand(argument.capture());
         assertThat(argument.getValue()).isEqualTo(null);
-    }
-
-
-    private RunnableNode createRunnableNode() {
-        RunnableNode node = new RunnableNode();
-        node.setId("11");
-        node.setMainClass(true);
-        node.setTestClass(false);
-        return node;
     }
 
     private List<TreeNode> createTreeData() {
@@ -98,7 +87,6 @@ public class BuildToolTest {
         mockStatic(Path.class, Paths.class, Files.class);
 
         List<TreeNode> treeNode = createTreeData();
-        RunnableNode runnableNode = createRunnableNode();
 
         Path tempDir = mock(Path.class);
         when(tempDir.toString()).thenReturn("tempDir/");
@@ -112,7 +100,7 @@ public class BuildToolTest {
         when(childPath.toString()).thenReturn(treeNode.get(0).getChildren().get(0).getLabel());
         when(Paths.get(anyString())).thenReturn(childPath);
 
-        String result = sut.testCode(treeNode, runnableNode, new Config());
+        String result = sut.testCode(treeNode, new Config());
 
         assertThat(result).isEqualTo(null);
         ArgumentCaptor<String> argString = ArgumentCaptor.forClass(String.class);

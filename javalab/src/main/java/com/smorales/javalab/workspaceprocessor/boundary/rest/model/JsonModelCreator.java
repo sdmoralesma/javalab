@@ -112,7 +112,6 @@ public class JsonModelCreator {
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)
                 .add("data", map.get(filename))
-                .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 
@@ -144,7 +143,6 @@ public class JsonModelCreator {
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)
                 .add("data", map.get(filename))
-                .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 

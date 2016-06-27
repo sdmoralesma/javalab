@@ -11,7 +11,6 @@ public class TreeNode {
     private String expandedIcon;
     private String collapsedIcon;
     private String data;
-    private Cursor cursor;//TODO: verify usefulness
     private List<TreeNode> children;
 
     public TreeNode() {
@@ -77,14 +76,6 @@ public class TreeNode {
         this.data = data;
     }
 
-    public Cursor getCursor() {
-        return cursor;
-    }
-
-    public void setCursor(Cursor cursor) {
-        this.cursor = cursor;
-    }
-
     public List<TreeNode> getChildren() {
         return children;
     }
@@ -116,7 +107,6 @@ public class TreeNode {
                 ", label='" + label + '\'' +
                 ", icon='" + icon + '\'' +
                 ", data='" + data + '\'' +
-                ", cursor=" + cursor +
                 ", children=" + children +
                 '}';
     }

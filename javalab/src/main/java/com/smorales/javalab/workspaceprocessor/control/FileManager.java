@@ -38,22 +38,21 @@ public class FileManager {
      * Adds all nodes to {@code flattenSet} to remove the hierarchy among the nodes, then the relation "parent -> children"
      * is flatten to a set of nodes.
      */
-    public void flattenDirectoryTree(Set<FlattenNode> flattenSet, Path parentPath, List<TreeNode> treeNode) {
+    public void flattenDirectoryTree(Set<FlattenNode> flattenSet, List<TreeNode> treeNode) {
         for (TreeNode node : treeNode) {
             if ("file".equals(node.getIcon())) {
-                Path path = Paths.get(parentPath.toString() + File.separator + node.getLabel());
+                Path path = calculatePathForNode(node, treeNode);
                 flattenSet.add(new FlattenNode(node.getId(), path, node.getIcon(), node.getData()));
             } else if ("folder".equals(node.getIcon())) {
-                String packagePathAsString = node.getLabel().replaceAll("\\.", "\\/");
-                Path path = Paths.get(parentPath.toString(), packagePathAsString);
+                Path path = calculatePathForNode(node, treeNode);
                 if (!node.getChildren().isEmpty()) {
-                    flattenDirectoryTree(flattenSet, path, node.getChildren());
+                    flattenDirectoryTree(flattenSet, node.getChildren());
                 }
             }
         }
     }
 
-    public Path calculatePathForNode(TreeNode node, List<TreeNode> treeNode) {// TODO: use this method
+    public Path calculatePathForNode(TreeNode node, List<TreeNode> treeNode) {
         List<TreeNode> parents = findParentsForNode(node, treeNode);
         String path = "";
         for (TreeNode p : parents) {
@@ -66,7 +65,7 @@ public class FileManager {
             path += label;
         }
 
-        return Paths.get(path,node.getLabel());
+        return Paths.get(path, node.getLabel());
     }
 
     public List<TreeNode> findParentsForNode(TreeNode node, List<TreeNode> treeNode) {
@@ -151,5 +150,10 @@ public class FileManager {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Error deleting file: " + file.toString());
         }
+    }
+
+
+    public String removeExtension(String path) {
+        return path.substring(0, path.lastIndexOf('.'));
     }
 }

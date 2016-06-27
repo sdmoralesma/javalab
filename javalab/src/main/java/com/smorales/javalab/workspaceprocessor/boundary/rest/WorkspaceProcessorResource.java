@@ -27,7 +27,9 @@ public class WorkspaceProcessorResource {
     @GET
     @Path("/init/{lang}")
     public Response initialize(@PathParam("lang") String lang) {
-        return Response.ok().entity(workspaceProcessor.initialize(lang)).build();
+        JsonObject jsonObject = workspaceProcessor.initialize(lang);
+        tracer.info(jsonObject.toString());
+        return Response.ok().entity(jsonObject).build();
     }
 
     @GET

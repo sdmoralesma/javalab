@@ -56,12 +56,12 @@ public class WorkspaceProcessor {
 
     public String runCode(Request req) {
         tracer.info("RUN CODE >>> \n" + req.toString());
-        return buildTool.runCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
+        return buildTool.runCode(req.getFilesTree(), req.getConfig());
     }
 
     public String runTests(Request req) {
         tracer.info("RUN TEST >>> \n" + req.toString());
-        return buildTool.testCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
+        return buildTool.testCode(req.getFilesTree(), req.getConfig());
     }
 
     public Integer save(String data) {
@@ -85,7 +85,7 @@ public class WorkspaceProcessor {
         String script = "Java.asJSONCompatible(" + json + ")";
         ScriptEngineManager sem = new ScriptEngineManager();
         ScriptEngine engine = sem.getEngineByName("javascript");
-        Map result = null;
+        Map result;
         try {
             result = (Map) engine.eval(script);
         } catch (ScriptException e) {

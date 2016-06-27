@@ -28,34 +28,17 @@ public abstract class BuildTool {
 
     protected abstract String buildTestCommand(Path tempDir);
 
-    protected abstract void createAuxFiles(Path tempDir, RunnableNode runnableNode, Config config);
+    protected abstract void createAuxFiles(Path tempDir, Config config);
 
     // implements template method pattern
-    public String runCode(List<TreeNode> treeNode, RunnableNode runnableNode, Config config) {
+    public String runCode(List<TreeNode> treeNode, Config config) {
         Path tempDir = null;
         try {
             tempDir = fileManager.createTempDir();
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            fileManager.flattenDirectoryTree(projectFiles, tempDir, treeNode);
+            fileManager.flattenDirectoryTree(projectFiles, treeNode);
             fileManager.createFileTree(projectFiles);
-            createAuxFiles(tempDir, runnableNode, config);
-            return runClass(tempDir);
-        } catch (NotRunnableCodeException exc) {
-            return exc.getMessage();
-        } finally {
-            fileManager.removeDirectoryRecursively(tempDir);
-        }
-    }
-
-    // implements template method pattern
-    public String runCodeModified(List<TreeNode> treeNode, Config config) {
-        Path tempDir = null;
-        try {
-            tempDir = fileManager.createTempDir();
-            Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            fileManager.flattenDirectoryTree(projectFiles, tempDir, treeNode);
-            fileManager.createFileTree(projectFiles);
-//            createAuxFiles(tempDir, runnableNode, config);//Todo: fix this
+            createAuxFiles(tempDir, config);
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
@@ -66,13 +49,13 @@ public abstract class BuildTool {
 
 
     // implements template method pattern
-    public String testCode(List<TreeNode> treeNode, RunnableNode runnableNode, Config config) {
+    public String testCode(List<TreeNode> treeNode, Config config) {
         Path tempDir = fileManager.createTempDir();
         try {
             Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            fileManager.flattenDirectoryTree(projectFiles, tempDir, treeNode);
+            fileManager.flattenDirectoryTree(projectFiles, treeNode);
             fileManager.createFileTree(projectFiles);
-            createAuxFiles(tempDir, runnableNode, config);
+            createAuxFiles(tempDir, config);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
