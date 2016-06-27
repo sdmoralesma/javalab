@@ -3,6 +3,7 @@ package com.smorales.javalab.workspaceprocessor.control;
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
+import com.smorales.javalab.workspaceprocessor.creators.FileManagerCreators;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -32,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest(FileManager.class)
 public class FileManagerTest {
 
-    public static final String REGEX_UUID = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
+    private static final String REGEX_UUID = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
     private FileManager sut;
 
     @Before
@@ -73,7 +73,7 @@ public class FileManagerTest {
     @Test
     public void shouldThrowExceptionWhenNoIdDefined() {
         //arrange
-        TreeNode toFind = new TreeNode("asdf");
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
         List<TreeNode> arrayOfNodes = Arrays.asList(new TreeNode(), toFind);
 
         //act, assert
@@ -82,9 +82,9 @@ public class FileManagerTest {
     }
 
     @Test
-    public void shouldFindNodeWhenPlainHierarchy() {
+    public void shouldFindNodeWhenPlainHierarchy() {//i.e: no nested nodes
         //arrange
-        TreeNode toFind = new TreeNode("asdf");
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
 
         int i = 0;
         List<TreeNode> arrayOfNodes = Arrays.asList(
@@ -103,8 +103,8 @@ public class FileManagerTest {
     @Test
     public void shouldFindNodeWhenNestedHierarchy() {
         //arrange
-        TreeNode toFind = new TreeNode("asdf");
-        List<TreeNode> arrayOfNodes = createNestedHierarchyOfNodes(toFind);
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
+        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
 
         //act
         TreeNode node = sut.findNode(toFind, arrayOfNodes);
@@ -116,31 +116,30 @@ public class FileManagerTest {
     @Test
     public void shouldReturnParentList() {
         //arrange
-        TreeNode toFind = new TreeNode("asdf");
-        toFind.setParentId("0");
-        List<TreeNode> arrayOfNodes = createNestedHierarchyOfNodes(toFind);
-
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
+        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
         List<TreeNode> expectedParents = Arrays.asList(new TreeNode("0"), new TreeNode("1"));
+
         //act
         List<TreeNode> parentsForNode = sut.findParentsForNode(toFind, arrayOfNodes);
 
         //assert
-
         assertThat(parentsForNode).isEqualTo(expectedParents);
     }
 
 
-    private List<TreeNode> createNestedHierarchyOfNodes(TreeNode toFind) {
-        TreeNode parent = new TreeNode("0");
-        parent.setParentId("1");
-        parent.setChildren(Collections.singletonList(toFind));
+    @Test
+    public void shouldCalculatePath() {
+        //arrange
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
+        toFind.setLabel("myfile.java");
+        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
 
-        TreeNode grandParent = new TreeNode("1");
-        grandParent.setChildren(Collections.singletonList(parent));
+        //act
+        Path path = sut.calculatePathForNode(toFind, arrayOfNodes);
 
-        return Arrays.asList(
-                new TreeNode("2"), new TreeNode("3"), new TreeNode("4"), grandParent, new TreeNode("5")
-        );
+        //assert
+        assertThat(path.toString()).isEqualTo("com/company/project/src/main/java/myfile.java");
     }
 
 }

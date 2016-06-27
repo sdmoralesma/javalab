@@ -57,10 +57,16 @@ public class FileManager {
         List<TreeNode> parents = findParentsForNode(node, treeNode);
         String path = "";
         for (TreeNode p : parents) {
-            path += p.getLabel();
+            String label = p.getLabel();
+            label = label.replaceAll("\\.", "\\/");
+            if (p.getIcon() != null && p.getIcon().equals("fa-file-text-o")) {//is a file
+            } else {//is a folder
+                label = label + "/";
+            }
+            path += label;
         }
 
-        return Paths.get(path);
+        return Paths.get(path,node.getLabel());
     }
 
     public List<TreeNode> findParentsForNode(TreeNode node, List<TreeNode> treeNode) {
