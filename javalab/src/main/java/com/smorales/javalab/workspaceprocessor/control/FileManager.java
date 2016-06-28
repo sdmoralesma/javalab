@@ -1,8 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.control;
 
-import com.smorales.javalab.workspaceprocessor.boundary.FlattenNode;
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 
 import javax.inject.Inject;
@@ -10,9 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.smorales.javalab.workspaceprocessor.boundary.SimpleNode.Type.FILE;
+import static com.smorales.javalab.workspaceprocessor.boundary.SimpleNode.Type.FOLDER;
 
 public class FileManager {
 
@@ -34,42 +40,24 @@ public class FileManager {
         return UUID.randomUUID().toString();
     }
 
-    /**
-     * Adds all nodes to {@code flattenSet} to remove the hierarchy among the nodes, then the relation "parent -> children"
-     * is flatten to a set of nodes.
-     */
-    public void flattenDirectoryTree(Set<FlattenNode> flattenSet, List<TreeNode> treeNode) {
-        for (TreeNode node : treeNode) {
-            if ("file".equals(node.getIcon())) {
-                Path path = calculatePathForNode(node, treeNode);
-                flattenSet.add(new FlattenNode(node.getId(), path, node.getIcon(), node.getData()));
-            } else if ("folder".equals(node.getIcon())) {
-                Path path = calculatePathForNode(node, treeNode);
-                if (!node.getChildren().isEmpty()) {
-                    flattenDirectoryTree(flattenSet, node.getChildren());
-                }
-            }
-        }
-    }
-
-    public Path calculatePathForNode(TreeNode node, List<TreeNode> treeNode) {
-        List<TreeNode> parents = findParentsForNode(node, treeNode);
+    public Path calculatePathForNode(SimpleNode node, List<SimpleNode> simpleNodes) {
+        List<SimpleNode> parents = findParentsForNode(node, simpleNodes);
         String path = "";
-        for (TreeNode p : parents) {
+        for (SimpleNode p : parents) {
             String label = p.getLabel();
             label = label.replaceAll("\\.", "\\/");
-            if (p.getIcon() != null && p.getIcon().equals("fa-file-text-o")) {//is a file
-            } else {//is a folder
+            if (p.getType() == FOLDER) {
                 label = label + "/";
             }
             path += label;
         }
 
-        return Paths.get(path, node.getLabel());
+        String label = (node.getType() == FOLDER) ? node.getLabel().replaceAll("\\.", "\\/") : node.getLabel();
+        return Paths.get(path, label);
     }
 
-    public List<TreeNode> findParentsForNode(TreeNode node, List<TreeNode> treeNode) {
-        List<TreeNode> parentList = new ArrayList<>();
+    private List<SimpleNode> findParentsForNode(SimpleNode node, List<SimpleNode> simpleNodes) {
+        List<SimpleNode> parentList = new ArrayList<>();
 
         String parentId = node.getParentId();
         if (parentId == null) {
@@ -77,7 +65,7 @@ public class FileManager {
         }
 
         while (true) {
-            TreeNode parentNode = findNode(new TreeNode(parentId), treeNode);
+            SimpleNode parentNode = findSimpleNode(new SimpleNode(parentId), simpleNodes);
             parentId = parentNode.getParentId();
             parentList.add(parentNode);
 
@@ -87,43 +75,58 @@ public class FileManager {
         }
     }
 
-    public TreeNode findNode(TreeNode toFind, List<TreeNode> nodeList) {
-        verifyId(toFind);
-
-        for (TreeNode node : nodeList) {
-            verifyId(node);
-            if (node.getId().equals(toFind.getId())) {
-                return node;
-            }
-
-            if (node.getChildren() != null && node.getChildren().size() > 0) {
-                return findNode(toFind, node.getChildren());
-            }
-        }
-
-        throw new NotRunnableCodeException("node not found " + toFind);
+    private SimpleNode findSimpleNode(SimpleNode toFind, List<SimpleNode> simpleNodes) {
+        return simpleNodes.stream()
+                .filter(s -> s.getId().equals(toFind.getId()))
+                .findFirst().orElseThrow(() -> new NotRunnableCodeException("Can not find node:" + toFind.getId()));
     }
 
-    private void verifyId(TreeNode toFind) {
-        Objects.requireNonNull(toFind);
-        if (toFind.getId() == null || toFind.getId().trim().equals("")) {
-            throw new NotRunnableCodeException("can not find node, Id not defined");
-        }
-    }
+    public void createFiles(Path tempDir, List<TreeNode> treeNodes) {
+        ArrayList<SimpleNode> simpleNodes = new ArrayList<>();
+        transformToSimpleList(treeNodes, simpleNodes);//will fill array
 
-    public void createFileTree(Set<FlattenNode> flattenDirs) {
-        for (FlattenNode node : flattenDirs) {
+        for (SimpleNode node : simpleNodes) {
             try {
-                Files.createDirectories(node.getPath().getParent());
-                Path filePath = Files.createFile(node.getPath());
-                Files.write(node.getPath(), node.getCode().getBytes(), StandardOpenOption.CREATE);
-                tracer.info("Created file: " + filePath);
+                Path pathForNode = this.calculatePathForNode(node, simpleNodes);
+                Path path = Paths.get(tempDir.toString(), pathForNode.toString());
+                if (node.getType() == FILE) {
+                    Files.createDirectories(path.getParent());
+                    Files.createFile(path);
+                    Files.write(path, node.getData().getBytes(), StandardOpenOption.CREATE);
+                    tracer.info("Created file: " + path);
+                } else if (node.getType() == FOLDER) {
+                    Files.createDirectories(path);
+                    tracer.info("Created folder(s): " + path);
+                }
             } catch (IOException e) {
                 tracer.log(Level.SEVERE, e, e::getMessage);
-                throw new NotRunnableCodeException("Error creating file: " + node.getPath());
+                throw new NotRunnableCodeException("Error creating file: " + node);
             }
         }
     }
+
+    public void transformToSimpleList(List<TreeNode> treeNodes, List<SimpleNode> simple) {
+        for (TreeNode node : treeNodes) {
+
+            String id = node.getId();
+            SimpleNode.Type type = getTypeOfNode(node);
+            String label = node.getLabel();
+            String data = node.getData();
+            String parentId = node.getParentId();
+
+            SimpleNode simpleNode = new SimpleNode(id, type, label, data, parentId);
+            simple.add(simpleNode);
+
+            if (node.getChildren() != null && node.getChildren() != null) {
+                transformToSimpleList(node.getChildren(), simple);
+            }
+        }
+    }
+
+    private SimpleNode.Type getTypeOfNode(TreeNode node) {
+        return (node.getIcon() != null && node.getIcon().equals("fa-file-text-o")) ? FILE : FOLDER;
+    }
+
 
     public void removeDirectoryRecursively(Path file) {
         Objects.nonNull(file);
@@ -156,4 +159,5 @@ public class FileManager {
     public String removeExtension(String path) {
         return path.substring(0, path.lastIndexOf('.'));
     }
+
 }

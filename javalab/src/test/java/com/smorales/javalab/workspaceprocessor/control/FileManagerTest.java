@@ -2,6 +2,7 @@ package com.smorales.javalab.workspaceprocessor.control;
 
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.creators.FileManagerCreators;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -69,77 +71,33 @@ public class FileManagerTest {
         assertThatThrownBy(sut::createTempDir).isInstanceOf(NotRunnableCodeException.class);
     }
 
-
-    @Test
-    public void shouldThrowExceptionWhenNoIdDefined() {
-        //arrange
-        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
-        List<TreeNode> arrayOfNodes = Arrays.asList(new TreeNode(), toFind);
-
-        //act, assert
-        assertThatThrownBy(() -> sut.findNode(toFind, arrayOfNodes)).isInstanceOf(NotRunnableCodeException.class)
-                .hasMessageContaining("Id not defined");
-    }
-
-    @Test
-    public void shouldFindNodeWhenPlainHierarchy() {//i.e: no nested nodes
-        //arrange
-        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
-
-        int i = 0;
-        List<TreeNode> arrayOfNodes = Arrays.asList(
-                new TreeNode("" + i++), new TreeNode("" + i++),
-                new TreeNode("" + i++), toFind, new TreeNode("" + i++)
-        );
-
-        //act
-        TreeNode node = sut.findNode(toFind, arrayOfNodes);
-
-        //assert
-        assertThat(node).isEqualTo(toFind);
-    }
-
-
-    @Test
-    public void shouldFindNodeWhenNestedHierarchy() {
-        //arrange
-        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
-        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
-
-        //act
-        TreeNode node = sut.findNode(toFind, arrayOfNodes);
-
-        //assert
-        assertThat(node).isEqualTo(toFind);
-    }
-
-    @Test
-    public void shouldReturnParentList() {
-        //arrange
-        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
-        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
-        List<TreeNode> expectedParents = Arrays.asList(new TreeNode("0"), new TreeNode("1"));
-
-        //act
-        List<TreeNode> parentsForNode = sut.findParentsForNode(toFind, arrayOfNodes);
-
-        //assert
-        assertThat(parentsForNode).isEqualTo(expectedParents);
-    }
-
-
     @Test
     public void shouldCalculatePath() {
         //arrange
-        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
-        toFind.setLabel("myfile.java");
-        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
+        SimpleNode toFind = FileManagerCreators.createValidSimpleNode("asdf", "myfile.java", "1");
+        List<SimpleNode> arrayOfNodes = FileManagerCreators.createSimpleListOfNodes(toFind);
 
         //act
         Path path = sut.calculatePathForNode(toFind, arrayOfNodes);
 
         //assert
-        assertThat(path.toString()).isEqualTo("com/company/project/src/main/java/myfile.java");
+        assertThat(path.toString()).isEqualTo("src/main/java/com/company/project/myfile.java");
+    }
+
+    @Test
+    public void shouldTraverseTheTreeNode() {
+        //arrange
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
+        List<SimpleNode> expected = Arrays.asList(new SimpleNode("2"), new SimpleNode("3"), new SimpleNode("4"),
+                new SimpleNode("1"), new SimpleNode("0"), new SimpleNode("asdf"), new SimpleNode("5"));
+        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
+        List<SimpleNode> simpleNodes = new ArrayList<>();
+
+        //act
+        sut.transformToSimpleList(arrayOfNodes, simpleNodes);
+
+        //assert
+        assertThat(simpleNodes).isEqualTo(expected);
     }
 
 }

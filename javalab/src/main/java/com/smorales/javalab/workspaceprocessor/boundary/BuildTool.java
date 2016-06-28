@@ -1,16 +1,13 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public abstract class BuildTool {
@@ -35,9 +32,7 @@ public abstract class BuildTool {
         Path tempDir = null;
         try {
             tempDir = fileManager.createTempDir();
-            Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            fileManager.flattenDirectoryTree(projectFiles, treeNode);
-            fileManager.createFileTree(projectFiles);
+            fileManager.createFiles(tempDir, treeNode);
             createAuxFiles(tempDir, config);
             return runClass(tempDir);
         } catch (NotRunnableCodeException exc) {
@@ -52,9 +47,7 @@ public abstract class BuildTool {
     public String testCode(List<TreeNode> treeNode, Config config) {
         Path tempDir = fileManager.createTempDir();
         try {
-            Set<FlattenNode> projectFiles = new LinkedHashSet<>();
-            fileManager.flattenDirectoryTree(projectFiles, treeNode);
-            fileManager.createFileTree(projectFiles);
+            fileManager.createFiles(tempDir, treeNode);
             createAuxFiles(tempDir, config);
             return testProject(tempDir);
         } catch (NotRunnableCodeException exc) {

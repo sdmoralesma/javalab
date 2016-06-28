@@ -1,5 +1,6 @@
 package com.smorales.javalab.workspaceprocessor.creators;
 
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 
 import java.util.Arrays;
@@ -13,6 +14,10 @@ public class FileManagerCreators {
         node.setParentId("0");
         node.setIcon("fa-file-text-o");
         return node;
+    }
+
+    public static SimpleNode createValidSimpleNode(String id, String label, String parent) {
+        return new SimpleNode(id, SimpleNode.Type.FILE, label, "", parent);
     }
 
     public static List<TreeNode> createNestedHierarchyOfNodes(TreeNode toFind) {
@@ -32,5 +37,13 @@ public class FileManagerCreators {
         return Arrays.asList(
                 new TreeNode("2"), new TreeNode("3"), new TreeNode("4"), grandParent, new TreeNode("5")
         );
+    }
+
+
+    public static List<SimpleNode> createSimpleListOfNodes(SimpleNode two) {
+        SimpleNode zero = new SimpleNode("0", SimpleNode.Type.FOLDER,"com.company.project","",null);
+        SimpleNode one = new SimpleNode("1", SimpleNode.Type.FOLDER,"src/main/java","","0");
+
+        return Arrays.asList(new SimpleNode("2"), new SimpleNode("3"), new SimpleNode("4"), zero, one, new SimpleNode("5"));
     }
 }
