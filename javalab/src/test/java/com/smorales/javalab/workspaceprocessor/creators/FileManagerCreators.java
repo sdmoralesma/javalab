@@ -22,10 +22,9 @@ public class FileManagerCreators {
 
     public static List<TreeNode> createNestedHierarchyOfNodes(TreeNode toFind) {
         TreeNode parent = new TreeNode("0");
-        parent.setParentId("1");
         parent.setLabel("com.company.project");
-        parent.setExpandedIcon("fa-folder-open");
-        parent.setCollapsedIcon("fa-folder");
+        parent.setIcon("fa fa-th-large");
+        parent.setParentId("1");
         parent.setChildren(Collections.singletonList(toFind));
 
         TreeNode grandParent = new TreeNode("1");
@@ -34,16 +33,13 @@ public class FileManagerCreators {
         grandParent.setCollapsedIcon("fa-folder");
         grandParent.setChildren(Collections.singletonList(parent));
 
-        return Arrays.asList(
-                new TreeNode("2"), new TreeNode("3"), new TreeNode("4"), grandParent, new TreeNode("5")
-        );
+        return Arrays.asList(new TreeNode("2"), new TreeNode("3"), new TreeNode("4"), grandParent, new TreeNode("5"));
     }
 
 
     public static List<SimpleNode> createSimpleListOfNodes(SimpleNode two) {
-        SimpleNode zero = new SimpleNode("0", SimpleNode.Type.FOLDER,"com.company.project","",null);
-        SimpleNode one = new SimpleNode("1", SimpleNode.Type.FOLDER,"src/main/java","","0");
-
-        return Arrays.asList(new SimpleNode("2"), new SimpleNode("3"), new SimpleNode("4"), zero, one, new SimpleNode("5"));
+        SimpleNode zero = new SimpleNode("0", SimpleNode.Type.FOLDER, "com.company.project", "", null);
+        SimpleNode one = new SimpleNode("1", SimpleNode.Type.FOLDER, "src/main/java", "", "0");
+        return Arrays.asList(zero, one, two);
     }
 }

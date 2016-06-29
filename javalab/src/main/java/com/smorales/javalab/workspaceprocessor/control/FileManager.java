@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,20 +54,20 @@ public class FileManager {
     }
 
     private List<SimpleNode> findParentsForNode(SimpleNode node, List<SimpleNode> simpleNodes) {
-        List<SimpleNode> parentList = new ArrayList<>();
-
-        String parentId = node.getParentId();
-        if (parentId == null) {
-            return parentList;
+        if (node.getParentId() == null) {
+            return new ArrayList<>();
         }
 
+        List<SimpleNode> parentList = new ArrayList<>();
+        String parentId = node.getParentId();
         while (true) {
             SimpleNode parentNode = findSimpleNode(new SimpleNode(parentId), simpleNodes);
-            parentId = parentNode.getParentId();
             parentList.add(parentNode);
 
-            if (parentId == null) {
+            if (parentNode.getParentId() == null) {
                 return parentList;
+            }else {
+                parentId = parentNode.getParentId();
             }
         }
     }

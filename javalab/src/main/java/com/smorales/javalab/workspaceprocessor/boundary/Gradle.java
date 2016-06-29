@@ -25,12 +25,12 @@ class Gradle extends BuildTool {
 
     @Override
     protected String buildRunCommand(Path tempDir) {
-        return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
+        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
     }
 
     @Override
     protected String buildTestCommand(Path tempDir) {
-        return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
+        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
     }
 
     @Override
