@@ -10,4 +10,8 @@ public class NotRunnableCodeException extends RuntimeException {
         super(cause);
     }
 
+    public NotRunnableCodeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ class Gradle extends BuildTool {
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, Config config) {
+    protected void createAuxFiles(Path tempDir, Config config, List<SimpleNode> simpleNodes) {
         Objects.requireNonNull(tempDir);
         Objects.requireNonNull(config);
 
@@ -42,11 +43,23 @@ class Gradle extends BuildTool {
             String pathByLang = LabPaths.pathByLanguage(Language.from(config.getLanguage())).asString();
             String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
 
-            template = template.replace("{runnableClassPath}", "com/company/project/myfile");
-            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
+            SimpleNode simpleNode = fileManager.findSimpleNode(new SimpleNode(config.getRunnable()), simpleNodes);
+            Path path = fileManager.calculatePathForNode(simpleNode, simpleNodes);
+            String runnableClassName = path.toString()
+                    .replaceAll("src/main/java/", "")
+                    .replaceAll("\\/", "\\.");
+            String removedExtension = fileManager.removeExtension(runnableClassName);
 
+            template = template.replace("{runnableClassPath}", removedExtension);
+            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
             Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
+
+            tracer.info("template: " + template);
+
             Files.write(buildGradleFile, template.getBytes());
+
+
+            fileManager.printAllFilesInFolder(tempDir);
         } catch (IOException e) {
             tracer.severe(e::getMessage);
             throw new NotRunnableCodeException("Cannot create AUX files");

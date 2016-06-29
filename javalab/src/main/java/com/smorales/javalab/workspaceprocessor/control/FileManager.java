@@ -67,22 +67,19 @@ public class FileManager {
             if (parentNode.getParentId() == null) {
                 Collections.reverse(parentList);
                 return parentList;
-            }else {
+            } else {
                 parentId = parentNode.getParentId();
             }
         }
     }
 
-    private SimpleNode findSimpleNode(SimpleNode toFind, List<SimpleNode> simpleNodes) {
+    public SimpleNode findSimpleNode(SimpleNode toFind, List<SimpleNode> simpleNodes) {
         return simpleNodes.stream()
                 .filter(s -> s.getId().equals(toFind.getId()))
                 .findFirst().orElseThrow(() -> new NotRunnableCodeException("Can not find node:" + toFind.getId()));
     }
 
-    public void createFiles(Path tempDir, List<TreeNode> treeNodes) {
-        ArrayList<SimpleNode> simpleNodes = new ArrayList<>();
-        transformToSimpleList(treeNodes, simpleNodes);//will fill array
-
+    public void createFiles(Path tempDir, List<SimpleNode> simpleNodes) {
         for (SimpleNode node : simpleNodes) {
             try {
                 Path pathForNode = this.calculatePathForNode(node, simpleNodes);
@@ -150,6 +147,18 @@ public class FileManager {
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException("Error deleting file: " + file.toString());
+        }
+    }
+
+    public void printAllFilesInFolder(Path tempDir) {
+        try {
+            Files.walk(tempDir).forEach(filePath -> {
+                if (Files.isRegularFile(filePath)) {
+                    System.out.println(filePath);
+                }
+            });
+        } catch (IOException e) {
+            throw new NotRunnableCodeException("Exception printing files in folder", e);
         }
     }
 
