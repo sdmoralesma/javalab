@@ -65,6 +65,7 @@ public class FileManager {
             parentList.add(parentNode);
 
             if (parentNode.getParentId() == null) {
+                Collections.reverse(parentList);
                 return parentList;
             }else {
                 parentId = parentNode.getParentId();

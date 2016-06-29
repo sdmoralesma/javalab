@@ -74,7 +74,7 @@ public class FileManagerTest {
     @Test
     public void shouldCalculatePath() {
         //arrange
-        SimpleNode toFind = FileManagerCreators.createValidSimpleNode("asdf", "myfile.java", "1");
+        SimpleNode toFind = FileManagerCreators.createValidSimpleNode("asdf", "myfile.java", "0");
         List<SimpleNode> arrayOfNodes = FileManagerCreators.createSimpleListOfNodes(toFind);
 
         //act

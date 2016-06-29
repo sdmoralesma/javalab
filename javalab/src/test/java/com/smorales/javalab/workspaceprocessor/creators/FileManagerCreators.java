@@ -38,8 +38,8 @@ public class FileManagerCreators {
 
 
     public static List<SimpleNode> createSimpleListOfNodes(SimpleNode two) {
-        SimpleNode zero = new SimpleNode("0", SimpleNode.Type.FOLDER, "com.company.project", "", null);
-        SimpleNode one = new SimpleNode("1", SimpleNode.Type.FOLDER, "src/main/java", "", "0");
+        SimpleNode zero = new SimpleNode("0", SimpleNode.Type.FOLDER, "com.company.project", "", "1");
+        SimpleNode one = new SimpleNode("1", SimpleNode.Type.FOLDER, "src/main/java", "", null);
         return Arrays.asList(zero, one, two);
     }
 }
