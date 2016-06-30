@@ -30,9 +30,8 @@ public abstract class BuildTool {
 
     // implements template method pattern
     public String runCode(List<TreeNode> treeNodes, Config config) {
-        Path tempDir = null;
+        Path tempDir = fileManager.createTempDir();
         try {
-            tempDir = fileManager.createTempDir();
             List<SimpleNode> simpleNodes = new ArrayList<>();
             fileManager.transformToSimpleList(treeNodes, simpleNodes);
             fileManager.createFiles(tempDir, simpleNodes);

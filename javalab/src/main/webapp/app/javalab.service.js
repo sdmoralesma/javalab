@@ -40,7 +40,7 @@ var JavalabService = (function () {
     };
     JavalabService.prototype.testCode = function (model) {
         var _this = this;
-        var runCodeURL = "http://localhost:48080/rest/process/run";
+        var runCodeURL = "http://localhost:48080/rest/process/test";
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });

@@ -68,7 +68,7 @@ var AppComponent = (function () {
         this.javalabService.runCode(this.model);
     };
     AppComponent.prototype.testCode = function ($event) {
-        this.javalabService.runCode(this.model);
+        this.javalabService.testCode(this.model);
     };
     __decorate([
         core_1.ViewChild(description_component_1.DescriptionComponent), 

@@ -56,7 +56,7 @@ public class WorkspaceProcessorResource {
 
 
     @POST
-    @Path("/tests")
+    @Path("/test")
     public Response runTests(Request req) {
         String result = workspaceProcessor.runTests(req);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
