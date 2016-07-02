@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { isBlank, isPresent, StringWrapper } from '../../src/facade/lang';
-import { BaseException } from '../../src/facade/exceptions';
-import { ListWrapper } from '../../src/facade/collection';
-import { Lexer, EOF, isIdentifier, isQuote, $PERIOD, $COLON, $SEMICOLON, $LBRACKET, $RBRACKET, $COMMA, $LBRACE, $RBRACE, $LPAREN, $RPAREN, $SLASH } from './lexer';
-import { EmptyExpr, ImplicitReceiver, PropertyRead, PropertyWrite, SafePropertyRead, LiteralPrimitive, Binary, PrefixNot, Conditional, BindingPipe, Chain, KeyedRead, KeyedWrite, LiteralArray, LiteralMap, Interpolation, MethodCall, SafeMethodCall, FunctionCall, TemplateBinding, ASTWithSource, Quote } from './ast';
+import { ListWrapper } from '../facade/collection';
+import { BaseException } from '../facade/exceptions';
+import { RegExpWrapper, StringWrapper, escapeRegExp, isBlank, isPresent } from '../facade/lang';
+import { DEFAULT_INTERPOLATION_CONFIG } from '../interpolation_config';
+import { ASTWithSource, Binary, BindingPipe, Chain, Conditional, EmptyExpr, FunctionCall, ImplicitReceiver, Interpolation, KeyedRead, KeyedWrite, LiteralArray, LiteralMap, LiteralPrimitive, MethodCall, PrefixNot, PropertyRead, PropertyWrite, Quote, SafeMethodCall, SafePropertyRead, TemplateBinding } from './ast';
+import { $COLON, $COMMA, $LBRACE, $LBRACKET, $LPAREN, $PERIOD, $RBRACE, $RBRACKET, $RPAREN, $SEMICOLON, $SLASH, EOF, Lexer, isIdentifier, isQuote } from './lexer';
 var _implicitReceiver = new ImplicitReceiver();
-// TODO(tbosch): Cannot make this const/final right now because of the transpiler...
-var INTERPOLATION_REGEXP = /\{\{([\s\S]*?)\}\}/g;
 class ParseException extends BaseException {
     constructor(message, input, errLocation, ctxLocation) {
         super(`Parser Error: ${message} ${errLocation} [${input}] in ${ctxLocation}`);
@@ -24,35 +23,39 @@ export class TemplateBindingParseResult {
         this.warnings = warnings;
     }
 }
+function _createInterpolateRegExp(config) {
+    const regexp = escapeRegExp(config.start) + '([\\s\\S]*?)' + escapeRegExp(config.end);
+    return RegExpWrapper.create(regexp, 'g');
+}
 export class Parser {
     constructor(/** @internal */ _lexer) {
         this._lexer = _lexer;
     }
-    parseAction(input, location) {
-        this._checkNoInterpolation(input, location);
+    parseAction(input, location, interpolationConfig = DEFAULT_INTERPOLATION_CONFIG) {
+        this._checkNoInterpolation(input, location, interpolationConfig);
         var tokens = this._lexer.tokenize(this._stripComments(input));
         var ast = new _ParseAST(input, location, tokens, true).parseChain();
         return new ASTWithSource(ast, input, location);
     }
-    parseBinding(input, location) {
-        var ast = this._parseBindingAst(input, location);
+    parseBinding(input, location, interpolationConfig = DEFAULT_INTERPOLATION_CONFIG) {
+        var ast = this._parseBindingAst(input, location, interpolationConfig);
         return new ASTWithSource(ast, input, location);
     }
-    parseSimpleBinding(input, location) {
-        var ast = this._parseBindingAst(input, location);
+    parseSimpleBinding(input, location, interpolationConfig = DEFAULT_INTERPOLATION_CONFIG) {
+        var ast = this._parseBindingAst(input, location, interpolationConfig);
         if (!SimpleExpressionChecker.check(ast)) {
             throw new ParseException('Host binding expression can only contain field access and constants', input, location);
         }
         return new ASTWithSource(ast, input, location);
     }
-    _parseBindingAst(input, location) {
+    _parseBindingAst(input, location, interpolationConfig) {
         // Quotes expressions use 3rd-party expression language. We don't want to use
         // our lexer or parser for that, so we check for that ahead of time.
         var quote = this._parseQuote(input, location);
         if (isPresent(quote)) {
             return quote;
         }
-        this._checkNoInterpolation(input, location);
+        this._checkNoInterpolation(input, location, interpolationConfig);
         var tokens = this._lexer.tokenize(this._stripComments(input));
         return new _ParseAST(input, location, tokens, false).parseChain();
     }
@@ -72,8 +75,8 @@ export class Parser {
         var tokens = this._lexer.tokenize(input);
         return new _ParseAST(input, location, tokens, false).parseTemplateBindings();
     }
-    parseInterpolation(input, location) {
-        let split = this.splitInterpolation(input, location);
+    parseInterpolation(input, location, interpolationConfig = DEFAULT_INTERPOLATION_CONFIG) {
+        let split = this.splitInterpolation(input, location, interpolationConfig);
         if (split == null)
             return null;
         let expressions = [];
@@ -84,8 +87,9 @@ export class Parser {
         }
         return new ASTWithSource(new Interpolation(split.strings, expressions), input, location);
     }
-    splitInterpolation(input, location) {
-        var parts = StringWrapper.split(input, INTERPOLATION_REGEXP);
+    splitInterpolation(input, location, interpolationConfig = DEFAULT_INTERPOLATION_CONFIG) {
+        const regexp = _createInterpolateRegExp(interpolationConfig);
+        const parts = StringWrapper.split(input, regexp);
         if (parts.length <= 1) {
             return null;
         }
@@ -101,7 +105,7 @@ export class Parser {
                 expressions.push(part);
             }
             else {
-                throw new ParseException('Blank expressions are not allowed in interpolated strings', input, `at column ${this._findInterpolationErrorColumn(parts, i)} in`, location);
+                throw new ParseException('Blank expressions are not allowed in interpolated strings', input, `at column ${this._findInterpolationErrorColumn(parts, i, interpolationConfig)} in`, location);
             }
         }
         return new SplitInterpolation(strings, expressions);
@@ -129,23 +133,28 @@ export class Parser {
         }
         return null;
     }
-    _checkNoInterpolation(input, location) {
-        var parts = StringWrapper.split(input, INTERPOLATION_REGEXP);
+    _checkNoInterpolation(input, location, interpolationConfig) {
+        var regexp = _createInterpolateRegExp(interpolationConfig);
+        var parts = StringWrapper.split(input, regexp);
         if (parts.length > 1) {
-            throw new ParseException('Got interpolation ({{}}) where expression was expected', input, `at column ${this._findInterpolationErrorColumn(parts, 1)} in`, location);
+            throw new ParseException(`Got interpolation (${interpolationConfig.start}${interpolationConfig.end}) where expression was expected`, input, `at column ${this._findInterpolationErrorColumn(parts, 1, interpolationConfig)} in`, location);
         }
     }
-    _findInterpolationErrorColumn(parts, partInErrIdx) {
+    _findInterpolationErrorColumn(parts, partInErrIdx, interpolationConfig) {
         var errLocation = '';
         for (var j = 0; j < partInErrIdx; j++) {
-            errLocation += j % 2 === 0 ? parts[j] : `{{${parts[j]}}}`;
+            errLocation += j % 2 === 0 ?
+                parts[j] :
+                `${interpolationConfig.start}${parts[j]}${interpolationConfig.end}`;
         }
         return errLocation.length;
     }
 }
+/** @nocollapse */
 Parser.decorators = [
     { type: Injectable },
 ];
+/** @nocollapse */
 Parser.ctorParameters = [
     { type: Lexer, },
 ];
@@ -220,7 +229,7 @@ export class _ParseAST {
             exprs.push(expr);
             if (this.optionalCharacter($SEMICOLON)) {
                 if (!this.parseAction) {
-                    this.error("Binding expression cannot contain chained expression");
+                    this.error('Binding expression cannot contain chained expression');
                 }
                 while (this.optionalCharacter($SEMICOLON)) {
                 } // read all semicolons
@@ -237,9 +246,9 @@ export class _ParseAST {
     }
     parsePipe() {
         var result = this.parseExpression();
-        if (this.optionalOperator("|")) {
+        if (this.optionalOperator('|')) {
             if (this.parseAction) {
-                this.error("Cannot have a pipe in an action expression");
+                this.error('Cannot have a pipe in an action expression');
             }
             do {
                 var name = this.expectIdentifierOrKeyword();
@@ -248,7 +257,7 @@ export class _ParseAST {
                     args.push(this.parseExpression());
                 }
                 result = new BindingPipe(result, name, args);
-            } while (this.optionalOperator("|"));
+            } while (this.optionalOperator('|'));
         }
         return result;
     }
@@ -387,7 +396,7 @@ export class _ParseAST {
             else if (this.optionalCharacter($LBRACKET)) {
                 var key = this.parsePipe();
                 this.expectCharacter($RBRACKET);
-                if (this.optionalOperator("=")) {
+                if (this.optionalOperator('=')) {
                     var value = this.parseConditional();
                     result = new KeyedWrite(result, key, value);
                 }
@@ -451,7 +460,7 @@ export class _ParseAST {
             this.error(`Unexpected token ${this.next}`);
         }
         // error() throws, so we don't reach here.
-        throw new BaseException("Fell through all cases in parsePrimary");
+        throw new BaseException('Fell through all cases in parsePrimary');
     }
     parseExpressionList(terminator) {
         var result = [];
@@ -486,17 +495,17 @@ export class _ParseAST {
         }
         else {
             if (isSafe) {
-                if (this.optionalOperator("=")) {
-                    this.error("The '?.' operator cannot be used in the assignment");
+                if (this.optionalOperator('=')) {
+                    this.error('The \'?.\' operator cannot be used in the assignment');
                 }
                 else {
                     return new SafePropertyRead(receiver, id);
                 }
             }
             else {
-                if (this.optionalOperator("=")) {
+                if (this.optionalOperator('=')) {
                     if (!this.parseAction) {
-                        this.error("Bindings cannot contain assignments");
+                        this.error('Bindings cannot contain assignments');
                     }
                     let value = this.parseConditional();
                     return new PropertyWrite(receiver, id, value);
@@ -516,25 +525,6 @@ export class _ParseAST {
             positionals.push(this.parsePipe());
         } while (this.optionalCharacter($COMMA));
         return positionals;
-    }
-    parseBlockContent() {
-        if (!this.parseAction) {
-            this.error("Binding expression cannot contain chained expression");
-        }
-        var exprs = [];
-        while (this.index < this.tokens.length && !this.next.isCharacter($RBRACE)) {
-            var expr = this.parseExpression();
-            exprs.push(expr);
-            if (this.optionalCharacter($SEMICOLON)) {
-                while (this.optionalCharacter($SEMICOLON)) {
-                } // read all semicolons
-            }
-        }
-        if (exprs.length == 0)
-            return new EmptyExpr();
-        if (exprs.length == 1)
-            return exprs[0];
-        return new Chain(exprs);
     }
     /**
      * An identifier, a keyword, a string with an optional `-` inbetween.
@@ -581,7 +571,7 @@ export class _ParseAST {
             var name = null;
             var expression = null;
             if (keyIsVar) {
-                if (this.optionalOperator("=")) {
+                if (this.optionalOperator('=')) {
                     name = this.expectTemplateBindingKey();
                 }
                 else {

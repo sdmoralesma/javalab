@@ -12,8 +12,8 @@ var core_1 = require('@angular/core');
 var inputtext_1 = require('../inputtext/inputtext');
 var button_1 = require('../button/button');
 var domhandler_1 = require('../dom/domhandler');
-var common_1 = require('@angular/common');
-var AUTOCOMPLETE_VALUE_ACCESSOR = new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
+var forms_1 = require('@angular/forms');
+var AUTOCOMPLETE_VALUE_ACCESSOR = new core_1.Provider(forms_1.NG_VALUE_ACCESSOR, {
     useExisting: core_1.forwardRef(function () { return AutoComplete; }),
     multi: true
 });

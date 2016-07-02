@@ -175,6 +175,30 @@ var Schedule = (function () {
         this.initialized = false;
         this.schedule = null;
     };
+    Schedule.prototype.gotoDate = function (date) {
+        this.schedule.fullCalendar('gotoDate', date);
+    };
+    Schedule.prototype.prev = function () {
+        this.schedule.fullCalendar('prev');
+    };
+    Schedule.prototype.next = function () {
+        this.schedule.fullCalendar('next');
+    };
+    Schedule.prototype.prevYear = function () {
+        this.schedule.fullCalendar('prevYear');
+    };
+    Schedule.prototype.nextYear = function () {
+        this.schedule.fullCalendar('nextYear');
+    };
+    Schedule.prototype.today = function () {
+        this.schedule.fullCalendar('today');
+    };
+    Schedule.prototype.incrementDate = function (duration) {
+        this.schedule.fullCalendar('incrementDate', duration);
+    };
+    Schedule.prototype.getDate = function () {
+        return this.schedule.fullCalendar('getDate');
+    };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Array)

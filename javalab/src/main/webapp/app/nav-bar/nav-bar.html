@@ -5,7 +5,7 @@
             <a href="http://javalab.co" class="title-link">javalab.co</a>
         </h2>
 
-        <p-autoComplete [(ngModel)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
+        <p-autoComplete [(model)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
                         placeholder="Select Class to Run/Test" (completeMethod)="search($event)" field="label"
                         (onDropdownClick)="handleDropdownClick($event)">
         </p-autoComplete>
@@ -13,10 +13,7 @@
 
         <button pButton type="button" label="Run" data-icon="fa-play" (click)="runCode()"></button>
         <button pButton type="button" label="Test" data-icon="fa-check-square-o" (click)="testCode()"></button>
-        <p-splitButton label="Download..." icon="fa-cloud-download" (onClick)="download()">
-            <p-splitButtonItem icon="fa-file-archive-o" label="Jar" (onClick)="download()"></p-splitButtonItem>
-            <p-splitButtonItem icon="fa-file-archive-o" label="Zip" (onClick)="download()"></p-splitButtonItem>
-        </p-splitButton>
+        <button pButton type="button" label="Download" data-icon="fa-cloud-download" (click)="download()"></button>
     </div>
 
     <div class="ui-toolbar-group-right">

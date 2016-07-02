@@ -1,5 +1,8 @@
-import { unimplemented } from '../../src/facade/exceptions';
 import { ChangeDetectionStrategy } from '../change_detection/constants';
+import { unimplemented } from '../facade/exceptions';
+/**
+ * @stable
+ */
 export class ViewRef {
     get destroyed() { return unimplemented(); }
 }
@@ -26,7 +29,7 @@ export class ViewRef {
  * </ul>
  * ```
  *
- * ... we have two {@link TemplateRef}s:
+ * We have two {@link TemplateRef}s:
  *
  * Outer {@link TemplateRef}:
  * ```
@@ -55,6 +58,7 @@ export class ViewRef {
  * </ul>
  * <!-- /ViewRef: outer-0 -->
  * ```
+ * @experimental
  */
 export class EmbeddedViewRef extends ViewRef {
     get context() { return unimplemented(); }
@@ -65,6 +69,7 @@ export class ViewRef_ {
     constructor(_view) {
         this._view = _view;
         this._view = _view;
+        this._originalMode = this._view.cdMode;
     }
     get internalView() { return this._view; }
     get rootNodes() { return this._view.flatRootNodes; }
@@ -75,7 +80,7 @@ export class ViewRef_ {
     detectChanges() { this._view.detectChanges(false); }
     checkNoChanges() { this._view.detectChanges(true); }
     reattach() {
-        this._view.cdMode = ChangeDetectionStrategy.CheckAlways;
+        this._view.cdMode = this._originalMode;
         this.markForCheck();
     }
     onDestroy(callback) { this._view.disposables.push(callback); }

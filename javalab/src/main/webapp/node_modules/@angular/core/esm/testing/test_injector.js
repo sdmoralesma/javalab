@@ -1,6 +1,7 @@
-import { ReflectiveInjector, PLATFORM_INITIALIZER } from '../index';
-import { BaseException } from '../src/facade/exceptions';
+import { PLATFORM_INITIALIZER, ReflectiveInjector } from '../index';
+import { lockRunMode } from '../src/application_ref';
 import { ListWrapper } from '../src/facade/collection';
+import { BaseException } from '../src/facade/exceptions';
 import { FunctionWrapper, isPresent } from '../src/facade/lang';
 import { async } from './async';
 import { AsyncTestCompleter } from './async_test_completer';
@@ -25,6 +26,7 @@ export class TestInjector {
         this._providers = ListWrapper.concat(this._providers, providers);
     }
     createInjector() {
+        lockRunMode();
         var rootInjector = ReflectiveInjector.resolveAndCreate(this.platformProviders);
         this._injector = rootInjector.resolveAndCreateChild(ListWrapper.concat(this.applicationProviders, this._providers));
         this._instantiated = true;
@@ -56,7 +58,7 @@ export function getTestInjector() {
  * common to every test in the suite.
  *
  * This may only be called once, to set up the common providers for the current test
- * suite on teh current platform. If you absolutely need to change the providers,
+ * suite on the current platform. If you absolutely need to change the providers,
  * first use `resetBaseTestProviders`.
  *
  * Test Providers for individual platforms are available from
@@ -107,9 +109,6 @@ export function resetBaseTestProviders() {
  * eventually
  *   becomes `it('...', @Inject (object: AClass, async: AsyncTestCompleter) => { ... });`
  *
- * @param {Array} tokens
- * @param {Function} fn
- * @return {Function}
  */
 export function inject(tokens, fn) {
     let testInjector = getTestInjector();
@@ -143,7 +142,7 @@ export class InjectSetupWrapper {
             return inject_impl(tokens, fn)();
         };
     }
-    /** @Deprecated {use async(withProviders().inject())} */
+    /** @deprecated {use async(withProviders().inject())} */
     injectAsync(tokens, fn) {
         return () => {
             this._addProviders();
@@ -155,7 +154,7 @@ export function withProviders(providers) {
     return new InjectSetupWrapper(providers);
 }
 /**
- * @Deprecated {use async(inject())}
+ * @deprecated {use async(inject())}
  *
  * Allows injecting dependencies in `beforeEach()` and `it()`. The test must return
  * a promise which will resolve when all asynchronous activity is complete.
@@ -170,9 +169,6 @@ export function withProviders(providers) {
  * })
  * ```
  *
- * @param {Array} tokens
- * @param {Function} fn
- * @return {Function}
  */
 export function injectAsync(tokens, fn) {
     return async(inject(tokens, fn));

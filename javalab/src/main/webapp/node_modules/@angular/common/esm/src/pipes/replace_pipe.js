@@ -1,5 +1,5 @@
-import { Injectable, Pipe } from '@angular/core';
-import { isBlank, isString, isNumber, isFunction, RegExpWrapper, StringWrapper } from '../../src/facade/lang';
+import { Pipe } from '@angular/core';
+import { RegExpWrapper, StringWrapper, isBlank, isFunction, isNumber, isString } from '../facade/lang';
 import { InvalidPipeArgumentException } from './invalid_pipe_argument_exception';
 export class ReplacePipe {
     transform(value, pattern, replacement) {
@@ -16,10 +16,8 @@ export class ReplacePipe {
         if (!this._supportedReplacement(replacement)) {
             throw new InvalidPipeArgumentException(ReplacePipe, replacement);
         }
-        // template fails with literal RegExp e.g /pattern/igm
-        // var rgx = pattern instanceof RegExp ? pattern : RegExpWrapper.create(pattern);
         if (isFunction(replacement)) {
-            var rgxPattern = isString(pattern) ? RegExpWrapper.create(pattern) : pattern;
+            const rgxPattern = isString(pattern) ? RegExpWrapper.create(pattern) : pattern;
             return StringWrapper.replaceAllMapped(input, rgxPattern, replacement);
         }
         if (pattern instanceof RegExp) {
@@ -36,8 +34,8 @@ export class ReplacePipe {
         return isString(replacement) || isFunction(replacement);
     }
 }
+/** @nocollapse */
 ReplacePipe.decorators = [
     { type: Pipe, args: [{ name: 'replace' },] },
-    { type: Injectable },
 ];
 //# sourceMappingURL=replace_pipe.js.map

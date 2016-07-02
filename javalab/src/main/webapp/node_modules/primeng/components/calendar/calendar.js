@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var button_1 = require('../button/button');
-var common_1 = require('@angular/common');
-var CALENDAR_VALUE_ACCESSOR = new core_1.Provider(common_1.NG_VALUE_ACCESSOR, {
+var forms_1 = require('@angular/forms');
+var CALENDAR_VALUE_ACCESSOR = new core_1.Provider(forms_1.NG_VALUE_ACCESSOR, {
     useExisting: core_1.forwardRef(function () { return Calendar; }),
     multi: true
 });

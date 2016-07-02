@@ -1,34 +1,28 @@
-import { AttributeMetadata, OptionalMetadata, ComponentMetadata, SelfMetadata, HostMetadata, SkipSelfMetadata, Provider, PLATFORM_DIRECTIVES, PLATFORM_PIPES, reflector, Injectable, Inject, Optional, QueryMetadata, resolveForwardRef, InjectMetadata } from '@angular/core';
-import { LIFECYCLE_HOOKS_VALUES, ReflectorReader } from '../core_private';
-import { Type, isBlank, isPresent, isArray, stringify, isString, isStringMap } from '../src/facade/lang';
+import { AnimationAnimateMetadata, AnimationGroupMetadata, AnimationKeyframesSequenceMetadata, AnimationStateDeclarationMetadata, AnimationStateTransitionMetadata, AnimationStyleMetadata, AnimationWithStepsMetadata, AttributeMetadata, ComponentMetadata, HostMetadata, InjectMetadata, Injectable, OptionalMetadata, Provider, QueryMetadata, SelfMetadata, SkipSelfMetadata, resolveForwardRef } from '@angular/core';
+import { LIFECYCLE_HOOKS_VALUES, ReflectorReader, createProvider, isProviderLiteral, reflector } from '../core_private';
 import { StringMapWrapper } from '../src/facade/collection';
 import { BaseException } from '../src/facade/exceptions';
+import { Type, isArray, isBlank, isPresent, isString, isStringMap, stringify } from '../src/facade/lang';
+import { assertArrayOfStrings, assertInterpolationSymbols } from './assertions';
 import * as cpl from './compile_metadata';
+import { CompilerConfig } from './config';
+import { hasLifecycleHook } from './directive_lifecycle_reflector';
 import { DirectiveResolver } from './directive_resolver';
 import { PipeResolver } from './pipe_resolver';
-import { ViewResolver } from './view_resolver';
-import { hasLifecycleHook } from './directive_lifecycle_reflector';
-import { MODULE_SUFFIX, sanitizeIdentifier, ValueTransformer, visitValue } from './util';
-import { assertArrayOfStrings } from './assertions';
 import { getUrlScheme } from './url_resolver';
-import { createProvider, isProviderLiteral } from "../core_private";
+import { MODULE_SUFFIX, ValueTransformer, sanitizeIdentifier, visitValue } from './util';
+import { ViewResolver } from './view_resolver';
 export class CompileMetadataResolver {
-    constructor(_directiveResolver, _pipeResolver, _viewResolver, _platformDirectives, _platformPipes, _reflector) {
+    constructor(_directiveResolver, _pipeResolver, _viewResolver, _config, _reflector = reflector) {
         this._directiveResolver = _directiveResolver;
         this._pipeResolver = _pipeResolver;
         this._viewResolver = _viewResolver;
-        this._platformDirectives = _platformDirectives;
-        this._platformPipes = _platformPipes;
+        this._config = _config;
+        this._reflector = _reflector;
         this._directiveCache = new Map();
         this._pipeCache = new Map();
         this._anonymousTypes = new Map();
         this._anonymousTypeIndex = 0;
-        if (isPresent(_reflector)) {
-            this._reflector = _reflector;
-        }
-        else {
-            this._reflector = reflector;
-        }
     }
     sanitizeTokenName(token) {
         let identifier = stringify(token);
@@ -43,6 +37,46 @@ export class CompileMetadataResolver {
         }
         return sanitizeIdentifier(identifier);
     }
+    getAnimationEntryMetadata(entry) {
+        var defs = entry.definitions.map(def => this.getAnimationStateMetadata(def));
+        return new cpl.CompileAnimationEntryMetadata(entry.name, defs);
+    }
+    getAnimationStateMetadata(value) {
+        if (value instanceof AnimationStateDeclarationMetadata) {
+            var styles = this.getAnimationStyleMetadata(value.styles);
+            return new cpl.CompileAnimationStateDeclarationMetadata(value.stateNameExpr, styles);
+        }
+        else if (value instanceof AnimationStateTransitionMetadata) {
+            return new cpl.CompileAnimationStateTransitionMetadata(value.stateChangeExpr, this.getAnimationMetadata(value.steps));
+        }
+        return null;
+    }
+    getAnimationStyleMetadata(value) {
+        return new cpl.CompileAnimationStyleMetadata(value.offset, value.styles);
+    }
+    getAnimationMetadata(value) {
+        if (value instanceof AnimationStyleMetadata) {
+            return this.getAnimationStyleMetadata(value);
+        }
+        else if (value instanceof AnimationKeyframesSequenceMetadata) {
+            return new cpl.CompileAnimationKeyframesSequenceMetadata(value.steps.map(entry => this.getAnimationStyleMetadata(entry)));
+        }
+        else if (value instanceof AnimationAnimateMetadata) {
+            let animateData = this
+                .getAnimationMetadata(value.styles);
+            return new cpl.CompileAnimationAnimateMetadata(value.timings, animateData);
+        }
+        else if (value instanceof AnimationWithStepsMetadata) {
+            var steps = value.steps.map(step => this.getAnimationMetadata(step));
+            if (value instanceof AnimationGroupMetadata) {
+                return new cpl.CompileAnimationGroupMetadata(steps);
+            }
+            else {
+                return new cpl.CompileAnimationSequenceMetadata(steps);
+            }
+        }
+        return null;
+    }
     getDirectiveMetadata(directiveType) {
         var meta = this._directiveCache.get(directiveType);
         if (isBlank(meta)) {
@@ -56,12 +90,18 @@ export class CompileMetadataResolver {
                 var cmpMeta = dirMeta;
                 var viewMeta = this._viewResolver.resolve(directiveType);
                 assertArrayOfStrings('styles', viewMeta.styles);
+                assertInterpolationSymbols('interpolation', viewMeta.interpolation);
+                var animations = isPresent(viewMeta.animations) ?
+                    viewMeta.animations.map(e => this.getAnimationEntryMetadata(e)) :
+                    null;
                 templateMeta = new cpl.CompileTemplateMetadata({
                     encapsulation: viewMeta.encapsulation,
                     template: viewMeta.template,
                     templateUrl: viewMeta.templateUrl,
                     styles: viewMeta.styles,
-                    styleUrls: viewMeta.styleUrls
+                    styleUrls: viewMeta.styleUrls,
+                    animations: animations,
+                    interpolation: viewMeta.interpolation
                 });
                 changeDetectionStrategy = cmpMeta.changeDetection;
                 if (isPresent(dirMeta.viewProviders)) {
@@ -76,8 +116,8 @@ export class CompileMetadataResolver {
             var queries = [];
             var viewQueries = [];
             if (isPresent(dirMeta.queries)) {
-                queries = this.getQueriesMetadata(dirMeta.queries, false);
-                viewQueries = this.getQueriesMetadata(dirMeta.queries, true);
+                queries = this.getQueriesMetadata(dirMeta.queries, false, directiveType);
+                viewQueries = this.getQueriesMetadata(dirMeta.queries, true, directiveType);
             }
             meta = cpl.CompileDirectiveMetadata.create({
                 selector: dirMeta.selector,
@@ -114,20 +154,20 @@ export class CompileMetadataResolver {
             throw e;
         }
     }
-    getTypeMetadata(type, moduleUrl) {
+    getTypeMetadata(type, moduleUrl, dependencies = null) {
         return new cpl.CompileTypeMetadata({
             name: this.sanitizeTokenName(type),
             moduleUrl: moduleUrl,
             runtime: type,
-            diDeps: this.getDependenciesMetadata(type, null)
+            diDeps: this.getDependenciesMetadata(type, dependencies)
         });
     }
-    getFactoryMetadata(factory, moduleUrl) {
+    getFactoryMetadata(factory, moduleUrl, dependencies = null) {
         return new cpl.CompileFactoryMetadata({
             name: this.sanitizeTokenName(factory),
             moduleUrl: moduleUrl,
             runtime: factory,
-            diDeps: this.getDependenciesMetadata(factory, null)
+            diDeps: this.getDependenciesMetadata(factory, dependencies)
         });
     }
     getPipeMetadata(pipeType) {
@@ -146,7 +186,7 @@ export class CompileMetadataResolver {
     }
     getViewDirectivesMetadata(component) {
         var view = this._viewResolver.resolve(component);
-        var directives = flattenDirectives(view, this._platformDirectives);
+        var directives = flattenDirectives(view, this._config.platformDirectives);
         for (var i = 0; i < directives.length; i++) {
             if (!isValidType(directives[i])) {
                 throw new BaseException(`Unexpected directive value '${stringify(directives[i])}' on the View of component '${stringify(component)}'`);
@@ -156,7 +196,7 @@ export class CompileMetadataResolver {
     }
     getViewPipesMetadata(component) {
         var view = this._viewResolver.resolve(component);
-        var pipes = flattenPipes(view, this._platformPipes);
+        var pipes = flattenPipes(view, this._config.platformPipes);
         for (var i = 0; i < pipes.length; i++) {
             if (!isValidType(pipes[i])) {
                 throw new BaseException(`Unexpected piped value '${stringify(pipes[i])}' on the View of component '${stringify(component)}'`);
@@ -165,14 +205,12 @@ export class CompileMetadataResolver {
         return pipes.map(type => this.getPipeMetadata(type));
     }
     getDependenciesMetadata(typeOrFunc, dependencies) {
+        let hasUnknownDeps = false;
         let params = isPresent(dependencies) ? dependencies : this._reflector.parameters(typeOrFunc);
         if (isBlank(params)) {
             params = [];
         }
-        return params.map((param) => {
-            if (isBlank(param)) {
-                return null;
-            }
+        let dependenciesMetadata = params.map((param) => {
             let isAttribute = false;
             let isHost = false;
             let isSelf = false;
@@ -182,8 +220,7 @@ export class CompileMetadataResolver {
             let viewQuery = null;
             var token = null;
             if (isArray(param)) {
-                param
-                    .forEach((paramEntry) => {
+                param.forEach((paramEntry) => {
                     if (paramEntry instanceof HostMetadata) {
                         isHost = true;
                     }
@@ -220,6 +257,7 @@ export class CompileMetadataResolver {
                 token = param;
             }
             if (isBlank(token)) {
+                hasUnknownDeps = true;
                 return null;
             }
             return new cpl.CompileDiDependencyMetadata({
@@ -228,11 +266,17 @@ export class CompileMetadataResolver {
                 isSelf: isSelf,
                 isSkipSelf: isSkipSelf,
                 isOptional: isOptional,
-                query: isPresent(query) ? this.getQueryMetadata(query, null) : null,
-                viewQuery: isPresent(viewQuery) ? this.getQueryMetadata(viewQuery, null) : null,
+                query: isPresent(query) ? this.getQueryMetadata(query, null, typeOrFunc) : null,
+                viewQuery: isPresent(viewQuery) ? this.getQueryMetadata(viewQuery, null, typeOrFunc) : null,
                 token: this.getTokenMetadata(token)
             });
         });
+        if (hasUnknownDeps) {
+            let depsTokens = dependenciesMetadata.map((dep) => { return dep ? stringify(dep.token) : '?'; })
+                .join(', ');
+            throw new BaseException(`Can't resolve all parameters for ${stringify(typeOrFunc)}: (${depsTokens}).`);
+        }
+        return dependenciesMetadata;
     }
     getTokenMetadata(token) {
         token = resolveForwardRef(token);
@@ -270,42 +314,45 @@ export class CompileMetadataResolver {
     }
     getProviderMetadata(provider) {
         var compileDeps;
+        var compileTypeMetadata = null;
+        var compileFactoryMetadata = null;
         if (isPresent(provider.useClass)) {
-            compileDeps = this.getDependenciesMetadata(provider.useClass, provider.dependencies);
+            compileTypeMetadata = this.getTypeMetadata(provider.useClass, staticTypeModuleUrl(provider.useClass), provider.dependencies);
+            compileDeps = compileTypeMetadata.diDeps;
         }
         else if (isPresent(provider.useFactory)) {
-            compileDeps = this.getDependenciesMetadata(provider.useFactory, provider.dependencies);
+            compileFactoryMetadata = this.getFactoryMetadata(provider.useFactory, staticTypeModuleUrl(provider.useFactory), provider.dependencies);
+            compileDeps = compileFactoryMetadata.diDeps;
         }
         return new cpl.CompileProviderMetadata({
             token: this.getTokenMetadata(provider.token),
-            useClass: isPresent(provider.useClass) ?
-                this.getTypeMetadata(provider.useClass, staticTypeModuleUrl(provider.useClass)) :
-                null,
+            useClass: compileTypeMetadata,
             useValue: convertToCompileValue(provider.useValue),
-            useFactory: isPresent(provider.useFactory) ?
-                this.getFactoryMetadata(provider.useFactory, staticTypeModuleUrl(provider.useFactory)) :
-                null,
+            useFactory: compileFactoryMetadata,
             useExisting: isPresent(provider.useExisting) ? this.getTokenMetadata(provider.useExisting) :
                 null,
             deps: compileDeps,
             multi: provider.multi
         });
     }
-    getQueriesMetadata(queries, isViewQuery) {
+    getQueriesMetadata(queries, isViewQuery, directiveType) {
         var compileQueries = [];
-        StringMapWrapper.forEach(queries, (query, propertyName) => {
+        StringMapWrapper.forEach(queries, (query /** TODO #9100 */, propertyName /** TODO #9100 */) => {
             if (query.isViewQuery === isViewQuery) {
-                compileQueries.push(this.getQueryMetadata(query, propertyName));
+                compileQueries.push(this.getQueryMetadata(query, propertyName, directiveType));
             }
         });
         return compileQueries;
     }
-    getQueryMetadata(q, propertyName) {
+    getQueryMetadata(q, propertyName, typeOrFunc) {
         var selectors;
         if (q.isVarBindingQuery) {
             selectors = q.varBindings.map(varName => this.getTokenMetadata(varName));
         }
         else {
+            if (!isPresent(q.selector)) {
+                throw new BaseException(`Can't construct a query for the property "${propertyName}" of "${stringify(typeOrFunc)}" since the query selector wasn't defined.`);
+            }
             selectors = [this.getTokenMetadata(q.selector)];
         }
         return new cpl.CompileQueryMetadata({
@@ -317,15 +364,16 @@ export class CompileMetadataResolver {
         });
     }
 }
+/** @nocollapse */
 CompileMetadataResolver.decorators = [
     { type: Injectable },
 ];
+/** @nocollapse */
 CompileMetadataResolver.ctorParameters = [
     { type: DirectiveResolver, },
     { type: PipeResolver, },
     { type: ViewResolver, },
-    { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [PLATFORM_DIRECTIVES,] },] },
-    { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [PLATFORM_PIPES,] },] },
+    { type: CompilerConfig, },
     { type: ReflectorReader, },
 ];
 function flattenDirectives(view, platformDirectives) {
