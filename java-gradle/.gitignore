@@ -5,3 +5,5 @@ settings.gradle
 gradle/
 .gradle
 .nb-gradle-properties
+.idea
+build
