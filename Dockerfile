@@ -45,7 +45,7 @@ RUN $JBOSS_HOME/scripts/execute.sh
 RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/current
 
 # Install Gradle
-ENV GRADLE_VERSION 2.11
+ENV GRADLE_VERSION 2.14
 WORKDIR /usr/bin
 RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
   unzip gradle-$GRADLE_VERSION-bin.zip && \
