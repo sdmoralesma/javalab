@@ -1,38 +1,37 @@
 {
-  "description": "This is a nice description :)",
+  "terminal": "Welcome to Javalab 0.4.0 !\r\n$ java -version : 1.8.0_74 Java HotSpot(TM) 64-Bit Server VM",
+  "description": "hardcoded description",
   "tags": [
-    "Colombia",
-    "Netherlands",
-    "South-Africa"
+    "hardcoded-tag1",
+    "hardcoded-tag2",
+    "hardcoded-tag3"
   ],
-  "terminal": "Welcome to Javalab v0.4.0 !\r\n$ java -version : 1.8.0_66 Java HotSpot(TM) 64-Bit Server VM",
   "filesTree": [
     {
-      "id": "e3c59fb7-f1fc-4d74-b0fb-d8b52d731287",
+      "id": "43cac31d-37cb-4c33-a391-935720d6c0eb",
       "label": "dependencies",
       "icon": "fa-file-text-o",
       "data": "testCompile 'junit:junit:+'\n",
       "children": []
     },
     {
-      "id": "e0549dae-1e0b-4819-8ccb-1ea3d790b7ae",
+      "id": "b47599b5-3ba4-41f3-a7a9-f53066dfcea2",
       "label": "src/main/java/",
       "expandedIcon": "fa-folder-open",
       "collapsedIcon": "fa-folder",
       "children": [
         {
-          "id": "71c8eed2-9732-45b4-8299-5eca126bdce3",
+          "id": "3e0608c7-6bad-4aca-860e-70e563096f19",
           "label": "com.company.project",
-          "icon": "fa fa-th-large",
-          "parentId": "e0549dae-1e0b-4819-8ccb-1ea3d790b7ae",
+          "icon": "fa-th-large",
+          "parentId": "b47599b5-3ba4-41f3-a7a9-f53066dfcea2",
           "children": [
             {
-              "id": "e597e833-8f97-4a13-b119-71a3b093aecc",
+              "id": "7fb87084-4fec-4570-bd51-f8f4fb211760",
               "label": "HelloWorld.java",
               "icon": "fa-file-text-o",
+              "parentId": "3e0608c7-6bad-4aca-860e-70e563096f19",
               "data": "package com.company.project;\n\npublic class HelloWorld {\n\n    public static void main(String[] args) {\n        System.out.println(\"hello world java!\");\n    }\n\n}\n",
-              "cursor": "",
-              "parentId": "71c8eed2-9732-45b4-8299-5eca126bdce3",
               "children": []
             }
           ]
@@ -40,24 +39,23 @@
       ]
     },
     {
-      "id": "765b381c-0bb1-4102-af25-8649d1e7aae8",
+      "id": "d3f13060-faa5-4c3f-ac0f-de8d1d128dc1",
       "label": "src/test/java/",
       "expandedIcon": "fa-folder-open",
       "collapsedIcon": "fa-folder",
       "children": [
         {
-          "id": "4078a5de-f759-439d-8f7c-8053db298999",
+          "id": "bc3fc691-f278-49b5-88d9-ff9a7cc742ea",
           "label": "com.company.project",
-          "icon": "fa fa-th-large",
-          "parentId": "765b381c-0bb1-4102-af25-8649d1e7aae8",
+          "icon": "fa-th-large",
+          "parentId": "d3f13060-faa5-4c3f-ac0f-de8d1d128dc1",
           "children": [
             {
-              "id": "d45d9ee5-d049-4e46-8ee4-f6abe6ad6fe6",
+              "id": "524b727b-4a7f-4cdf-9248-db7a02a189e7",
               "label": "HelloWorldTest.java",
               "icon": "fa-file-text-o",
+              "parentId": "bc3fc691-f278-49b5-88d9-ff9a7cc742ea",
               "data": "package com.company.project;\n\nimport org.junit.*;\n\npublic class HelloWorldTest {\n\n    @Test\n    public void test() {\n        Assert.assertEquals(1, 1);\n    }\n}\n",
-              "cursor": "",
-              "parentId": "4078a5de-f759-439d-8f7c-8053db298999",
               "children": []
             }
           ]
@@ -68,12 +66,12 @@
   "config": {
     "language": "java",
     "languageMode": "text/x-java",
-    "initialNode": "e597e833-8f97-4a13-b119-71a3b093aecc",
-    "runnable": "e597e833-8f97-4a13-b119-71a3b093aecc",
+    "initialNode": "7fb87084-4fec-4570-bd51-f8f4fb211760",
+    "runnable": "7fb87084-4fec-4570-bd51-f8f4fb211760",
     "action": "RUN",
     "javaClasses": [
-      "e597e833-8f97-4a13-b119-71a3b093aecc",
-      "d45d9ee5-d049-4e46-8ee4-f6abe6ad6fe6"
+      "93164f6a-cfc2-42af-9936-c3fbb9110896",
+      "fc4e279d-7934-4563-8082-58853d0ff7cc"
     ]
   }
 }

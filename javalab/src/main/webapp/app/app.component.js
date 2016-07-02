@@ -63,10 +63,19 @@ var AppComponent = (function () {
         }
         this.filemanager.selectedNode.data = event.value;
     };
-    AppComponent.prototype.runCode = function ($event) {
-        this.javalabService.runCode(this.model);
+    AppComponent.prototype.runCode = function () {
+        var _this = this;
+        this.javalabService.runCode(this.model)
+            .then(function (data) {
+            _this.model.terminal = data.output;
+        }, function (error) { return _this.errorMessage = error; });
     };
-    AppComponent.prototype.testCode = function ($event) {
+    AppComponent.prototype.testCode = function () {
+        var _this = this;
+        this.javalabService.runCode(this.model)
+            .then(function (data) {
+            _this.model.terminal = data.output;
+        }, function (error) { return _this.errorMessage = error; });
         this.javalabService.testCode(this.model);
     };
     __decorate([
