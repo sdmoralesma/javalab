@@ -16,7 +16,7 @@ var JavalabService = (function () {
         this.http = http;
     }
     JavalabService.prototype.initialize = function () {
-        // let url = "assets/json/mock-response.json";
+        // var url = "assets/json/mock-response.json";
         var url = "http://localhost:48080/rest/process/init/java";
         return this.http.get(url)
             .toPromise()
