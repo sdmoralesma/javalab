@@ -11,13 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
+var BASE = "http://localhost:48080/rest/process";
 var JavalabService = (function () {
     function JavalabService(http) {
         this.http = http;
     }
     JavalabService.prototype.initialize = function () {
-        // var url = "assets/json/mock-response.json";
-        var url = "http://localhost:48080/rest/process/init/java";
+        // let url = "assets/json/mock-response.json";
+        var url = BASE + "/init/java";
         return this.http.get(url)
             .toPromise()
             .then(function (res) { return res.json(); })
@@ -29,7 +30,7 @@ var JavalabService = (function () {
     };
     JavalabService.prototype.runCode = function (model) {
         var _this = this;
-        var runCodeURL = "http://localhost:48080/rest/process/run";
+        var runCodeURL = BASE + "/run";
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
@@ -40,7 +41,7 @@ var JavalabService = (function () {
     };
     JavalabService.prototype.testCode = function (model) {
         var _this = this;
-        var testCodeURL = "http://localhost:48080/rest/process/test";
+        var testCodeURL = BASE + "/test";
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
@@ -72,14 +73,30 @@ var JavalabService = (function () {
         return null;
     };
     JavalabService.prototype.download = function (model) {
-        var _this = this;
-        var downloadURL = "http://localhost:48080/rest/process/download";
-        var body = JSON.stringify(model);
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        var options = new http_1.RequestOptions({ headers: headers });
-        return this.http.post(downloadURL, body, options)
-            .toPromise()
-            .catch(function (error) { return _this.handleError; });
+        // Xhr creates new context so we need to create reference to this
+        var self = this;
+        var pending = true;
+        // Create the Xhr request object
+        var xhr = new XMLHttpRequest();
+        var url = BASE + "/download";
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.responseType = 'blob';
+        // Xhr callback when we get a result back
+        // We are not using arrow function because we need the 'this' context
+        xhr.onreadystatechange = function () {
+            // We use setTimeout to trigger change detection in Zones
+            setTimeout(function () {
+                pending = false;
+            }, 0);
+            // If we get an HTTP status OK (200), save the file using fileSaver
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var blob = new Blob([this.response], { type: 'application/zip' });
+                saveAs(blob, 'project.zip');
+            }
+        };
+        // Start the Ajax request
+        xhr.send(JSON.stringify(model));
     };
     JavalabService = __decorate([
         core_1.Injectable(), 

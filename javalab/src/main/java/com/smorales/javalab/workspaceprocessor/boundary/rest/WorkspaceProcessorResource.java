@@ -73,6 +73,7 @@ public class WorkspaceProcessorResource {
 
     @POST
     @Path("/download")
+    @Produces({"application/zip"})
     public Response download(Request req) {
         byte[] zipFileContent = workspaceProcessor.download(req.getFilesTree(), req.getConfig());
         return Response
