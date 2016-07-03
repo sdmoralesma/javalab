@@ -16,6 +16,8 @@ import java.util.zip.ZipOutputStream;
 
 public class Zipper {
 
+    static final String ZIP_FILENAME = "project.zip";
+
     public byte[] createZipFromFolder(Path folder) {
         List<Path> fileList = this.generateFileList(folder);
         Path pathToZip = this.zipIt(folder, fileList);
@@ -47,7 +49,7 @@ public class Zipper {
 
     private Path zipIt(Path folder, List<Path> fileList) {
         try {
-            String zipFilename = folder + File.separator + "project.zip";
+            String zipFilename = folder + File.separator + ZIP_FILENAME;
             ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFilename));
 
             for (Path f : fileList) {
