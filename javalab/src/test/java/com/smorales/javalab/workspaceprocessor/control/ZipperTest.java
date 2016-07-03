@@ -28,7 +28,7 @@ public class ZipperTest {
 
     @After
     public void tearDown() {
-        Path zipFile = Paths.get("/home/sergio/IdeaProjects/javalab/java-gradle/zip" + File.separator + "project.zip");
+        Path zipFile = Paths.get("/home/sergio/IdeaProjects/javalab/java-gradle/project.zip");
         if (zipFile.toFile().exists()) {
             zipFile.toFile().delete();
         }
