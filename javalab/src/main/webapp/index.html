@@ -17,33 +17,27 @@
 
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico"/>
 
-    <!-- PrimeNG/PrimeUI CSS dependencies-->
-    <link rel="stylesheet" type="text/css" href="node_modules/primeui/themes/bootstrap/theme.css"/>
+    <!-- PrimeNG/PrimeUI CSS -->
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/primeui/themes/bootstrap/theme.css"/>
     <link rel="stylesheet" type="text/css" href="node_modules/primeui/primeui-ng-all.min.css"/>
 
-    <!-- Load Angular libraries -->
-    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <!-- Load Angular libraries and bundle-->
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
-    <script src="systemjs.config.js"></script>
-    <script>
-        System.import('app').catch(function(err){ console.error(err);  });
-    </script>
+    <script src="bundle.min.js"></script>
 
-    <!--CodeMirror setup-->
+    <!-- 3rd party libs-->
     <link rel="stylesheet" href="assets/css/codemirror.css"/>
     <script src="node_modules/codemirror/lib/codemirror.js"></script>
     <script src="node_modules/codemirror/mode/clike/clike.js"></script>
-
     <script src="node_modules/file-saver/FileSaver.js"></script>
 
 </head>
 
-<!-- 3. Display the application -->
 <body>
 
+<!-- Display the application -->
 <javalab-app>Loading...</javalab-app>
 
 </body>

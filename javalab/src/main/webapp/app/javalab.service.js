@@ -11,13 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
-var BASE = "http://localhost:48080/rest/process";
+var BASE = "rest/process";
 var JavalabService = (function () {
     function JavalabService(http) {
         this.http = http;
     }
     JavalabService.prototype.initialize = function () {
-        // let url = "assets/json/mock-response.json";
         var url = BASE + "/init/java";
         return this.http.get(url)
             .toPromise()

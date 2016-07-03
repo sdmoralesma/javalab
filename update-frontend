@@ -24,7 +24,7 @@ cp -a $source_dir"/app" $target_dir
 cp -a $source_dir"/assets" $target_dir
 cp -a $source_dir"/node_modules" $target_dir
 cp $source_dir"/index.html" $target_dir"/index.html"
-cp $source_dir"/systemjs.config.js" $target_dir"/systemjs.config.js"
+cp $source_dir"/bundle.min.js" $target_dir"/bundle.min.js"
 
 #package in war file
 cd /home/sergio/IdeaProjects/javalab/javalab/
