@@ -51,7 +51,6 @@ var AppComponent = (function () {
             optionsAsObjects.push(found);
         }
         this.navBar.options = optionsAsObjects;
-        this.navBar.options.push({ "id": "all-tests", "label": "all-tests" });
         this.navBar.selected = this.filemanager.selectedNode;
     };
     AppComponent.prototype.showFileContent = function (event) {

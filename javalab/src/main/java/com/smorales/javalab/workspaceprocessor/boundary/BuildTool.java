@@ -32,6 +32,8 @@ public abstract class BuildTool {
 
     protected abstract void createAuxFiles(Path tempDir, Config config, List<SimpleNode> simpleNodes);
 
+    protected abstract String cleanResultMessage(String toClean);
+
     // implements template method pattern
     public String runCode(List<TreeNode> treeNodes, Config config) {
         Path tempDir = fileManager.createTempDir();
@@ -84,7 +86,7 @@ public abstract class BuildTool {
         tracer.info(() -> "Running with cmd: " + cmd);
         String result = executor.execCommand(cmd);
         tracer.info(() -> "Result: " + result);
-        return result;
+        return cleanResultMessage(result);
     }
 
     private String testProject(Path tempDir) {
@@ -92,5 +94,6 @@ public abstract class BuildTool {
         tracer.info(() -> "Testing with cmd: " + cmd);
         return executor.execCommand(cmd, Executor.STD.OUT);
     }
+
 
 }

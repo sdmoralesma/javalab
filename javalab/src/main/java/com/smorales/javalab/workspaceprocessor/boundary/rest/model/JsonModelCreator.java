@@ -1,8 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary.rest.model;
 
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
-import com.smorales.javalab.workspaceprocessor.control.ConsoleMsgInitializer;
 import com.smorales.javalab.workspaceprocessor.boundary.Language;
+import com.smorales.javalab.workspaceprocessor.control.ConsoleMsgInitializer;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -23,6 +23,9 @@ public class JsonModelCreator {
     public static final String FA_TH_LARGE = "fa-th-large";
     public static final String FA_FOLDER = "fa-folder";
     public static final String FA_FILE_TEXT_O = "fa-file-text-o";
+
+    public static final String HELLO_WORLD_NODE_ID = "c91e25db-5487-4de4-a8d5-0353a2920c7b";
+    public static final String HELLO_WORLD_TEST_NODE_ID = "dcdba544-c787-4627-94d5-d952b2a38e2b";
 
     @Inject
     Logger tracer;
@@ -71,8 +74,8 @@ public class JsonModelCreator {
                 .add("runnable", this.initialNode)
                 .add("action", "RUN")
                 .add("javaClasses", Json.createArrayBuilder()
-                        .add(generateUUID())
-                        .add(generateUUID())
+                        .add(HELLO_WORLD_NODE_ID)
+                        .add(HELLO_WORLD_TEST_NODE_ID)
                         .build())
                 .build();
     }
@@ -92,7 +95,7 @@ public class JsonModelCreator {
     private JsonObject createDependenciesNode(Map<String, String> map) {
         String key = entry(map, LanguageSourcesReader.INIT_DEPS_REGEX);
         return Json.createObjectBuilder()
-                .add("id", this.generateUUID())
+                .add("id", "5bf3fa6a-4220-4036-bb57-6e0266d233e5")
                 .add("label", "dependencies")
                 .add("icon", FA_FILE_TEXT_O)
                 .add("data", map.get(key))
@@ -101,11 +104,11 @@ public class JsonModelCreator {
     }
 
     private JsonObject createHelloWorldNode(Map<String, String> map, Language lang) {
-        String srcMainDirUUID = this.generateUUID();
-        String packageUUID = this.generateUUID();
+        String srcMainDirUUID = "a3d6bf2a-8031-4e11-a7cf-4199ec82a195";
+        String packageUUID = "d8b7b7ac-0e99-473d-ad9d-3b4177e26ad2";
         String filename = entry(map, LanguageSourcesReader.HELLO_WORLD_REGEX);
 
-        this.initialNode = this.generateUUID();
+        this.initialNode = HELLO_WORLD_NODE_ID;
         JsonValue helloWorldNode = Json.createObjectBuilder()
                 .add("id", this.initialNode)
                 .add("label", filename)
@@ -133,12 +136,12 @@ public class JsonModelCreator {
     }
 
     private JsonObject createHelloWorldTestNode(Map<String, String> map, Language lang) {
-        String srcTestDirUUID = this.generateUUID();
-        String packageUUID = this.generateUUID();
+        String srcTestDirUUID = "4ac7a8cc-f99c-4d17-8fbd-2d6caebf56e1";
+        String packageUUID = "b1d1a112-dfdd-4808-a672-5fd5444e17b7";
         String filename = entry(map, LanguageSourcesReader.HELLO_WORLD_TEST_REGEX);
 
         JsonValue helloWorldTestNode = Json.createObjectBuilder()
-                .add("id", this.generateUUID())
+                .add("id", HELLO_WORLD_TEST_NODE_ID)
                 .add("label", filename)
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)

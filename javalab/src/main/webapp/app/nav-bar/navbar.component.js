@@ -31,7 +31,12 @@ var NavBarComponent = (function () {
         return filtered;
     };
     NavBarComponent.prototype.handleDropdownClick = function ($event) {
-        this.suggestions = this.options;
+        var _this = this;
+        this.suggestions = [];
+        //mimic remote call
+        setTimeout(function () {
+            _this.suggestions = _this.options;
+        }, 100);
     };
     NavBarComponent.prototype.runCode = function () {
         this.runCodeClicked.emit(this.selected);

@@ -6,13 +6,13 @@
         </h2>
 
         <p-autoComplete [(model)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
-                        placeholder="Select Class to Run" (completeMethod)="search($event)" field="label"
+                        placeholder="Select Main class to run" (completeMethod)="search($event)" field="label"
                         (onDropdownClick)="handleDropdownClick($event)">
         </p-autoComplete>
         <span style="margin-left:40px"></span>
 
         <button pButton type="button" label="Run" data-icon="fa-play" (click)="runCode()"></button>
-        <button pButton type="button" label="Test" data-icon="fa-check-square-o" (click)="testCode()"></button>
+        <button pButton type="button" label="Tests" data-icon="fa-check-square-o" (click)="testCode()"></button>
         <button pButton type="button" label="Download" data-icon="fa-cloud-download" (click)="download()"></button>
     </div>
 
