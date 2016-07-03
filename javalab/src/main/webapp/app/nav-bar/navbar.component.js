@@ -14,6 +14,7 @@ var NavBarComponent = (function () {
     function NavBarComponent() {
         this.runCodeClicked = new core_1.EventEmitter();
         this.testCodeClicked = new core_1.EventEmitter();
+        this.downloadClicked = new core_1.EventEmitter();
     }
     NavBarComponent.prototype.search = function (event) {
         var query = event.query;
@@ -39,7 +40,7 @@ var NavBarComponent = (function () {
         this.testCodeClicked.emit(this.selected);
     };
     NavBarComponent.prototype.download = function () {
-        alert("Downloading project!");
+        this.downloadClicked.emit("");
     };
     __decorate([
         core_1.Output(), 
@@ -49,6 +50,10 @@ var NavBarComponent = (function () {
         core_1.Output(), 
         __metadata('design:type', Object)
     ], NavBarComponent.prototype, "testCodeClicked", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], NavBarComponent.prototype, "downloadClicked", void 0);
     NavBarComponent = __decorate([
         core_1.Component({
             selector: 'nav-bar',

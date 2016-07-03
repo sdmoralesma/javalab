@@ -1,4 +1,4 @@
-import { provide, ReflectiveInjector } from '@angular/core';
+import { ReflectiveInjector } from '@angular/core';
 import { NG1_SCOPE } from './constants';
 const INITIAL_VALUE = {
     __UNINITIALIZED__: true
@@ -24,10 +24,9 @@ export class DowngradeNg2ComponentAdapter {
         this.childNodes = element.contents();
     }
     bootstrapNg2() {
-        var childInjector = ReflectiveInjector.resolveAndCreate([provide(NG1_SCOPE, { useValue: this.componentScope })], this.parentInjector);
+        var childInjector = ReflectiveInjector.resolveAndCreate([{ provide: NG1_SCOPE, useValue: this.componentScope }], this.parentInjector);
         this.contentInsertionPoint = document.createComment('ng1 insertion point');
-        this.componentRef =
-            this.componentFactory.create(childInjector, [[this.contentInsertionPoint]], '#' + this.id);
+        this.componentRef = this.componentFactory.create(childInjector, [[this.contentInsertionPoint]], this.element[0]);
         this.changeDetector = this.componentRef.changeDetectorRef;
         this.component = this.componentRef.instance;
     }
@@ -38,9 +37,9 @@ export class DowngradeNg2ComponentAdapter {
             var input = inputs[i];
             var expr = null;
             if (attrs.hasOwnProperty(input.attr)) {
-                var observeFn = ((prop) => {
+                var observeFn = ((prop /** TODO #9100 */) => {
                     var prevValue = INITIAL_VALUE;
-                    return (value) => {
+                    return (value /** TODO #9100 */) => {
                         if (this.inputChanges !== null) {
                             this.inputChangeCount++;
                             this.inputChanges[prop] =
@@ -65,7 +64,7 @@ export class DowngradeNg2ComponentAdapter {
                 expr = attrs[input.bracketParenAttr];
             }
             if (expr != null) {
-                var watchFn = ((prop) => (value, prevValue) => {
+                var watchFn = ((prop /** TODO #9100 */) => (value /** TODO #9100 */, prevValue /** TODO #9100 */) => {
                     if (this.inputChanges != null) {
                         this.inputChangeCount++;
                         this.inputChanges[prop] = new Ng1Change(prevValue, value);
@@ -130,8 +129,9 @@ export class DowngradeNg2ComponentAdapter {
                 var emitter = this.component[output.prop];
                 if (emitter) {
                     emitter.subscribe({
-                        next: assignExpr ? ((setter) => (value) => setter(this.scope, value))(setter) :
-                            ((getter) => (value) => getter(this.scope, { $event: value }))(getter)
+                        next: assignExpr ?
+                            ((setter) => (v /** TODO #9100 */) => setter(this.scope, v))(setter) :
+                            ((getter) => (v /** TODO #9100 */) => getter(this.scope, { $event: v }))(getter)
                     });
                 }
                 else {

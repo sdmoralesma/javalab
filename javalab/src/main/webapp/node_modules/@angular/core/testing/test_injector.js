@@ -1,7 +1,8 @@
 "use strict";
 var index_1 = require('../index');
-var exceptions_1 = require('../src/facade/exceptions');
+var application_ref_1 = require('../src/application_ref');
 var collection_1 = require('../src/facade/collection');
+var exceptions_1 = require('../src/facade/exceptions');
 var lang_1 = require('../src/facade/lang');
 var async_1 = require('./async');
 var async_test_completer_1 = require('./async_test_completer');
@@ -27,6 +28,7 @@ var TestInjector = (function () {
         this._providers = collection_1.ListWrapper.concat(this._providers, providers);
     };
     TestInjector.prototype.createInjector = function () {
+        application_ref_1.lockRunMode();
         var rootInjector = index_1.ReflectiveInjector.resolveAndCreate(this.platformProviders);
         this._injector = rootInjector.resolveAndCreateChild(collection_1.ListWrapper.concat(this.applicationProviders, this._providers));
         this._instantiated = true;
@@ -62,7 +64,7 @@ exports.getTestInjector = getTestInjector;
  * common to every test in the suite.
  *
  * This may only be called once, to set up the common providers for the current test
- * suite on teh current platform. If you absolutely need to change the providers,
+ * suite on the current platform. If you absolutely need to change the providers,
  * first use `resetBaseTestProviders`.
  *
  * Test Providers for individual platforms are available from
@@ -115,9 +117,6 @@ exports.resetBaseTestProviders = resetBaseTestProviders;
  * eventually
  *   becomes `it('...', @Inject (object: AClass, async: AsyncTestCompleter) => { ... });`
  *
- * @param {Array} tokens
- * @param {Function} fn
- * @return {Function}
  */
 function inject(tokens, fn) {
     var testInjector = getTestInjector();
@@ -153,7 +152,7 @@ var InjectSetupWrapper = (function () {
             return inject_impl(tokens, fn)();
         };
     };
-    /** @Deprecated {use async(withProviders().inject())} */
+    /** @deprecated {use async(withProviders().inject())} */
     InjectSetupWrapper.prototype.injectAsync = function (tokens, fn) {
         var _this = this;
         return function () {
@@ -169,7 +168,7 @@ function withProviders(providers) {
 }
 exports.withProviders = withProviders;
 /**
- * @Deprecated {use async(inject())}
+ * @deprecated {use async(inject())}
  *
  * Allows injecting dependencies in `beforeEach()` and `it()`. The test must return
  * a promise which will resolve when all asynchronous activity is complete.
@@ -184,9 +183,6 @@ exports.withProviders = withProviders;
  * })
  * ```
  *
- * @param {Array} tokens
- * @param {Function} fn
- * @return {Function}
  */
 function injectAsync(tokens, fn) {
     return async_1.async(inject(tokens, fn));

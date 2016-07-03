@@ -3,7 +3,9 @@
     <div class="ui-grid ui-grid-responsive">
         <div class="ui-grid-row">
             <div class="ui-grid-col-12">
-                <nav-bar (runCodeClicked)="runCode($event)" (testCodeClicked)="testCode($event)"></nav-bar>
+                <nav-bar (runCodeClicked)="runCode()" (testCodeClicked)="testCode()"
+                         (downloadClicked)="download()">
+                </nav-bar>
             </div>
         </div>
 

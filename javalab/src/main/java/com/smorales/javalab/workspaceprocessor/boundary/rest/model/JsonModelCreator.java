@@ -10,6 +10,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
@@ -111,7 +112,6 @@ public class JsonModelCreator {
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)
                 .add("data", map.get(filename))
-                .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 
@@ -125,7 +125,7 @@ public class JsonModelCreator {
 
         return Json.createObjectBuilder()
                 .add("id", srcMainDirUUID)
-                .add("label", "src/main/" + lang.getDescription() + "/")
+                .add("label", "src/main/" + lang.getDescription() + File.separator)
                 .add("expandedIcon", FA_FOLDER_OPEN)
                 .add("collapsedIcon", FA_FOLDER)
                 .add("children", Json.createArrayBuilder().add(packageNode))
@@ -143,7 +143,6 @@ public class JsonModelCreator {
                 .add("icon", FA_FILE_TEXT_O)
                 .add("parentId", packageUUID)
                 .add("data", map.get(filename))
-                .add("cursor", "")
                 .add("children", Json.createArrayBuilder().build())
                 .build();
 
@@ -157,7 +156,7 @@ public class JsonModelCreator {
 
         return Json.createObjectBuilder()
                 .add("id", srcTestDirUUID)
-                .add("label", "src/test/" + lang.getDescription() + "/")
+                .add("label", "src/test/" + lang.getDescription() + File.separator)
                 .add("expandedIcon", FA_FOLDER_OPEN)
                 .add("collapsedIcon", FA_FOLDER)
                 .add("children", Json.createArrayBuilder().add(packageNode))

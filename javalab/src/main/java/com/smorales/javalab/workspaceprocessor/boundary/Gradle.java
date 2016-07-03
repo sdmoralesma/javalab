@@ -1,13 +1,14 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.RunnableNode;
+import com.smorales.javalab.workspaceprocessor.control.FileManager;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -20,38 +21,49 @@ class Gradle extends BuildTool {
     @Inject
     Logger tracer;
 
+    @Inject
+    FileManager fileManager;
+
     @Override
     protected String buildRunCommand(Path tempDir) {
-        return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
+        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
     }
 
     @Override
     protected String buildTestCommand(Path tempDir) {
-        return "gradle -b " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
+        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
     }
 
     @Override
-    protected void createAuxFiles(Path tempDir, RunnableNode runnable, Config config) {
+    protected void createAuxFiles(Path tempDir, Config config, List<SimpleNode> simpleNodes) {
         Objects.requireNonNull(tempDir);
-        Objects.requireNonNull(runnable);
         Objects.requireNonNull(config);
 
         try {
             String pathByLang = LabPaths.pathByLanguage(Language.from(config.getLanguage())).asString();
             String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
-            template = template.replace("{runnableClassPath}", removeExtension(runnable.getPath()));
-            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
 
+            SimpleNode simpleNode = fileManager.findSimpleNode(new SimpleNode(config.getRunnable()), simpleNodes);
+            Path path = fileManager.calculatePathForNode(simpleNode, simpleNodes);
+            String runnableClassName = path.toString()
+                    .replaceAll("src/main/java/", "")
+                    .replaceAll("\\/", "\\.");
+            String removedExtension = fileManager.removeExtension(runnableClassName);
+
+            template = template.replace("{runnableClassPath}", removedExtension);
+            template = template.replace("{dependenciesSet}", readDependencies(tempDir));
             Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
+
+            tracer.info("template: " + template);
+
             Files.write(buildGradleFile, template.getBytes());
+
+
+            fileManager.printAllFilesInFolder(tempDir);
         } catch (IOException e) {
             tracer.severe(e::getMessage);
             throw new NotRunnableCodeException("Cannot create AUX files");
         }
-    }
-
-    private String removeExtension(String path) {
-        return path.substring(0, path.lastIndexOf('.'));
     }
 
     private String readDependencies(Path tempDir) {
@@ -84,7 +96,7 @@ class Gradle extends BuildTool {
     }
 
     /**
-     * Validates line structure, should look like: {@code testCompile 'org.hibernate:hibernate-core:3.6.7.Final'}
+     * Validates line structure, for example: {@code testCompile 'org.hibernate:hibernate-core:3.6.7.Final'}
      */
     private boolean validateDependency(String line) {
         return line.matches("(testCompile|compile)\\s('|\")[-_.\\w]*:[\\w_.-]*:[_\\[0-9_._+_,_\\)\\w-]*('|\")");

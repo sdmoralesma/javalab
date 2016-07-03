@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Request {
 
-    private List<TreeData> filesTree;
+    private List<TreeNode> filesTree;
     private Config config;
     private String terminal;
     private String description;
@@ -12,11 +12,11 @@ public class Request {
 
     private RunnableNode runnableNode;
 
-    public List<TreeData> getFilesTree() {
+    public List<TreeNode> getFilesTree() {
         return filesTree;
     }
 
-    public void setFilesTree(List<TreeData> filesTree) {
+    public void setFilesTree(List<TreeNode> filesTree) {
         this.filesTree = filesTree;
     }
 

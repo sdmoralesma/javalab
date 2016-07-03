@@ -17,7 +17,6 @@ var filemanager_component_1 = require("./filemanager/filemanager.component");
 var terminal_component_1 = require("./terminal/terminal.component");
 var codemirror_component_1 = require("./codemirror/codemirror.component");
 var router_1 = require("@angular/router");
-var hero_list_component_1 = require("./hero-list/hero-list.component");
 var AppComponent = (function () {
     function AppComponent(javalabService) {
         this.javalabService = javalabService;
@@ -64,11 +63,24 @@ var AppComponent = (function () {
         }
         this.filemanager.selectedNode.data = event.value;
     };
-    AppComponent.prototype.runCode = function ($event) {
-        this.javalabService.runCode(this.model);
+    AppComponent.prototype.runCode = function () {
+        var _this = this;
+        this.javalabService.runCode(this.model)
+            .then(function (data) {
+            _this.terminal.response = data.output;
+            _this.model.terminal = data.output;
+        }, function (error) { return _this.errorMessage = error; });
     };
-    AppComponent.prototype.testCode = function ($event) {
-        this.javalabService.runCode(this.model);
+    AppComponent.prototype.testCode = function () {
+        var _this = this;
+        this.javalabService.testCode(this.model)
+            .then(function (data) {
+            _this.terminal.response = data.output;
+            _this.model.terminal = data.output;
+        }, function (error) { return _this.errorMessage = error; });
+    };
+    AppComponent.prototype.download = function () {
+        this.javalabService.download(this.model);
     };
     __decorate([
         core_1.ViewChild(description_component_1.DescriptionComponent), 
@@ -99,10 +111,7 @@ var AppComponent = (function () {
             selector: 'javalab-app',
             templateUrl: './app/app.html',
             directives: [description_component_1.DescriptionComponent, filemanager_component_1.FileManagerComponent, navbar_component_1.NavBarComponent, tags_component_1.TagsComponent, terminal_component_1.TerminalComponent, codemirror_component_1.CodeMirrorComponent, router_1.ROUTER_DIRECTIVES]
-        }),
-        router_1.Routes([
-            { path: '/heroes', component: hero_list_component_1.HeroListComponent }
-        ]), 
+        }), 
         __metadata('design:paramtypes', [javalab_service_1.JavalabService])
     ], AppComponent);
     return AppComponent;

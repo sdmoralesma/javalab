@@ -2,6 +2,9 @@ package com.smorales.javalab.workspaceprocessor.control;
 
 import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
+import com.smorales.javalab.workspaceprocessor.creators.FileManagerCreators;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +13,14 @@ import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +34,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest(FileManager.class)
 public class FileManagerTest {
 
-    public static final String REGEX_UUID = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
+    private static final String REGEX_UUID = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
     private FileManager sut;
 
     @Before
@@ -51,7 +58,7 @@ public class FileManagerTest {
         Paths.get(argument.capture());
 
         assertThat(result).isNotNull();
-        assertThat(argument.getValue()).matches(LabPaths.HOME.asString() + REGEX_UUID + "/");
+        assertThat(argument.getValue()).matches(LabPaths.HOME.asString() + REGEX_UUID + File.separator);
     }
 
     @Test
@@ -62,6 +69,35 @@ public class FileManagerTest {
         when(Files.createDirectory(any(Path.class))).thenThrow(new IOException());
 
         assertThatThrownBy(sut::createTempDir).isInstanceOf(NotRunnableCodeException.class);
+    }
+
+    @Test
+    public void shouldCalculatePath() {
+        //arrange
+        SimpleNode toFind = FileManagerCreators.createValidSimpleNode("asdf", "myfile.java", "0");
+        List<SimpleNode> arrayOfNodes = FileManagerCreators.createSimpleListOfNodes(toFind);
+
+        //act
+        Path path = sut.calculatePathForNode(toFind, arrayOfNodes);
+
+        //assert
+        assertThat(path.toString()).isEqualTo("src/main/java/com/company/project/myfile.java");
+    }
+
+    @Test
+    public void shouldTraverseTheTreeNode() {
+        //arrange
+        TreeNode toFind = FileManagerCreators.createValidTreeNode("asdf");
+        List<SimpleNode> expected = Arrays.asList(new SimpleNode("2"), new SimpleNode("3"), new SimpleNode("4"),
+                new SimpleNode("1"), new SimpleNode("0"), new SimpleNode("asdf"), new SimpleNode("5"));
+        List<TreeNode> arrayOfNodes = FileManagerCreators.createNestedHierarchyOfNodes(toFind);
+        List<SimpleNode> simpleNodes = new ArrayList<>();
+
+        //act
+        sut.transformToSimpleList(arrayOfNodes, simpleNodes);
+
+        //assert
+        assertThat(simpleNodes).isEqualTo(expected);
     }
 
 }

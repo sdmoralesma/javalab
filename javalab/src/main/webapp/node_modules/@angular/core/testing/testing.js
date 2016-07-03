@@ -1,13 +1,13 @@
 "use strict";
 /**
-* Public Test Library for unit testing Angular2 Applications. Uses the
-* Jasmine framework.
-*/
-var test_injector_1 = require('./test_injector');
+ * Public Test Library for unit testing Angular2 Applications. Uses the
+ * Jasmine framework.
+ */
 var lang_1 = require('../src/facade/lang');
+var test_injector_1 = require('./test_injector');
 var test_injector_2 = require('./test_injector');
-exports.inject = test_injector_2.inject;
 exports.async = test_injector_2.async;
+exports.inject = test_injector_2.inject;
 exports.injectAsync = test_injector_2.injectAsync;
 var _global = (typeof window === 'undefined' ? global : window);
 exports.expect = _global.expect;
@@ -98,7 +98,12 @@ function _wrapTestFn(fn) {
             var retVal = fn();
             if (lang_1.isPromise(retVal)) {
                 // Asynchronous test function - wait for completion.
-                retVal.then(done, done.fail);
+                retVal.then(done, function (err) {
+                    if (lang_1.isString(err)) {
+                        return done.fail(new Error(err));
+                    }
+                    return done.fail(err);
+                });
             }
             else {
                 // Synchronous test function - complete immediately.

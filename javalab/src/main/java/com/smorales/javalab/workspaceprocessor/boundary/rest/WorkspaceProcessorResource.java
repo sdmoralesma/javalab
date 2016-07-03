@@ -27,7 +27,9 @@ public class WorkspaceProcessorResource {
     @GET
     @Path("/init/{lang}")
     public Response initialize(@PathParam("lang") String lang) {
-        return Response.ok().entity(workspaceProcessor.initialize(lang)).build();
+        JsonObject jsonObject = workspaceProcessor.initialize(lang);
+        tracer.info(jsonObject.toString());
+        return Response.ok().entity(jsonObject).build();
     }
 
     @GET
@@ -54,7 +56,7 @@ public class WorkspaceProcessorResource {
 
 
     @POST
-    @Path("/tests")
+    @Path("/test")
     public Response runTests(Request req) {
         String result = workspaceProcessor.runTests(req);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
@@ -69,4 +71,15 @@ public class WorkspaceProcessorResource {
         return Response.ok().entity(output).build();
     }
 
+    @POST
+    @Path("/download")
+    @Produces({"application/zip"})
+    public Response download(Request req) {
+        byte[] zipFileContent = workspaceProcessor.download(req.getFilesTree(), req.getConfig());
+        return Response
+                .ok(zipFileContent)
+                .type("application/zip")
+                .header("Content-Disposition", "attachment; filename = \"project.zip\"")
+                .build();
+    }
 }

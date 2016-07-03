@@ -1,6 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Request;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
 import com.smorales.javalab.workspaceprocessor.entity.Tag;
 import com.smorales.javalab.workspaceprocessor.entity.User;
@@ -19,10 +21,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Stateless
@@ -56,12 +55,12 @@ public class WorkspaceProcessor {
 
     public String runCode(Request req) {
         tracer.info("RUN CODE >>> \n" + req.toString());
-        return buildTool.runCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
+        return buildTool.runCode(req.getFilesTree(), req.getConfig());
     }
 
     public String runTests(Request req) {
         tracer.info("RUN TEST >>> \n" + req.toString());
-        return buildTool.testCode(req.getFilesTree(), req.getRunnableNode(), req.getConfig());
+        return buildTool.testCode(req.getFilesTree(), req.getConfig());
     }
 
     public Integer save(String data) {
@@ -85,7 +84,7 @@ public class WorkspaceProcessor {
         String script = "Java.asJSONCompatible(" + json + ")";
         ScriptEngineManager sem = new ScriptEngineManager();
         ScriptEngine engine = sem.getEngineByName("javascript");
-        Map result = null;
+        Map result;
         try {
             result = (Map) engine.eval(script);
         } catch (ScriptException e) {
@@ -104,6 +103,10 @@ public class WorkspaceProcessor {
             em.persist(tag);
         }
         return tags;
+    }
+
+    public byte[] download(List<TreeNode> filesTree, Config config) {
+        return this.buildTool.createZip(filesTree, config);
     }
 }
 
