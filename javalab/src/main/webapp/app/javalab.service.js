@@ -40,11 +40,11 @@ var JavalabService = (function () {
     };
     JavalabService.prototype.testCode = function (model) {
         var _this = this;
-        var runCodeURL = "http://localhost:48080/rest/process/test";
+        var testCodeURL = "http://localhost:48080/rest/process/test";
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
-        return this.http.post(runCodeURL, body, options)
+        return this.http.post(testCodeURL, body, options)
             .toPromise()
             .then(function (res) { return res.json(); })
             .catch(function (error) { return _this.handleError; });
@@ -70,6 +70,16 @@ var JavalabService = (function () {
             return result;
         }
         return null;
+    };
+    JavalabService.prototype.download = function (model) {
+        var _this = this;
+        var downloadURL = "http://localhost:48080/rest/process/download";
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(downloadURL, body, options)
+            .toPromise()
+            .catch(function (error) { return _this.handleError; });
     };
     JavalabService = __decorate([
         core_1.Injectable(), 

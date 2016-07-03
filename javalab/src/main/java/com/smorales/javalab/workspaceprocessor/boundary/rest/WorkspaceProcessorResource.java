@@ -71,4 +71,14 @@ public class WorkspaceProcessorResource {
         return Response.ok().entity(output).build();
     }
 
+    @POST
+    @Path("/download")
+    public Response download(Request req) {
+        byte[] zipFileContent = workspaceProcessor.download(req.getFilesTree(), req.getConfig());
+        return Response
+                .ok(zipFileContent)
+                .type("application/zip")
+                .header("Content-Disposition", "attachment; filename = \"project.zip\"")
+                .build();
+    }
 }

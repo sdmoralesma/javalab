@@ -67,16 +67,20 @@ var AppComponent = (function () {
         var _this = this;
         this.javalabService.runCode(this.model)
             .then(function (data) {
+            _this.terminal.response = data.output;
             _this.model.terminal = data.output;
         }, function (error) { return _this.errorMessage = error; });
     };
     AppComponent.prototype.testCode = function () {
         var _this = this;
-        this.javalabService.runCode(this.model)
+        this.javalabService.testCode(this.model)
             .then(function (data) {
+            _this.terminal.response = data.output;
             _this.model.terminal = data.output;
         }, function (error) { return _this.errorMessage = error; });
-        this.javalabService.testCode(this.model);
+    };
+    AppComponent.prototype.download = function () {
+        this.javalabService.download(this.model);
     };
     __decorate([
         core_1.ViewChild(description_component_1.DescriptionComponent), 

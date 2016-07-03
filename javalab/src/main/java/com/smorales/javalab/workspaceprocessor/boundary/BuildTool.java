@@ -4,6 +4,7 @@ import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
+import com.smorales.javalab.workspaceprocessor.control.Zipper;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -21,6 +22,9 @@ public abstract class BuildTool {
 
     @Inject
     Logger tracer;
+
+    @Inject
+    Zipper zipper;
 
     protected abstract String buildRunCommand(Path tempDir);
 
@@ -40,7 +44,7 @@ public abstract class BuildTool {
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileManager.removeDirectoryRecursively(tempDir);
+            fileManager.deleteFolderRecursively(tempDir);
         }
     }
 
@@ -56,7 +60,22 @@ public abstract class BuildTool {
         } catch (NotRunnableCodeException exc) {
             return exc.getMessage();
         } finally {
-            fileManager.removeDirectoryRecursively(tempDir);
+            fileManager.deleteFolderRecursively(tempDir);
+        }
+    }
+
+    public byte[] createZip(List<TreeNode> filesTree, Config config) {
+        Path tempDir = fileManager.createTempDir();
+        try {
+            List<SimpleNode> simpleNodes = new ArrayList<>();
+            fileManager.transformToSimpleList(filesTree, simpleNodes);
+            fileManager.createFiles(tempDir, simpleNodes);
+            createAuxFiles(tempDir, config, simpleNodes);
+            return zipper.createZipFromFolder(tempDir);
+        } catch (NotRunnableCodeException exc) {
+            throw new NotRunnableCodeException("can not read zip file");
+        } finally {
+            fileManager.deleteFolderRecursively(tempDir);
         }
     }
 

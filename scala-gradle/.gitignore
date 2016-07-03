@@ -5,3 +5,4 @@ settings.gradle
 gradle/
 .gradle
 .nb-gradle-properties
+build/

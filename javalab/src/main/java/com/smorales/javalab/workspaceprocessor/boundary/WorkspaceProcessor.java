@@ -1,6 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Request;
+import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
 import com.smorales.javalab.workspaceprocessor.entity.Tag;
 import com.smorales.javalab.workspaceprocessor.entity.User;
@@ -19,10 +21,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Stateless
@@ -104,6 +103,10 @@ public class WorkspaceProcessor {
             em.persist(tag);
         }
         return tags;
+    }
+
+    public byte[] download(List<TreeNode> filesTree, Config config) {
+        return this.buildTool.createZip(filesTree, config);
     }
 }
 

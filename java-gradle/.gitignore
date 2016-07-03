@@ -6,4 +6,4 @@ gradle/
 .gradle
 .nb-gradle-properties
 .idea
-build
+build/

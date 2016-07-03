@@ -123,14 +123,15 @@ public class FileManager {
     }
 
 
-    public void removeDirectoryRecursively(Path file) {
-        Objects.nonNull(file);
+    public void deleteFolderRecursively(Path path) {
+        Objects.nonNull(path);
+
         try {
-            Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     Files.deleteIfExists(file);
-                    tracer.info("Deleted file: " + file);
+                    tracer.info("Deleted path: " + file);
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -140,13 +141,17 @@ public class FileManager {
                         throw exc;
                     }
                     Files.deleteIfExists(dir);
-                    tracer.info("Deleted file: " + dir);
+                    tracer.info("Deleted path: " + dir);
                     return FileVisitResult.CONTINUE;
                 }
             });
+
+            if (path.toFile().exists() && path.toFile().list().length == 0) {
+                path.toFile().delete();
+            }
         } catch (IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
-            throw new NotRunnableCodeException("Error deleting file: " + file.toString());
+            throw new NotRunnableCodeException("Error deleting path: " + path.toString());
         }
     }
 
