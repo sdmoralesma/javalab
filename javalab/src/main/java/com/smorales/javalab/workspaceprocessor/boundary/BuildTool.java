@@ -84,7 +84,7 @@ public abstract class BuildTool {
     private String runClass(Path tempDir) {
         String cmd = buildRunCommand(tempDir);
         tracer.info(() -> "Running with cmd: " + cmd);
-        String result = executor.execCommand(cmd);
+        String result = executor.execCommand(cmd, tempDir.toFile(), Executor.STD.OUT);
         tracer.info(() -> "Result: " + result);
         return cleanResultMessage(result);
     }
@@ -92,7 +92,9 @@ public abstract class BuildTool {
     private String testProject(Path tempDir) {
         String cmd = buildTestCommand(tempDir);
         tracer.info(() -> "Testing with cmd: " + cmd);
-        return executor.execCommand(cmd, Executor.STD.OUT);
+        String result = executor.execCommand(cmd, tempDir.toFile(), Executor.STD.OUT);
+        tracer.info(() -> "Result: " + result);
+        return cleanResultMessage(result);
     }
 
 

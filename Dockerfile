@@ -56,6 +56,16 @@ RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zi
 ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
+# Install Ruby Buildr
+RUN \
+  apt-get update && \
+  apt-get install -y ruby ruby-dev ruby-bundler && \
+  rm -rf /var/lib/apt/lists/*
+RUN gem install buildr
+
+ENV BUILDR_HOME /usr/local/bin/buildr
+ENV PATH $PATH:$BUILDR_HOME
+
 # Create the wildfly user and group
 RUN groupadd -r wildfly-group -g 433 && \
   useradd -u 431 -r -g wildfly-group -s /bin/false wildfly -m

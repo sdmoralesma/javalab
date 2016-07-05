@@ -3,21 +3,16 @@ package com.smorales.javalab.workspaceprocessor.boundary;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
 
-import javax.enterprise.inject.Vetoed;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@Vetoed
-class Gradle extends BuildTool {
+class Buildr extends BuildTool {
 
     private static final String DEPENDENCIES = "/dependencies";
 
@@ -27,14 +22,15 @@ class Gradle extends BuildTool {
     @Inject
     FileManager fileManager;
 
+
     @Override
     protected String buildRunCommand(Path tempDir) {
-        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " run";
+        return "buildr run";
     }
 
     @Override
     protected String buildTestCommand(Path tempDir) {
-        return "gradle --build-file " + tempDir.toAbsolutePath() + "/build.gradle" + " test";
+        return "buildr test";
     }
 
     @Override
@@ -44,7 +40,7 @@ class Gradle extends BuildTool {
 
         try {
             String pathByLang = LabPaths.pathByLanguage(Language.from(config.getLanguage())).asString();
-            String template = new String(Files.readAllBytes(Paths.get(pathByLang, "build.template")));
+            String template = new String(Files.readAllBytes(Paths.get(pathByLang, "buildfile.template")));
 
             SimpleNode simpleNode = fileManager.findSimpleNode(new SimpleNode(config.getRunnable()), simpleNodes);
             Path path = fileManager.calculatePathForNode(simpleNode, simpleNodes);
@@ -55,11 +51,11 @@ class Gradle extends BuildTool {
 
             template = template.replace("{runnableClassPath}", removedExtension);
             template = template.replace("{dependenciesSet}", readDependencies(tempDir));
-            Path buildGradleFile = Files.createFile(Paths.get(tempDir + "/build.gradle"));
+            Path buildrFile = Files.createFile(Paths.get(tempDir + "/buildfile"));
 
             tracer.info("template: " + template);
 
-            Files.write(buildGradleFile, template.getBytes());
+            Files.write(buildrFile, template.getBytes());
 
 
             fileManager.printAllFilesInFolder(tempDir);
@@ -72,16 +68,16 @@ class Gradle extends BuildTool {
     @Override
     protected String cleanResultMessage(String toClean) {
         for (String b : blackListedStrings()) {
-            toClean = toClean.replace(b, "");
+            toClean = toClean.replaceAll(b, "");
         }
 
         return toClean;
     }
 
     private List<String> blackListedStrings() {
-        return Arrays.asList("This build could be faster,",
-                "please consider using the Gradle Daemon:",
-                "https://docs.gradle.org/2.14/userguide/gradle_daemon.html");
+        return Arrays.asList("Trying to override old definition of datatype junit [junit] Testsuite: com.company.project.HelloWorldTest [junit]",
+                "/home/wildfly/",
+                "");
     }
 
 
@@ -98,6 +94,7 @@ class Gradle extends BuildTool {
             findInvalidDependencies(deps);
             return deps.stream()
                     .filter(this::validateDependency)
+                    .map(this::convertDependencyToBuildr)
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             tracer.severe(e::getMessage);
@@ -107,6 +104,7 @@ class Gradle extends BuildTool {
 
     private void findInvalidDependencies(Set<String> deps) {
         String invalidDeps = deps.stream()
+                .filter(s -> !"#".equals(String.valueOf(s.charAt(0))))
                 .filter(dep -> !this.validateDependency(dep))
                 .collect(Collectors.joining(", "));
         if (!invalidDeps.isEmpty()) {
@@ -119,6 +117,17 @@ class Gradle extends BuildTool {
      */
     private boolean validateDependency(String line) {
         return line.matches("(testCompile|compile)\\s('|\")[-_.\\w]*:[\\w_.-]*:[_\\[0-9_._+_,_\\)\\w-]*('|\")");
+    }
+
+
+    String convertDependencyToBuildr(String gradleFormat) {
+        gradleFormat = gradleFormat.replaceAll("testCompile", "test.with");
+        gradleFormat = gradleFormat.replaceAll("compile", "compile.with");
+
+        String[] split = gradleFormat.split(":");
+        List<String> stringList = Arrays.stream(split).collect(Collectors.toList());
+        stringList.add(2, "jar");
+        return stringList.stream().collect(Collectors.joining(":"));
     }
 
 }

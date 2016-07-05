@@ -3,10 +3,7 @@ package com.smorales.javalab.workspaceprocessor.control;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
 
 import javax.inject.Inject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,12 +20,12 @@ public class Executor {
     Logger tracer;
 
     public String execCommand(String command) {
-        return this.execCommand(command, STD.ERR);
+        return this.execCommand(command, null, STD.ERR);
     }
 
-    public String execCommand(String command, STD returnOnError) {
+    public String execCommand(String command, File folder, STD returnOnError) {
         try {
-            Process proc = Runtime.getRuntime().exec(command);
+            Process proc = Runtime.getRuntime().exec(command, null, folder);
             int status = proc.waitFor();
             if (status == EXIT_CODE_OK) {
                 return getStreamAsString(proc.getInputStream());

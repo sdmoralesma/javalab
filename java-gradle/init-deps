@@ -1,1 +1,2 @@
-testCompile 'junit:junit:+'
+# Declare dependencies in gradle format: (compile | testCompile) 'group:name:version'
+testCompile 'junit:junit:4.12'
