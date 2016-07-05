@@ -1,0 +1,15 @@
+VERSION_NUMBER = "1.0.0"
+GROUP = "my-app"
+
+repositories.remote << "http://repo1.maven.org/maven2"
+
+desc "The My-app project"
+define "my-app" do
+
+  project.version = VERSION_NUMBER
+  project.group = GROUP
+  {dependenciesSet}
+  package :jar
+  run.using :main => "{runnableClassPath}"
+
+end
