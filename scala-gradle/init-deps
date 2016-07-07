@@ -1,2 +1,3 @@
-compile "org.scala-lang:scala-library:+"
-testCompile "junit:junit:+"
+# Declare dependencies in gradle format: (compile | testCompile) 'group:name:version'
+compile "org.scala-lang:scala-library:2.12.0-M5"
+testCompile "junit:junit:4.12"

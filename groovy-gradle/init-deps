@@ -1,2 +1,3 @@
-compile 'org.codehaus.groovy:groovy-all:+'
-testCompile 'junit:junit:+'
+# Declare dependencies in gradle format: (compile | testCompile) 'group:name:version'
+compile 'org.codehaus.groovy:groovy-all:2.4.7'
+testCompile 'junit:junit:4.12'
