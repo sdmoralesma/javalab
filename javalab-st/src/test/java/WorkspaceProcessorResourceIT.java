@@ -18,4 +18,20 @@ public class WorkspaceProcessorResourceIT {
         JsonObject result = response.readEntity(JsonObject.class);
         assertThat(result.getString("terminal")).isNotNull().contains("Welcome to Javalab");
     }
+
+    @Test
+    public void shouldGetScalaWorkspace() {
+        Response response = provider.addPath("/init/scala").request(MediaType.APPLICATION_JSON).get();
+        assertThat(response.getStatus()).isEqualTo(200);
+        JsonObject result = response.readEntity(JsonObject.class);
+        assertThat(result.getString("terminal")).isNotNull().contains("Welcome to Javalab");
+    }
+
+    @Test
+    public void shouldGetGroovyWorkspace() {
+        Response response = provider.addPath("/init/groovy").request(MediaType.APPLICATION_JSON).get();
+        assertThat(response.getStatus()).isEqualTo(200);
+        JsonObject result = response.readEntity(JsonObject.class);
+        assertThat(result.getString("terminal")).isNotNull().contains("Welcome to Javalab");
+    }
 }
