@@ -18,4 +18,4 @@ javalab follows [semantic versioning](http://semver.org/)
 
 ## Powered By
 
-<img src="http://resources.jetbrains.com/assets/media/open-graph/intellij-idea_250x250.png">
+[<img src="http://resources.jetbrains.com/assets/media/open-graph/intellij-idea_250x250.png">](https://jetbrains.com/idea)
