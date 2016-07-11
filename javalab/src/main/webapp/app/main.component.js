@@ -9,26 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var TerminalComponent = (function () {
-    function TerminalComponent() {
+var router_1 = require("@angular/router");
+var MainComponent = (function () {
+    function MainComponent() {
     }
-    TerminalComponent.prototype.addResponseToTerminal = function (response) {
-        this.response += "\n\njavalab $ " + response;
-        var element = this.input.nativeElement;
-        element.scrollTop = element.scrollHeight;
-    };
-    __decorate([
-        core_1.ViewChild('terminal_area'), 
-        __metadata('design:type', Object)
-    ], TerminalComponent.prototype, "input", void 0);
-    TerminalComponent = __decorate([
+    MainComponent = __decorate([
         core_1.Component({
-            selector: 'terminal',
-            templateUrl: './app/terminal/terminal.html',
+            selector: 'javalab-app',
+            templateUrl: 'app/main.html',
+            directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])
-    ], TerminalComponent);
-    return TerminalComponent;
+    ], MainComponent);
+    return MainComponent;
 }());
-exports.TerminalComponent = TerminalComponent;
-//# sourceMappingURL=terminal.component.js.map
+exports.MainComponent = MainComponent;
+//# sourceMappingURL=main.component.js.map

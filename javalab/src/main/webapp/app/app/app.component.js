@@ -9,36 +9,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var navbar_component_1 = require("./nav-bar/navbar.component");
-var tags_component_1 = require("./tags/tags.component");
-var javalab_service_1 = require("./javalab.service");
-var description_component_1 = require("./description/description.component");
-var filemanager_component_1 = require("./filemanager/filemanager.component");
-var terminal_component_1 = require("./terminal/terminal.component");
-var codemirror_component_1 = require("./codemirror/codemirror.component");
+var description_component_1 = require("../description/description.component");
+var filemanager_component_1 = require("../filemanager/filemanager.component");
+var tags_component_1 = require("../tags/tags.component");
+var codemirror_component_1 = require("../codemirror/codemirror.component");
+var navbar_component_1 = require("../nav-bar/navbar.component");
+var terminal_component_1 = require("../terminal/terminal.component");
 var router_1 = require("@angular/router");
+var javalab_service_1 = require("../javalab.service");
 var AppComponent = (function () {
-    function AppComponent(javalabService) {
+    function AppComponent(javalabService, route) {
         this.javalabService = javalabService;
+        this.route = route;
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.javalabService.initialize()
-            .then(function (data) {
-            _this.model = data;
-            _this.filemanager.files = _this.model.filesTree;
-            _this.navBar.options = data.config.javaClasses;
-            _this.description.text = _this.model.description;
-            _this.terminal.welcomeMessage = _this.model.terminal;
-            _this.tagsComponent.selectedTags = _this.model.tags;
-            _this.editor.config = _this.model.config;
-        }, function (error) { return _this.errorMessage = error; });
+        this.sub = this.route.params.subscribe(function (params) {
+            var lang = params['lang'] == undefined ? '/java' : "/" + params['lang'];
+            _this.javalabService.initialize(lang)
+                .then(function (data) {
+                _this.model = data;
+                _this.filemanager.files = _this.model.filesTree;
+                _this.navBar.options = data.config.javaClasses;
+                _this.description.text = _this.model.description;
+                _this.terminal.welcomeMessage = _this.model.terminal;
+                _this.tagsComponent.selectedTags = _this.model.tags;
+                _this.editor.config = _this.model.config;
+            }, function (error) { return _this.errorMessage = error; });
+        });
         setTimeout(function () {
-            _this.initializeEditor();
             _this.initializeNavBar();
-        }, 800);
+            _this.initializeCentralPanel();
+        }, 300);
     };
-    AppComponent.prototype.initializeEditor = function () {
+    AppComponent.prototype.ngOnDestroy = function () {
+        this.sub.unsubscribe();
+    };
+    AppComponent.prototype.showFileContent = function (event) {
+        this.editor.updateCode(event.value);
+    };
+    AppComponent.prototype.updateFileContent = function (event) {
+        if (this.filemanager.selectedNode === null) {
+            return;
+        }
+        this.filemanager.selectedNode.data = event.value;
+    };
+    AppComponent.prototype.initializeCentralPanel = function () {
         this.filemanager.selectedNode = this.javalabService.findNodeById(this.model.config.initialNode, this.model.filesTree);
         this.editor.editor.setValue(this.filemanager.selectedNode.data);
         this.editor.editor.setOption("mode", this.model.config.languageMode);
@@ -51,31 +67,24 @@ var AppComponent = (function () {
             optionsAsObjects.push(found);
         }
         this.navBar.options = optionsAsObjects;
-        this.navBar.selected = this.filemanager.selectedNode;
-    };
-    AppComponent.prototype.showFileContent = function (event) {
-        this.editor.updateCode(event.value);
-    };
-    AppComponent.prototype.updateFileContent = function (event) {
-        if (this.filemanager.selectedNode === null) {
-            return;
-        }
-        this.filemanager.selectedNode.data = event.value;
+        this.navBar.selected = this.navBar.options[0];
     };
     AppComponent.prototype.runCode = function () {
         var _this = this;
         this.javalabService.runCode(this.model)
             .then(function (data) {
-            _this.terminal.response = data.output;
+            _this.terminal.addResponseToTerminal(data.output);
             _this.model.terminal = data.output;
+            _this.navBar.displayDialog = false;
         }, function (error) { return _this.errorMessage = error; });
     };
     AppComponent.prototype.testCode = function () {
         var _this = this;
         this.javalabService.testCode(this.model)
             .then(function (data) {
-            _this.terminal.response = data.output;
+            _this.terminal.addResponseToTerminal(data.output);
             _this.model.terminal = data.output;
+            _this.navBar.displayDialog = false;
         }, function (error) { return _this.errorMessage = error; });
     };
     AppComponent.prototype.download = function () {
@@ -86,17 +95,9 @@ var AppComponent = (function () {
         __metadata('design:type', description_component_1.DescriptionComponent)
     ], AppComponent.prototype, "description", void 0);
     __decorate([
-        core_1.ViewChild(terminal_component_1.TerminalComponent), 
-        __metadata('design:type', terminal_component_1.TerminalComponent)
-    ], AppComponent.prototype, "terminal", void 0);
-    __decorate([
         core_1.ViewChild(codemirror_component_1.CodeMirrorComponent), 
         __metadata('design:type', codemirror_component_1.CodeMirrorComponent)
     ], AppComponent.prototype, "editor", void 0);
-    __decorate([
-        core_1.ViewChild(navbar_component_1.NavBarComponent), 
-        __metadata('design:type', navbar_component_1.NavBarComponent)
-    ], AppComponent.prototype, "navBar", void 0);
     __decorate([
         core_1.ViewChild(filemanager_component_1.FileManagerComponent), 
         __metadata('design:type', filemanager_component_1.FileManagerComponent)
@@ -105,13 +106,21 @@ var AppComponent = (function () {
         core_1.ViewChild(tags_component_1.TagsComponent), 
         __metadata('design:type', tags_component_1.TagsComponent)
     ], AppComponent.prototype, "tagsComponent", void 0);
+    __decorate([
+        core_1.ViewChild(navbar_component_1.NavBarComponent), 
+        __metadata('design:type', navbar_component_1.NavBarComponent)
+    ], AppComponent.prototype, "navBar", void 0);
+    __decorate([
+        core_1.ViewChild(terminal_component_1.TerminalComponent), 
+        __metadata('design:type', terminal_component_1.TerminalComponent)
+    ], AppComponent.prototype, "terminal", void 0);
     AppComponent = __decorate([
         core_1.Component({
-            selector: 'javalab-app',
-            templateUrl: './app/app.html',
-            directives: [description_component_1.DescriptionComponent, filemanager_component_1.FileManagerComponent, navbar_component_1.NavBarComponent, tags_component_1.TagsComponent, terminal_component_1.TerminalComponent, codemirror_component_1.CodeMirrorComponent, router_1.ROUTER_DIRECTIVES]
+            selector: 'central-panel',
+            templateUrl: './app/app/app.html',
+            directives: [description_component_1.DescriptionComponent, filemanager_component_1.FileManagerComponent, tags_component_1.TagsComponent, codemirror_component_1.CodeMirrorComponent, navbar_component_1.NavBarComponent, terminal_component_1.TerminalComponent]
         }), 
-        __metadata('design:paramtypes', [javalab_service_1.JavalabService])
+        __metadata('design:paramtypes', [javalab_service_1.JavalabService, router_1.ActivatedRoute])
     ], AppComponent);
     return AppComponent;
 }());

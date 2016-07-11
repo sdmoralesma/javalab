@@ -13,7 +13,8 @@ var primeng_1 = require("primeng/primeng");
 var uuid_1 = require("./uuid");
 var FILE_CLASS = "fa-file-text-o";
 var FileManagerComponent = (function () {
-    function FileManagerComponent() {
+    function FileManagerComponent(renderer) {
+        this.renderer = renderer;
         // dialog variables
         this.displayNewFolder = false;
         this.displayNewFile = false;
@@ -24,6 +25,19 @@ var FileManagerComponent = (function () {
         this.selectedNode = null;
         this.fileSelected = new core_1.EventEmitter();
     }
+    FileManagerComponent.prototype.ngAfterViewInit = function () {
+        var clazz = this;
+        setTimeout(function () {
+            var tree = document.getElementsByTagName("p-tree")[0];
+            var srcMainJava = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[0];
+            var event = new MouseEvent('click', { bubbles: true });
+            clazz.renderer.invokeElementMethod(srcMainJava, 'dispatchEvent', [event]);
+            setTimeout(function () {
+                var comCompanyProject = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[0];
+                clazz.renderer.invokeElementMethod(comCompanyProject, 'dispatchEvent', [event]);
+            }, 200);
+        }, 200);
+    };
     FileManagerComponent.prototype.nodeSelect = function (event) {
         if (this.selectedNode.icon === FILE_CLASS) {
             this.fileSelected.emit({ value: this.selectedNode.data });
@@ -146,7 +160,7 @@ var FileManagerComponent = (function () {
             templateUrl: './app/filemanager/filemanager.html',
             directives: [primeng_1.Tree, primeng_1.Panel, primeng_1.Toolbar, primeng_1.Button, primeng_1.Dialog, primeng_1.InputText]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [core_1.Renderer])
     ], FileManagerComponent);
     return FileManagerComponent;
 }());

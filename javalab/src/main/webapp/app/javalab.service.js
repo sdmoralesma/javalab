@@ -16,8 +16,8 @@ var JavalabService = (function () {
     function JavalabService(http) {
         this.http = http;
     }
-    JavalabService.prototype.initialize = function () {
-        var url = BASE + "/init/java";
+    JavalabService.prototype.initialize = function (lang) {
+        var url = BASE + "/init" + lang;
         return this.http.get(url)
             .toPromise()
             .then(function (res) { return res.json(); })

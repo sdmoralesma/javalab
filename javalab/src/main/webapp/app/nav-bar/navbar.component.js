@@ -10,8 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var primeng_1 = require("primeng/primeng");
+var router_1 = require("@angular/router");
 var NavBarComponent = (function () {
-    function NavBarComponent() {
+    function NavBarComponent(router, route) {
+        this.router = router;
+        this.route = route;
+        this.displayDialog = false;
         this.runCodeClicked = new core_1.EventEmitter();
         this.testCodeClicked = new core_1.EventEmitter();
         this.downloadClicked = new core_1.EventEmitter();
@@ -33,7 +37,7 @@ var NavBarComponent = (function () {
     NavBarComponent.prototype.handleDropdownClick = function ($event) {
         var _this = this;
         this.suggestions = [];
-        //mimic remote call
+        //won't work without this timeout
         setTimeout(function () {
             _this.suggestions = _this.options;
         }, 100);
@@ -46,6 +50,14 @@ var NavBarComponent = (function () {
     };
     NavBarComponent.prototype.download = function () {
         this.downloadClicked.emit("");
+    };
+    NavBarComponent.prototype.newWorkspace = function (lang) {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            var goTolang = params['lang'] == undefined ? 'java' : params['lang'];
+            console.log(goTolang);
+            _this.router.navigateByUrl('/' + goTolang);
+        });
     };
     __decorate([
         core_1.Output(), 
@@ -64,9 +76,9 @@ var NavBarComponent = (function () {
             selector: 'nav-bar',
             templateUrl: './app/nav-bar/nav-bar.html',
             styleUrls: ['./app/nav-bar/nav-bar.css'],
-            directives: [primeng_1.AutoComplete, primeng_1.Toolbar, primeng_1.Button, primeng_1.SplitButton, primeng_1.SplitButtonItem]
+            directives: [primeng_1.AutoComplete, primeng_1.Toolbar, primeng_1.Button, primeng_1.Dialog, primeng_1.SplitButton, primeng_1.SplitButtonItem, router_1.ROUTER_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_1.Router, router_1.ActivatedRoute])
     ], NavBarComponent);
     return NavBarComponent;
 }());
