@@ -1,4 +1,4 @@
-package com.smorales.javalab.workspaceprocessor.boundary;
+package com.smorales.javalab.workspaceprocessor.boundary.buildtool;
 
 import org.junit.Test;
 
