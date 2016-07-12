@@ -1,5 +1,7 @@
-package com.smorales.javalab.workspaceprocessor.boundary;
+package com.smorales.javalab.workspaceprocessor.boundary.buildtool;
 
+import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.Executor;
@@ -10,7 +12,9 @@ import javax.inject.Inject;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public abstract class BuildTool {
 
@@ -97,5 +101,20 @@ public abstract class BuildTool {
         return cleanResultMessage(result);
     }
 
+    protected void findInvalidDependencies(Set<String> deps) {
+        String invalidDeps = deps.stream()
+                .filter(s -> !"#".equals(String.valueOf(s.charAt(0))))
+                .filter(dep -> !validateDependency(dep))
+                .collect(Collectors.joining(", "));
+        if (!invalidDeps.isEmpty()) {
+            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalidDeps);
+        }
+    }
 
+    /**
+     * Validates line structure, for example: {@code testCompile 'org.hibernate:hibernate-core:3.6.7.Final'}
+     */
+    protected boolean validateDependency(String line) {
+        return line.matches("(testCompile|compile)\\s('|\")[-_.\\w]*:[\\w_.-]*:[_\\[0-9_._+_,_\\)\\w-]*('|\")");
+    }
 }

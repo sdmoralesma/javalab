@@ -33,14 +33,6 @@ public class WorkspaceProcessorResource {
     }
 
     @GET
-    @Path("/new")
-    public Response newWorkspace() {
-        String result = workspaceProcessor.newWorkspace();
-        JsonObject output = Json.createObjectBuilder().add("output", result).build();
-        return Response.ok().entity(output).build();
-    }
-
-    @GET
     @Path("/{labId}")
     public Response getByBase62(@PathParam("labId") Integer labId) {
         return Response.ok().entity(workspaceProcessor.getById(labId)).build();
@@ -53,7 +45,6 @@ public class WorkspaceProcessorResource {
         JsonObject jsonObject = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(jsonObject).build();
     }
-
 
     @POST
     @Path("/test")
@@ -75,7 +66,7 @@ public class WorkspaceProcessorResource {
     @Path("/download")
     @Produces({"application/zip"})
     public Response download(Request req) {
-        byte[] zipFileContent = workspaceProcessor.download(req.getFilesTree(), req.getConfig());
+        byte[] zipFileContent = workspaceProcessor.download(req);
         return Response
                 .ok(zipFileContent)
                 .type("application/zip")

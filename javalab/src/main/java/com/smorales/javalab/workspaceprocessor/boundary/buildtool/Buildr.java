@@ -1,5 +1,9 @@
-package com.smorales.javalab.workspaceprocessor.boundary;
+package com.smorales.javalab.workspaceprocessor.boundary.buildtool;
 
+import com.smorales.javalab.workspaceprocessor.boundary.LabPaths;
+import com.smorales.javalab.workspaceprocessor.boundary.Language;
+import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.workspaceprocessor.boundary.SimpleNode;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
 import com.smorales.javalab.workspaceprocessor.control.FileManager;
 
@@ -8,7 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -21,7 +28,6 @@ class Buildr extends BuildTool {
 
     @Inject
     FileManager fileManager;
-
 
     @Override
     protected String buildRunCommand(Path tempDir) {
@@ -45,7 +51,7 @@ class Buildr extends BuildTool {
             SimpleNode simpleNode = fileManager.findSimpleNode(new SimpleNode(config.getRunnable()), simpleNodes);
             Path path = fileManager.calculatePathForNode(simpleNode, simpleNodes);
             String runnableClassName = path.toString()
-                    .replaceAll("src/main/java/", "")
+                    .replaceAll("src/main/(java|groovy|scala)/", "")
                     .replaceAll("\\/", "\\.");
             String removedExtension = fileManager.removeExtension(runnableClassName);
 
@@ -56,8 +62,6 @@ class Buildr extends BuildTool {
             tracer.info("template: " + template);
 
             Files.write(buildrFile, template.getBytes());
-
-
             fileManager.printAllFilesInFolder(tempDir);
         } catch (IOException e) {
             tracer.severe(e::getMessage);
@@ -100,23 +104,6 @@ class Buildr extends BuildTool {
             tracer.severe(e::getMessage);
             throw new NotRunnableCodeException("Cannot read dependencies file");
         }
-    }
-
-    private void findInvalidDependencies(Set<String> deps) {
-        String invalidDeps = deps.stream()
-                .filter(s -> !"#".equals(String.valueOf(s.charAt(0))))
-                .filter(dep -> !this.validateDependency(dep))
-                .collect(Collectors.joining(", "));
-        if (!invalidDeps.isEmpty()) {
-            throw new NotRunnableCodeException("Invalid Dependendencies : \n" + invalidDeps);
-        }
-    }
-
-    /**
-     * Validates line structure, for example: {@code testCompile 'org.hibernate:hibernate-core:3.6.7.Final'}
-     */
-    private boolean validateDependency(String line) {
-        return line.matches("(testCompile|compile)\\s('|\")[-_.\\w]*:[\\w_.-]*:[_\\[0-9_._+_,_\\)\\w-]*('|\")");
     }
 
 

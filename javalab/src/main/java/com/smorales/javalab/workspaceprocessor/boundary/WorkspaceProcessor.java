@@ -1,8 +1,8 @@
 package com.smorales.javalab.workspaceprocessor.boundary;
 
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Config;
+import com.smorales.javalab.workspaceprocessor.boundary.buildtool.BuildTool;
+import com.smorales.javalab.workspaceprocessor.boundary.buildtool.BuildToolFactory;
 import com.smorales.javalab.workspaceprocessor.boundary.rest.request.Request;
-import com.smorales.javalab.workspaceprocessor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.workspaceprocessor.control.ProjectCache;
 import com.smorales.javalab.workspaceprocessor.entity.Tag;
 import com.smorales.javalab.workspaceprocessor.entity.User;
@@ -21,7 +21,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Stateless
@@ -32,10 +35,10 @@ public class WorkspaceProcessor {
     EntityManager em;
 
     @Inject
-    BuildTool buildTool;
+    ProjectCache projectCache;
 
     @Inject
-    ProjectCache projectCache;
+    BuildToolFactory factory;
 
     @Inject
     Logger tracer;
@@ -54,11 +57,13 @@ public class WorkspaceProcessor {
     }
 
     public String runCode(Request req) {
+        BuildTool buildTool = factory.get(req);
         tracer.info("RUN CODE >>> \n" + req.toString());
         return buildTool.runCode(req.getFilesTree(), req.getConfig());
     }
 
     public String runTests(Request req) {
+        BuildTool buildTool = factory.get(req);
         tracer.info("RUN TEST >>> \n" + req.toString());
         return buildTool.testCode(req.getFilesTree(), req.getConfig());
     }
@@ -74,11 +79,6 @@ public class WorkspaceProcessor {
         em.persist(workspace);
         return workspace.getId();
     }
-
-    public String newWorkspace() {
-        return "new workspace";
-    }
-
 
     private String getStringFromJson(String toFind, String json) {
         String script = "Java.asJSONCompatible(" + json + ")";
@@ -105,8 +105,10 @@ public class WorkspaceProcessor {
         return tags;
     }
 
-    public byte[] download(List<TreeNode> filesTree, Config config) {
-        return this.buildTool.createZip(filesTree, config);
+
+    public byte[] download(Request req) {
+        BuildTool buildTool = factory.get(req);
+        return buildTool.createZip(req.getFilesTree(), req.getConfig());
     }
 }
 
