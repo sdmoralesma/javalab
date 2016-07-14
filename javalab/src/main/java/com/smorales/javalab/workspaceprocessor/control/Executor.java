@@ -10,20 +10,12 @@ import java.util.stream.Collectors;
 
 public class Executor {
 
-    public static final int EXIT_CODE_OK = 0;
-
-    public enum STD {
-        OUT, ERR
-    }
+    private static final int EXIT_CODE_OK = 0;
 
     @Inject
     Logger tracer;
 
-    public String execCommand(String command) {
-        return this.execCommand(command, null, STD.ERR);
-    }
-
-    public String execCommand(String command, File folder, STD returnOnError) {
+    public String execCommand(String command, File folder) {
         try {
             Process proc = Runtime.getRuntime().exec(command, null, folder);
             int status = proc.waitFor();
@@ -31,17 +23,20 @@ public class Executor {
                 return getStreamAsString(proc.getInputStream());
             }
 
-            String stdErrorMsg = getStreamAsString(proc.getErrorStream());
-            String stdOutMsg = getStreamAsString(proc.getInputStream());
-            if (returnOnError == STD.ERR) {
-                tracer.info(() -> "STD OUT MSG: \n" + stdOutMsg);
-                throw new NotRunnableCodeException(stdErrorMsg);
-            } else if (returnOnError == STD.OUT) {
-                tracer.info(() -> "STD ERROR MSG: \n" + stdErrorMsg);
-                throw new NotRunnableCodeException(stdOutMsg);
-            } else {
-                throw new NotRunnableCodeException("unknown STD: " + returnOnError);
+            String stdOut = getStreamAsString(proc.getInputStream());
+            String stdErr = getStreamAsString(proc.getErrorStream());
+
+            if (stdOut == null || stdOut.trim().isEmpty()) {
+                stdOut = "";
             }
+
+            if (stdErr == null || stdErr.trim().isEmpty()) {
+                stdErr = "";
+            }
+
+            tracer.info("STD_OUT: \n" + stdOut);
+            tracer.severe("STD_ERR: \n" + stdErr);
+            return stdOut + "\n" + stdErr;
         } catch (InterruptedException | IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException(e);

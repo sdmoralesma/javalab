@@ -30,11 +30,15 @@ var FileManagerComponent = (function () {
         setTimeout(function () {
             var tree = document.getElementsByTagName("p-tree")[0];
             var srcMainJava = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[0];
+            var srcTestJava = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[1];
             var event = new MouseEvent('click', { bubbles: true });
             clazz.renderer.invokeElementMethod(srcMainJava, 'dispatchEvent', [event]);
+            clazz.renderer.invokeElementMethod(srcTestJava, 'dispatchEvent', [event]);
             setTimeout(function () {
-                var comCompanyProject = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[0];
-                clazz.renderer.invokeElementMethod(comCompanyProject, 'dispatchEvent', [event]);
+                var mainComCompanyProject = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[0];
+                var testComCompanyProject = tree.getElementsByClassName("ui-tree-toggler fa fa-fw fa-caret-right")[1];
+                clazz.renderer.invokeElementMethod(mainComCompanyProject, 'dispatchEvent', [event]);
+                clazz.renderer.invokeElementMethod(testComCompanyProject, 'dispatchEvent', [event]);
             }, 200);
         }, 200);
     };

@@ -13,14 +13,9 @@ var TerminalComponent = (function () {
     function TerminalComponent() {
     }
     TerminalComponent.prototype.addResponseToTerminal = function (response) {
-        this.response += "\n\njavalab $ " + response;
-        var element = this.input.nativeElement;
-        element.scrollTop = element.scrollHeight;
+        this.welcomeMessage = "";
+        this.response = "javalab $ " + response;
     };
-    __decorate([
-        core_1.ViewChild('terminal_area'), 
-        __metadata('design:type', Object)
-    ], TerminalComponent.prototype, "input", void 0);
     TerminalComponent = __decorate([
         core_1.Component({
             selector: 'terminal',

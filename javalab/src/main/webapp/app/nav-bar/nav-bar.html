@@ -29,6 +29,7 @@
 
 </p-toolbar>
 
-<p-dialog  header="Processing..." [(visible)]="displayDialog" modal="modal" [closable]="false" [showEffect]="fade"
+<p-dialog [(visible)]="displayDialog" modal="modal" [closable]="false" [showEffect]="fade" [width]="150" [height]="180"
           [resizable]="false" [closeOnEscape]="false" [draggable]="false">
+    <img src="../../assets/images/loading.gif" alt="loading" />
 </p-dialog>
