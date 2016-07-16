@@ -3,40 +3,38 @@ package com.smorales.javalab.workspaceprocessor.control;
 import com.smorales.javalab.workspaceprocessor.boundary.NotRunnableCodeException;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Executor {
 
-    private static final int EXIT_CODE_OK = 0;
+    private static final int TIMEOUT_VALUE = 45;
+    private static final String TIMEOUT_MESSAGE_ERROR = "The process took more time than the allowed: " + TIMEOUT_VALUE + " seconds";
 
     @Inject
     Logger tracer;
 
-    public String execCommand(String command, File folder) {
+    public String execCommand(@NotNull String command, @NotNull File folder) {
         try {
-            Process proc = Runtime.getRuntime().exec(command, null, folder);
-            int status = proc.waitFor();
-            if (status == EXIT_CODE_OK) {
-                return getStreamAsString(proc.getInputStream());
+            String[] cmdAsTokens = command.split(" ");
+            Process process = new ProcessBuilder(cmdAsTokens)
+                    .directory(folder)
+                    .redirectErrorStream(true)
+                    .start();
+
+            boolean finished = process.waitFor(TIMEOUT_VALUE, TimeUnit.SECONDS);
+            if (finished) {
+                String stdOut = getStreamAsString(process.getInputStream());
+                tracer.info("OUT: \n" + stdOut);
+                return stdOut;
+            } else {
+                process.destroyForcibly();
+                return TIMEOUT_MESSAGE_ERROR;
             }
-
-            String stdOut = getStreamAsString(proc.getInputStream());
-            String stdErr = getStreamAsString(proc.getErrorStream());
-
-            if (stdOut == null || stdOut.trim().isEmpty()) {
-                stdOut = "";
-            }
-
-            if (stdErr == null || stdErr.trim().isEmpty()) {
-                stdErr = "";
-            }
-
-            tracer.info("STD_OUT: \n" + stdOut);
-            tracer.severe("STD_ERR: \n" + stdErr);
-            return stdOut + "\n" + stdErr;
         } catch (InterruptedException | IOException e) {
             tracer.log(Level.SEVERE, e, e::getMessage);
             throw new NotRunnableCodeException(e);
