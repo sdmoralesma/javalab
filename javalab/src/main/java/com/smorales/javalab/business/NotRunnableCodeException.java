@@ -1,4 +1,4 @@
-package com.smorales.javalab.business.processor.boundary;
+package com.smorales.javalab.business;
 
 public class NotRunnableCodeException extends RuntimeException {
 

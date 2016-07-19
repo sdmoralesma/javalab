@@ -1,5 +1,7 @@
 package com.smorales.javalab.business.processor.boundary;
 
+import com.smorales.javalab.business.NotRunnableCodeException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

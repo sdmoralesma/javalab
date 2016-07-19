@@ -5,6 +5,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.StringJoiner;
 import java.util.logging.Logger;
 
 public class TimeLogger {
@@ -19,7 +20,17 @@ public class TimeLogger {
             return ctx.proceed();
         } finally {
             Instant end = Instant.now();
-            tracer.info(() -> "Total Duration of '" + ctx.getMethod().getName() + "' method, was: " + Duration.between(start, end).toMillis() + " milliseconds");
+            tracer.info(() -> {
+                Long duration = Duration.between(start, end).toMillis();
+
+                return new StringJoiner("")
+                        .add("Total Duration of method ")
+                        .add(ctx.getMethod().getName())
+                        .add(" on class ")
+                        .add(ctx.getMethod().getDeclaringClass().getSimpleName())
+                        .add(" : ").add(duration.toString()).add(" milliseconds")
+                        .toString();
+            });
         }
     }
 }

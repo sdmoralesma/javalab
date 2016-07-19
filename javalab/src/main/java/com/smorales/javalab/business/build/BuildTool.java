@@ -1,6 +1,6 @@
 package com.smorales.javalab.business.build;
 
-import com.smorales.javalab.business.processor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.business.NotRunnableCodeException;
 import com.smorales.javalab.business.processor.boundary.SimpleNode;
 import com.smorales.javalab.business.processor.boundary.rest.request.Config;
 import com.smorales.javalab.business.processor.boundary.rest.request.TreeNode;

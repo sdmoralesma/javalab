@@ -1,7 +1,8 @@
 package com.smorales.javalab.business.files;
 
+import com.smorales.javalab.business.NotRunnableCodeException;
+import com.smorales.javalab.business.files.async.Async;
 import com.smorales.javalab.business.processor.boundary.LabPaths;
-import com.smorales.javalab.business.processor.boundary.NotRunnableCodeException;
 import com.smorales.javalab.business.processor.boundary.SimpleNode;
 import com.smorales.javalab.business.processor.boundary.rest.request.TreeNode;
 
@@ -122,7 +123,7 @@ public class FileManager {
         return (node.getIcon() != null && node.getIcon().equals("fa-file-text-o")) ? FILE : FOLDER;
     }
 
-
+    @Async
     public void deleteFolderRecursively(Path path) {
         Objects.nonNull(path);
 
@@ -166,7 +167,6 @@ public class FileManager {
             throw new NotRunnableCodeException("Exception printing files in folder", e);
         }
     }
-
 
     public String removeExtension(String path) {
         return path.substring(0, path.lastIndexOf('.'));

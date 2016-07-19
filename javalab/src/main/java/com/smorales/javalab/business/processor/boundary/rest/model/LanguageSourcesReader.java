@@ -1,6 +1,6 @@
 package com.smorales.javalab.business.processor.boundary.rest.model;
 
-import com.smorales.javalab.business.processor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.business.NotRunnableCodeException;
 
 import javax.inject.Inject;
 import java.io.IOException;

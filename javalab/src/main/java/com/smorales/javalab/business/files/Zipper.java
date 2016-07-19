@@ -1,6 +1,6 @@
 package com.smorales.javalab.business.files;
 
-import com.smorales.javalab.business.processor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.business.NotRunnableCodeException;
 
 import java.io.File;
 import java.io.FileInputStream;

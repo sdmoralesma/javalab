@@ -1,7 +1,7 @@
 package com.smorales.javalab.business.files;
 
 import com.smorales.javalab.business.processor.boundary.LabPaths;
-import com.smorales.javalab.business.processor.boundary.NotRunnableCodeException;
+import com.smorales.javalab.business.NotRunnableCodeException;
 import com.smorales.javalab.business.processor.boundary.SimpleNode;
 import com.smorales.javalab.business.processor.boundary.rest.request.TreeNode;
 import com.smorales.javalab.business.processor.creators.FileManagerCreators;
