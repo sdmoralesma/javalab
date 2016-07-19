@@ -81,7 +81,7 @@ class Buildr extends BuildTool {
     private List<String> blackListedStrings() {
         return Arrays.asList("Trying to override old definition of datatype junit [junit] Testsuite: com.company.project.HelloWorldTest [junit]",
                 "/home/wildfly/",
-                "");
+                "Trying to override old definition of datatype junit");
     }
 
 
