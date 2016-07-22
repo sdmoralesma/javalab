@@ -16,6 +16,10 @@ import java.util.logging.Logger;
 import static java.lang.Boolean.TRUE;
 import static javax.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
 
+/**
+ * Create a Async annotation compatible with CDI
+ * Copied from: http://jdevelopment.nl/cdi-based-asynchronous-alternative/
+ */
 @Async
 @Interceptor
 @Priority(PLATFORM_BEFORE)
