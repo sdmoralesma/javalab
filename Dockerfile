@@ -1,24 +1,17 @@
-FROM ubuntu:14.04.4
+FROM ubuntu:16.04
 
 MAINTAINER Sergio Morales "sdmoralesma@gmail.com"
 
 #Install packages on ubuntu base image
 RUN \
-  export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  apt-get install -y unzip && \
-  apt-get install -y software-properties-common python-software-properties
+  apt-get install -y && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y wget unzip
 
-# Install Java 8, agree to oracle jdk license
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \ 
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
-
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+# Install JDK 8
+RUN apt-get install -y openjdk-8-jdk
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Install WildFly to /opt
 ENV WILDFLY_VERSION 10.0.0.Final
@@ -58,8 +51,7 @@ ENV PATH $PATH:$GRADLE_HOME/bin
 
 # Install Ruby Buildr
 RUN \
-  apt-get update && \
-  apt-get install -y ruby ruby-dev ruby-bundler && \
+  apt-get install -y  build-essential ruby ruby-dev ruby-bundler && \
   rm -rf /var/lib/apt/lists/*
 RUN gem install buildr
 
