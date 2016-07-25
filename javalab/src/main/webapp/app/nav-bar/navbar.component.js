@@ -55,7 +55,6 @@ var NavBarComponent = (function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             var goTolang = params['lang'] == undefined ? 'java' : params['lang'];
-            console.log(goTolang);
             _this.router.navigateByUrl('/' + goTolang);
         });
     };

@@ -1,4 +1,7 @@
-<textarea style="width:99.5%; background-color: lightgray" readonly rows="15" cols="30">
+<textarea style="background-color: lightgray" readonly rows="15" cols="30"
+          [style.width.px]="width"
+          [style.height.px]="height"
+          (window:resize)="onResize($event)">
 {{welcomeMessage}}{{response}}
 </textarea>
 

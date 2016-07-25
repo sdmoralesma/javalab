@@ -9,12 +9,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var EDITOR_WIDTH = "75%";
-var EDITOR_HEIGHT = "595px";
 var CodeMirrorComponent = (function () {
-    function CodeMirrorComponent(elRef) {
+    function CodeMirrorComponent(elRef, changeDetector) {
+        this.elRef = elRef;
+        this.changeDetector = changeDetector;
         this.fileContentChanged = new core_1.EventEmitter();
-        this.editorNativeElement = elRef.nativeElement;
     }
     CodeMirrorComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
@@ -23,19 +22,41 @@ var CodeMirrorComponent = (function () {
             lineNumbers: true,
             value: "default text; // if you are reading this there was a problem :("
         };
-        this.editor = CodeMirror(this.editorNativeElement, config);
-        this.editor.setSize(EDITOR_WIDTH, EDITOR_HEIGHT);
+        this.editor = CodeMirror(this.elRef.nativeElement, config);
+        this.editor.setSize(this.calculateWidht(), this.calculateHeight());
         this.editor.setOption("matchbrackets", true);
         this.editor.on('change', function (editor) {
             var content = _this.editor.getDoc().getValue();
             _this.fileContentChanged.emit({ value: content });
         });
+        this.changeDetector.detectChanges();
     };
-    CodeMirrorComponent.prototype.updateHeight = function (height) {
-        this.height = height;
+    CodeMirrorComponent.prototype.calculateHeight = function () {
+        var innerHeight = window.innerHeight;
+        if (this.isSingleColumnMode()) {
+            return (innerHeight <= 640) ? 350 : innerHeight * 60 / 100;
+        }
+        else {
+            return innerHeight * 66 / 100;
+        }
+    };
+    CodeMirrorComponent.prototype.calculateWidht = function () {
+        var width = window.innerWidth;
+        if (width <= 600) {
+            return width * 0.77;
+        }
+        else {
+            return width * 0.74;
+        }
+    };
+    CodeMirrorComponent.prototype.isSingleColumnMode = function () {
+        return window.innerWidth <= 1024;
     };
     CodeMirrorComponent.prototype.updateCode = function (newCode) {
         this.editor.setValue(newCode);
+    };
+    CodeMirrorComponent.prototype.onResize = function (event) {
+        this.editor.setSize(this.calculateWidht(), this.calculateHeight());
     };
     __decorate([
         core_1.Output(), 
@@ -46,7 +67,7 @@ var CodeMirrorComponent = (function () {
             selector: 'codemirror',
             templateUrl: './app/codemirror/codemirror.html'
         }), 
-        __metadata('design:paramtypes', [core_1.ElementRef])
+        __metadata('design:paramtypes', [core_1.ElementRef, core_1.ChangeDetectorRef])
     ], CodeMirrorComponent);
     return CodeMirrorComponent;
 }());

@@ -10,18 +10,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var TerminalComponent = (function () {
-    function TerminalComponent() {
+    function TerminalComponent(changeDetector) {
+        this.changeDetector = changeDetector;
     }
+    TerminalComponent.prototype.ngAfterViewInit = function () {
+        this.width = this.calculateWidht();
+        this.height = this.calculateHeight();
+        this.changeDetector.detectChanges();
+    };
     TerminalComponent.prototype.addResponseToTerminal = function (response) {
         this.welcomeMessage = "";
-        this.response = "javalab $ " + response;
+        this.response = "javalab $ \n" + response;
+    };
+    TerminalComponent.prototype.onResize = function (event) {
+        this.width = this.calculateWidht();
+        this.height = this.calculateHeight();
+    };
+    TerminalComponent.prototype.calculateHeight = function () {
+        var innerHeight = window.innerHeight;
+        if (this.isSingleColumnMode()) {
+            return (innerHeight <= 640) ? 250 : innerHeight * 25 / 100;
+        }
+        else {
+            return innerHeight * 25 / 100;
+        }
+    };
+    TerminalComponent.prototype.calculateWidht = function () {
+        var width = window.innerWidth;
+        if (width <= 600) {
+            return width * 0.97;
+        }
+        else if (width > 600 && width <= 1350) {
+            return width * 0.98;
+        }
+        else {
+            return width * 0.985;
+        }
+    };
+    TerminalComponent.prototype.isSingleColumnMode = function () {
+        return window.innerWidth <= 1024;
     };
     TerminalComponent = __decorate([
         core_1.Component({
             selector: 'terminal',
             templateUrl: './app/terminal/terminal.html',
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [core_1.ChangeDetectorRef])
     ], TerminalComponent);
     return TerminalComponent;
 }());

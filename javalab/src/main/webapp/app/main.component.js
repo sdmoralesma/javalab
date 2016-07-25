@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+var app_component_1 = require("./app/app.component");
 var MainComponent = (function () {
     function MainComponent() {
     }
@@ -17,7 +18,8 @@ var MainComponent = (function () {
         core_1.Component({
             selector: 'javalab-app',
             templateUrl: 'app/main.html',
-            directives: [router_1.ROUTER_DIRECTIVES]
+            directives: [router_1.ROUTER_DIRECTIVES],
+            precompile: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], MainComponent);

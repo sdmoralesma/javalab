@@ -24,7 +24,7 @@ var AppComponent = (function () {
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.sub = this.route.params.subscribe(function (params) {
+        this.routerSubscriber = this.route.params.subscribe(function (params) {
             var lang = params['lang'] == undefined ? '/java' : "/" + params['lang'];
             _this.javalabService.initialize(lang)
                 .then(function (data) {
@@ -35,15 +35,13 @@ var AppComponent = (function () {
                 _this.terminal.welcomeMessage = _this.model.terminal;
                 _this.tagsComponent.selectedTags = _this.model.tags;
                 _this.editor.config = _this.model.config;
+                _this.initializeNavBar();
+                _this.initializeCentralPanel();
             }, function (error) { return _this.errorMessage = error; });
         });
-        setTimeout(function () {
-            _this.initializeNavBar();
-            _this.initializeCentralPanel();
-        }, 300);
     };
     AppComponent.prototype.ngOnDestroy = function () {
-        this.sub.unsubscribe();
+        this.routerSubscriber.unsubscribe();
     };
     AppComponent.prototype.showFileContent = function (event) {
         this.editor.updateCode(event.value);
