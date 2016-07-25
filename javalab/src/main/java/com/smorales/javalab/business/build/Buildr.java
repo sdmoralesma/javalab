@@ -1,11 +1,11 @@
 package com.smorales.javalab.business.build;
 
+import com.smorales.javalab.business.NotRunnableCodeException;
+import com.smorales.javalab.business.files.FileManager;
 import com.smorales.javalab.business.processor.boundary.LabPaths;
 import com.smorales.javalab.business.processor.boundary.Language;
-import com.smorales.javalab.business.NotRunnableCodeException;
 import com.smorales.javalab.business.processor.boundary.SimpleNode;
 import com.smorales.javalab.business.processor.boundary.rest.request.Config;
-import com.smorales.javalab.business.files.FileManager;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -79,9 +79,7 @@ class Buildr extends BuildTool {
     }
 
     private List<String> blackListedStrings() {
-        return Arrays.asList("Trying to override old definition of datatype junit [junit] Testsuite: com.company.project.HelloWorldTest [junit]",
-                "/home/wildfly/",
-                "Trying to override old definition of datatype junit");
+        return Arrays.asList("/home/wildfly/", "Trying to override old definition of datatype junit");
     }
 
 
