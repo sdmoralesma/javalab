@@ -12,19 +12,26 @@ import java.util.stream.Collectors;
 
 public class Executor {
 
-    private static final int TIMEOUT_VALUE = 45;
+    private static final int TIMEOUT_VALUE = 60;
     private static final String TIMEOUT_MESSAGE_ERROR = "The process took more time than the allowed: " + TIMEOUT_VALUE + " seconds";
 
     @Inject
     Logger tracer;
 
-    public String execCommand(@NotNull String command, @NotNull File folder) {
+    public String execCommand(@NotNull String command, File folder) {
         try {
             String[] cmdAsTokens = command.split(" ");
-            Process process = new ProcessBuilder(cmdAsTokens)
-                    .directory(folder)
-                    .redirectErrorStream(true)
-                    .start();
+            Process process;
+            if (folder == null) {
+                process = new ProcessBuilder(cmdAsTokens)
+                        .redirectErrorStream(true)
+                        .start();
+            } else {
+                process = new ProcessBuilder(cmdAsTokens)
+                        .directory(folder)
+                        .redirectErrorStream(true)
+                        .start();
+            }
 
             boolean finished = process.waitFor(TIMEOUT_VALUE, TimeUnit.SECONDS);
             if (finished) {

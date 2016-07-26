@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/docker")
 public class ContainerResource {
@@ -20,7 +22,7 @@ public class ContainerResource {
 
 
     @GET
-    public void dockerVersion() {
-        containerController.dockerVersion();
+    public Response dockerVersion() {
+        return Response.ok(containerController.dockerVersion(), MediaType.APPLICATION_JSON).build();
     }
 }
