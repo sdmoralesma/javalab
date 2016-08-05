@@ -2,25 +2,21 @@ package com.smorales.javalab.business.processor.boundary;
 
 import com.smorales.javalab.business.build.BuildTool;
 import com.smorales.javalab.business.build.BuildToolFactory;
+import com.smorales.javalab.business.monitoring.TimeLogger;
 import com.smorales.javalab.business.processor.boundary.rest.request.Request;
 import com.smorales.javalab.business.processor.control.ProjectCache;
 import com.smorales.javalab.business.processor.entity.Tag;
-import com.smorales.javalab.business.processor.entity.User;
 import com.smorales.javalab.business.processor.entity.Workspace;
-import com.smorales.javalab.business.monitoring.TimeLogger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,8 +27,8 @@ import java.util.logging.Logger;
 @Interceptors({TimeLogger.class})
 public class WorkspaceProcessor {
 
-    @PersistenceContext
-    EntityManager em;
+//    @PersistenceContext
+//    EntityManager em;
 
     @Inject
     ProjectCache projectCache;
@@ -49,8 +45,9 @@ public class WorkspaceProcessor {
 
     public JsonObject getById(Integer labId) {
         try {
-            Workspace workspace = em.find(Workspace.class, labId);
-            return Json.createReader(new StringReader(workspace.getJson())).readObject();
+//            Workspace workspace = em.find(Workspace.class, labId);
+//            return Json.createReader(new StringReader(workspace.getJson())).readObject();
+            throw new UnsupportedOperationException();
         } catch (NoResultException ex) {
             return Json.createObjectBuilder().add("output", "no workspace available").build();
         }
@@ -74,9 +71,9 @@ public class WorkspaceProcessor {
         workspace.setJson(data);
 
         workspace.setDescription(getStringFromJson("description", data));
-        workspace.setUserid(em.getReference(User.class, 1));
+//        workspace.setUserid(em.getReference(User.class, 1));
         workspace.setTags(createTags(getStringFromJson("tags", data)));
-        em.persist(workspace);
+//        em.persist(workspace);
         return workspace.getId();
     }
 
@@ -100,7 +97,7 @@ public class WorkspaceProcessor {
         for (String tagName : split) {
             Tag tag = new Tag(tagName);
             tags.add(tag);
-            em.persist(tag);
+//            em.persist(tag);
         }
         return tags;
     }

@@ -4,13 +4,13 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="labPU" transaction-type="JTA">
-        <jta-data-source>java:/MySQLDS</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <properties>
+    <!--<persistence-unit name="labPU" transaction-type="JTA">-->
+        <!--<jta-data-source>java:/MySQLDS</jta-data-source>-->
+        <!--<exclude-unlisted-classes>false</exclude-unlisted-classes>-->
+        <!--<properties>-->
 
-            <property name = "hibernate.show_sql" value = "true" />
+            <!--<property name = "hibernate.show_sql" value = "true" />-->
 
-        </properties>
-    </persistence-unit>
+        <!--</properties>-->
+    <!--</persistence-unit>-->
 </persistence>
