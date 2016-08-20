@@ -14,7 +14,7 @@ RUN apt-get install -y openjdk-8-jdk
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Install WildFly to /opt
-ENV WILDFLY_VERSION 10.0.0.Final
+ENV WILDFLY_VERSION 10.1.0.Final
 RUN cd /opt && wget http://download.jboss.org/wildfly/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.tar.gz && \
   tar xvf wildfly-$WILDFLY_VERSION.tar.gz && \
   ln -s /opt/wildfly-$WILDFLY_VERSION /opt/wildfly && \
@@ -38,7 +38,7 @@ RUN $JBOSS_HOME/scripts/execute.sh
 RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/current
 
 # Install Gradle
-ENV GRADLE_VERSION 2.14
+ENV GRADLE_VERSION 3.0
 WORKDIR /usr/bin
 RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
   unzip gradle-$GRADLE_VERSION-bin.zip && \
@@ -88,7 +88,7 @@ RUN chown -R wildfly:wildfly-group $JBOSS_HOME/* && \
 USER wildfly
 
 # Expose the ports
-EXPOSE 8080 9990 8787
+EXPOSE 8080 9990 8787 8443
 
 # Boot WildFly in the standalone mode and bind to all interfaces
 CMD ["sh", "-c", "${JBOSS_HOME}/bin/standalone.sh", "--debug", "8787", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
