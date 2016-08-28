@@ -1,31 +1,30 @@
 #!/usr/bin/env bash
+set -e -x
 
 #
-# transpile to js the frontend project
-cd /home/sergio/WebstormProjects/javalab-ang2/
+# will copy all files related to the frontend project to javalab
 
-# create a "dist" folder with all js files required
-source /home/sergio/WebstormProjects/javalab-ang2/build.sh
+# define paths
+CURRENT=`pwd`
+JAVALAB_FRONT=/home/sergio/WebstormProjects/javalab-ang2
+TARGET_DIR=$CURRENT/javalab/src/main/webapp
 
-source_dir="/home/sergio/WebstormProjects/javalab-ang2/dist"
-target_dir="/home/sergio/IdeaProjects/javalab/javalab/src/main/webapp"
-
-cd $target_dir
-
-#remove previous frontend
-rm -rf app
-rm -rf assets
-rm -rf node_modules
+# remove previous frontend copied
+cd $TARGET_DIR
+rm -rf app assets prod node_modules
 rm index.html
-rm systemjs.config.js
 
-#copy new files
-cp -a $source_dir"/app" $target_dir
-cp -a $source_dir"/assets" $target_dir
-cp -a $source_dir"/node_modules" $target_dir
-cp $source_dir"/index.html" $target_dir"/index.html"
-cp $source_dir"/bundle.min.js" $target_dir"/bundle.min.js"
+# generates project's artifacts
+cd $JAVALAB_FRONT
+source $JAVALAB_FRONT/dist.sh
 
-#package in war file
-cd /home/sergio/IdeaProjects/javalab/javalab/
+# copy new frontend files
+cp -a $JAVALAB_FRONT/dist/app $TARGET_DIR
+cp -a $JAVALAB_FRONT/dist/assets $TARGET_DIR
+cp -a $JAVALAB_FRONT/dist/prod $TARGET_DIR
+cp -a $JAVALAB_FRONT/dist/node_modules $TARGET_DIR
+cp $JAVALAB_FRONT/dist/index.html $TARGET_DIR/index.html
+
+# package in a war file
+cd $CURRENT/javalab/
 mvn package
