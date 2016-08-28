@@ -39,10 +39,6 @@
     <link rel="stylesheet" type="text/css" href="node_modules/primeui/themes/omega/theme.css"/>
     <link rel="stylesheet" type="text/css" href="node_modules/primeui/primeui-ng-all.min.css"/>
 
-    <!-- Load Angular libraries and bundle-->
-    <script src="node_modules/zone.js/dist/zone.js"></script>
-    <script src="node_modules/reflect-metadata/Reflect.js"></script>
-
     <!-- 3rd party libs-->
     <link rel="stylesheet" href="assets/css/codemirror.css"/>
     <script src="node_modules/codemirror/lib/codemirror.js"></script>
@@ -56,7 +52,10 @@
 <!-- Display the application -->
 <javalab-app>Loading...</javalab-app>
 
-<script src="bundle.min.js"></script>
+<script src="prod/polyfills.js"></script>
+<script src="prod/vendor.js"></script>
+<script src="prod/app.js"></script>
+
 </body>
 
 </html>

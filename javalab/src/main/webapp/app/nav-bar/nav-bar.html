@@ -5,7 +5,7 @@
             <a href="#" [routerLink]="['/']" class="title-link">javalab.co</a>
         </h2>
 
-        <p-autoComplete [(model)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
+        <p-autoComplete [(ngModel)]="selected" [suggestions]="suggestions" [minLength]="1" [size]="30" [dropdown]="true"
                         placeholder="Select Main class to run" (completeMethod)="search($event)" field="label"
                         (onDropdownClick)="handleDropdownClick($event)">
         </p-autoComplete>
@@ -14,11 +14,7 @@
         <button pButton type="button" label="Run" data-icon="fa-play" (click)="displayDialog=true; runCode()"></button>
         <button pButton type="button" label="Tests" data-icon="fa-check-square-o" (click)="displayDialog=true; testCode()"></button>
         <button pButton type="button" label="Download" data-icon="fa-cloud-download" (click)="download()"></button>
-        <p-splitButton label="New" icon="fa-file-code-o" (onClick)="newWorkspace()">
-            <p-splitButtonItem label="Java" icon="fa-file-code-o" [url]="['/#/java']"></p-splitButtonItem>
-            <p-splitButtonItem label="Scala" icon="fa-file-code-o" [url]="['/#/scala']"></p-splitButtonItem>
-            <p-splitButtonItem label="Groovy" icon="fa-file-code-o" [url]="['/#/groovy']"></p-splitButtonItem>
-        </p-splitButton>
+        <p-splitButton label="New" icon="fa-file-code-o" (onClick)="newWorkspace()" [model]="items"></p-splitButton>
     </div>
 
     <div class="ui-toolbar-group-right">
