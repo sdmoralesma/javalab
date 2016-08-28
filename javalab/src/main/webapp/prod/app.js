@@ -6,8 +6,7 @@ webpackJsonp([0],{
 	"use strict";
 	var platform_browser_dynamic_1 = __webpack_require__(1);
 	var main_module_1 = __webpack_require__(337);
-	var core_1 = __webpack_require__(11);
-	core_1.enableProdMode();
+	enableProdMode();
 	platform_browser_dynamic_1.platformBrowserDynamic().bootstrapModule(main_module_1.MainModule);
 	//# sourceMappingURL=main.js.map
 
