@@ -5,7 +5,7 @@
 cd /home/sergio/WebstormProjects/javalab-ang2/
 
 # create a "dist" folder with all js files required
-source /home/sergio/WebstormProjects/javalab-ang2/build
+source /home/sergio/WebstormProjects/javalab-ang2/build.sh
 
 source_dir="/home/sergio/WebstormProjects/javalab-ang2/dist"
 target_dir="/home/sergio/IdeaProjects/javalab/javalab/src/main/webapp"
