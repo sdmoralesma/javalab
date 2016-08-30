@@ -48,7 +48,7 @@ webpackJsonp([0],{
 	    MainModule = __decorate([
 	        core_1.NgModule({
 	            imports: [
-	                main_routes_1.AppRoutes,
+	                main_routes_1.routing,
 	                platform_browser_1.BrowserModule,
 	                primeng_1.InputTextModule,
 	                platform_browser_1.BrowserModule,
@@ -125,11 +125,12 @@ webpackJsonp([0],{
 	                navbar_component_1.NavBarComponent,
 	                terminal_component_1.TerminalComponent
 	            ],
-	            bootstrap: [main_component_1.MainComponent],
 	            providers: [
+	                main_routes_1.routingProviders,
 	                tag_service_1.TagService,
 	                javalab_service_1.JavalabService
-	            ]
+	            ],
+	            bootstrap: [main_component_1.MainComponent]
 	        }), 
 	        __metadata('design:paramtypes', [])
 	    ], MainModule);
@@ -245,9 +246,10 @@ webpackJsonp([0],{
 	    };
 	    AppComponent.prototype.runCode = function () {
 	        var _this = this;
+	        this.terminal.replace("running ...");
 	        this.javalabService.runCode(this.model)
 	            .then(function (data) {
-	            _this.terminal.addResponseToTerminal(data.output);
+	            _this.terminal.append(data.output);
 	            _this.model.terminal = data.output;
 	            _this.navBar.displayDialog = false;
 	        }, function (error) { return _this.errorMessage = error; });
@@ -256,7 +258,7 @@ webpackJsonp([0],{
 	        var _this = this;
 	        this.javalabService.testCode(this.model)
 	            .then(function (data) {
-	            _this.terminal.addResponseToTerminal(data.output);
+	            _this.terminal.append(data.output);
 	            _this.model.terminal = data.output;
 	            _this.navBar.displayDialog = false;
 	        }, function (error) { return _this.errorMessage = error; });
@@ -726,9 +728,9 @@ webpackJsonp([0],{
 	    }
 	    NavBarComponent.prototype.ngOnInit = function () {
 	        this.items = [
-	            { label: 'Java', icon: 'fa-file-code-o', routerLink: '/#/java' },
-	            { label: 'Scala', icon: 'fa-file-code-o', routerLink: '/#/scala' },
-	            { label: 'Groovy', icon: 'fa-file-code-o', routerLink: '/#/groovy' }
+	            { label: 'Java', icon: 'fa-file-code-o', routerLink: ['/java'] },
+	            { label: 'Scala', icon: 'fa-file-code-o', routerLink: ['/scala'] },
+	            { label: 'Groovy', icon: 'fa-file-code-o', routerLink: ['/groovy'] }
 	        ];
 	    };
 	    NavBarComponent.prototype.search = function (event) {
@@ -819,9 +821,13 @@ webpackJsonp([0],{
 	        this.height = this.calculateHeight();
 	        this.changeDetector.detectChanges();
 	    };
-	    TerminalComponent.prototype.addResponseToTerminal = function (response) {
+	    TerminalComponent.prototype.append = function (response) {
 	        this.welcomeMessage = "";
 	        this.response = "javalab $ \n" + response;
+	    };
+	    TerminalComponent.prototype.replace = function (msg) {
+	        this.welcomeMessage = "";
+	        this.response = "javalab $ \n" + msg;
 	    };
 	    TerminalComponent.prototype.onResize = function (event) {
 	        this.width = this.calculateWidht();
@@ -984,11 +990,15 @@ webpackJsonp([0],{
 	"use strict";
 	var router_1 = __webpack_require__(384);
 	var app_component_1 = __webpack_require__(521);
+	var common_1 = __webpack_require__(205);
 	exports.routes = [
-	    { path: '', component: app_component_1.AppComponent },
-	    { path: ':lang', component: app_component_1.AppComponent }
+	    { path: ':lang', component: app_component_1.AppComponent },
+	    { path: '', component: app_component_1.AppComponent }
 	];
-	exports.AppRoutes = router_1.RouterModule.forRoot(exports.routes);
+	exports.routingProviders = [
+	    { provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }
+	];
+	exports.routing = router_1.RouterModule.forRoot(exports.routes);
 	//# sourceMappingURL=main.routes.js.map
 
 /***/ }

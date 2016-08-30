@@ -11,8 +11,12 @@
         </p-autoComplete>
         <span style="margin-left:40px"></span>
 
-        <button pButton type="button" label="Run" data-icon="fa-play" (click)="displayDialog=true; runCode()"></button>
-        <button pButton type="button" label="Tests" data-icon="fa-check-square-o" (click)="displayDialog=true; testCode()"></button>
+        <button pButton type="button" label="Run" data-icon="fa-play"
+                (click)="displayDialog=true; runCode()" [disabled]="displayDialog">
+        </button>
+        <button pButton type="button" label="Tests" data-icon="fa-check-square-o"
+                (click)="displayDialog=true; testCode()" [disabled]="displayDialog">
+        </button>
         <button pButton type="button" label="Download" data-icon="fa-cloud-download" (click)="download()"></button>
         <p-splitButton label="New" icon="fa-file-code-o" (onClick)="newWorkspace()" [model]="items"></p-splitButton>
     </div>
@@ -24,8 +28,3 @@
     </div>
 
 </p-toolbar>
-
-<p-dialog [(visible)]="displayDialog" modal="modal" [closable]="false" [showEffect]="fade" [width]="150" [height]="180"
-          [resizable]="false" [closeOnEscape]="false" [draggable]="false">
-    <img src="../../assets/images/loading.gif" alt="loading" />
-</p-dialog>
