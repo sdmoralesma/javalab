@@ -69,15 +69,12 @@ ENV USER_HOME /home/wildfly
 
 # Add java project
 ADD java-gradle $USER_HOME/java-gradle
-RUN cd $USER_HOME/java-gradle && gradle run --quiet --refresh-dependencies
 
 # Add scala project
 ADD scala-gradle $USER_HOME/scala-gradle
-RUN cd $USER_HOME/scala-gradle && gradle run --quiet --refresh-dependencies
 
 # Add groovy project
 ADD groovy-gradle $USER_HOME/groovy-gradle
-RUN cd $USER_HOME/groovy-gradle && gradle run --quiet --refresh-dependencies
 
 # Run everything below as the wildfly user
 RUN chown -R wildfly:wildfly-group $JBOSS_HOME/* && \

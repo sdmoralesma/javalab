@@ -1,6 +1,8 @@
 package com.smorales.javalab.business.containers.boundary;
 
 import com.smorales.javalab.business.build.Executor;
+import jnr.unixsocket.UnixSocketAddress;
+import jnr.unixsocket.UnixSocketChannel;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -9,11 +11,18 @@ import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.CharBuffer;
+import java.nio.channels.Channels;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Singleton
 public class ContainerController {
@@ -23,6 +32,9 @@ public class ContainerController {
 
     @Inject
     Executor executor;
+
+    @Inject
+    Logger tracer;
 
     private Client client;
     private WebTarget target;
@@ -40,7 +52,16 @@ public class ContainerController {
     }
 
     public void createJavaContainer() {
+//        client.target(uri).
     }
+
+    public JsonObject createImage() {
+        Response response = target.path("images/create")
+                .queryParam("fromImage", "ubuntu")
+                .request(MediaType.APPLICATION_JSON).post(Entity.text(""));
+        return response.readEntity(JsonObject.class);
+    }
+
 
     public JsonObject dockerVersion() {
         Response response = target.path("version").request(MediaType.APPLICATION_JSON).get();

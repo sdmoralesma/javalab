@@ -8,10 +8,11 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <name>Parent project for javalab</name>
+    <name>parent</name>
 
     <modules>
         <module>javalab</module>
+        <module>unix</module>
     </modules>
 
 </project>

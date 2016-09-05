@@ -4,6 +4,7 @@ app:
   command: /opt/wildfly/bin/standalone.sh --debug 8787 -b 0.0.0.0 -bmanagement 0.0.0.0
   volumes:
     - ./javalab/target/javalab.war:/opt/wildfly/standalone/deployments/javalab.war:ro
+    - /var/run/docker.sock:/var/run/docker.sock
   ports:
     - "49990:9990"
     - "48080:8080"
@@ -21,3 +22,9 @@ app:
 #    MYSQL_ROOT_PASSWORD: admin123
 #  ports:
 #    - "43306:3306"
+java:
+  build: .
+  dockerfile: Dockerfile-Java
+  command: java -jar /opt/java/unix-1.0-jar-with-dependencies.jar
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
