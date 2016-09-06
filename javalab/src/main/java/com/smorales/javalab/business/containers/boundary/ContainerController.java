@@ -1,8 +1,6 @@
 package com.smorales.javalab.business.containers.boundary;
 
 import com.smorales.javalab.business.build.Executor;
-import jnr.unixsocket.UnixSocketAddress;
-import jnr.unixsocket.UnixSocketChannel;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,11 +13,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.nio.CharBuffer;
-import java.nio.channels.Channels;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Logger;
