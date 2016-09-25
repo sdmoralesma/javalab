@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,7 +41,7 @@ public class WorkspaceProcessorResource {
 
     @POST
     @Path("/run")
-    public Response runCode(Request req) {
+    public Response runCode(@NotNull Request req) {
         String result = workspaceProcessor.runCode(req);
         JsonObject jsonObject = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(jsonObject).build();
@@ -48,7 +49,7 @@ public class WorkspaceProcessorResource {
 
     @POST
     @Path("/test")
-    public Response runTests(Request req) {
+    public Response runTests(@NotNull Request req) {
         String result = workspaceProcessor.runTests(req);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(output).build();
@@ -56,7 +57,7 @@ public class WorkspaceProcessorResource {
 
     @POST
     @Path("/save")
-    public Response save(String data) {
+    public Response save(@NotNull String data) {
         Integer result = workspaceProcessor.save(data);
         JsonObject output = Json.createObjectBuilder().add("output", result).build();
         return Response.ok().entity(output).build();
@@ -65,7 +66,7 @@ public class WorkspaceProcessorResource {
     @POST
     @Path("/download")
     @Produces({"application/zip"})
-    public Response download(Request req) {
+    public Response download(@NotNull Request req) {
         byte[] zipFileContent = workspaceProcessor.download(req);
         return Response
                 .ok(zipFileContent)
