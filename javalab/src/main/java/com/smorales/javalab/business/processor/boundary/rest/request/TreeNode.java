@@ -8,6 +8,7 @@ public class TreeNode {
     private String label;
     private String icon;
     private String parentId;
+    private Boolean expanded;
     private String expandedIcon;
     private String collapsedIcon;
     private String data;
@@ -50,6 +51,14 @@ public class TreeNode {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public Boolean getExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        this.expanded = expanded;
     }
 
     public String getExpandedIcon() {
