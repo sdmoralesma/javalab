@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.github.jnr</groupId>
             <artifactId>jnr-unixsocket</artifactId>
-            <version>0.12</version>
+            <version>0.13</version>
         </dependency>
     </dependencies>
 
